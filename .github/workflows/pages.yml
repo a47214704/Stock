@@ -1,0 +1,52 @@
+name: 部署前端
+
+on:
+  # ETL 每天 commit 新資料後自動重新部署
+  push:
+    branches: [main]
+    paths: ["web/**", "data/**", ".github/workflows/pages.yml"]
+  workflow_dispatch:
+
+# 同時只跑一份部署，排隊而不取消，避免部署到舊資料
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 組裝靜態站台
+        run: |
+          mkdir -p _site
+          cp -r web/. _site/
+          # data/ 要跟 index.html 同層，前端才會優先讀到它而不是退回示範資料
+          if [ -d data ]; then
+            cp -r data _site/data
+            echo "已納入 data/：$(ls data | tr '\n' ' ')"
+          else
+            echo "::warning::還沒有 data/，站台將顯示示範資料。請先跑一次「每日 ETL」。"
+          fi
+          # Pages 預設會走 Jekyll，跳過它以免底線開頭的檔案被忽略
+          touch _site/.nojekyll
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4

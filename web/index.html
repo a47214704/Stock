@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>台股選股 — 盤整、季線扣底、籌碼與 MACD</title>
+<meta name="description" content="以交易所公開資料篩選盤整三個月以上、季線扣底翻揚、融資遞減外資加碼、MACD 由綠轉紅的個股。">
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='13' font-size='13'>📈</text></svg>">
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1>台股選股</h1>
+    <span class="meta" id="data-date">載入中…</span>
+    <span class="spacer"></span>
+    <div id="controls" style="display:flex; gap:8px"></div>
+  </header>
+
+  <div id="banner"></div>
+  <main id="view">
+    <div class="empty">載入中…</div>
+  </main>
+
+  <footer style="margin-top:40px; padding-top:16px; border-top:1px solid var(--hairline);
+                 color:var(--ink-muted); font-size:12.5px">
+    資料來源：臺灣證券交易所、證券櫃檯買賣中心公開資訊。
+    本頁為技術分析工具，所有數字僅供研究參考，不構成投資建議。
+  </footer>
+</div>
+<script type="module" src="app.js"></script>
+</body>
+</html>

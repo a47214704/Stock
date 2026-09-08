@@ -1,0 +1,50 @@
+{
+  "1216": {
+    "market": "twse",
+    "name": "示範食品"
+  },
+  "1301": {
+    "market": "twse",
+    "name": "示範化工"
+  },
+  "2308": {
+    "market": "twse",
+    "name": "示範電子"
+  },
+  "2317": {
+    "market": "twse",
+    "name": "示範精密"
+  },
+  "2330": {
+    "market": "twse",
+    "name": "示範半導體"
+  },
+  "2412": {
+    "market": "twse",
+    "name": "示範電信"
+  },
+  "2454": {
+    "market": "twse",
+    "name": "示範通訊"
+  },
+  "2603": {
+    "market": "twse",
+    "name": "示範航運"
+  },
+  "2882": {
+    "market": "twse",
+    "name": "示範金控"
+  },
+  "2891": {
+    "market": "twse",
+    "name": "示範銀行"
+  },
+  "3008": {
+    "market": "twse",
+    "name": "示範光學"
+  },
+  "6505": {
+    "market": "twse",
+    "name": "示範能源"
+  }
+}
