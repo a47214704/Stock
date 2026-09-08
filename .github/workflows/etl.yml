@@ -74,11 +74,16 @@ jobs:
             --start "$(date -u -d '10 days ago' +%Y-%m-%d)" \
             --markets twse
 
-      - name: 補抓延遲公布的報表
-        # 外資持股當天抓不到（TWSE 回「查詢日期大於可查詢最大日期」），
-        # 要等下一個交易日才公布，所以每次執行都往回補幾天。
+      - name: 補抓缺漏或延遲公布的報表
+        # 兩種洞都靠這步修：
+        #   1. 外資持股當天抓不到（TWSE 回「查詢日期大於可查詢最大日期」），
+        #      要等下一個交易日才公布
+        #   2. 某天抓取當時失敗（端點路徑錯、暫時性錯誤），之後修好了，
+        #      但上一步的 backfill 只補「完全沒有快照」的日期，
+        #      部分完成的快照不會被碰到
+        # 未指定資料集時會逐日偵測整組缺漏的，只補真正缺的那幾組。
         if: inputs.mode != 'build-only'
-        run: python -m etl refresh --days 5
+        run: python -m etl refresh --days 10
 
       - name: 重算指標與選股結果
         run: python -m etl build

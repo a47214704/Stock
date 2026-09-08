@@ -11,12 +11,42 @@ from datetime import date as Date
 
 from .sources import twse, tpex
 from .sources.twse import DateMismatch, NoDataForDate
-from .storage import SNAPSHOT_FIELDS, to_api_date
+from .storage import SNAPSHOT_FIELDS, load_daily, snapshot_rows, to_api_date
 
 log = logging.getLogger(__name__)
 
 MARKETS = {"twse": twse, "tpex": tpex}
 DATASETS = ("price", "institutional", "margin", "foreign")
+
+# 各資料集在快照裡的代表欄位，用來判斷某天是不是整組沒抓到。
+DATASET_FIELDS = {
+    "institutional": ("total_net",),
+    "margin": ("margin_balance",),
+    "foreign": ("foreign_shares", "foreign_ratio"),
+}
+
+
+def missing_datasets(date: str) -> list[str]:
+    """回報某日快照裡整組缺漏的資料集。
+
+    backfill 只補「完全沒有快照」的日期，對**部分完成**的快照無效——
+    例如某天抓取時端點路徑還是錯的，之後路徑修好了，那天的融資餘額仍會
+    永遠是空的（實測 2026-09-08 全市場 1950 檔的融資餘額都是 None，
+    而前後幾天都有 1050 檔左右）。這裡逐一檢查代表欄位，讓 refresh
+    只補真正缺的那幾組。
+
+    價格不列入檢查：它是錨，沒有價格就不會有快照。
+    """
+    snapshot = load_daily(date)
+    if not snapshot:
+        return []
+    rows = [row for _, row in snapshot_rows(snapshot)]
+    if not rows:
+        return []
+    return [
+        dataset for dataset, fields in DATASET_FIELDS.items()
+        if not any(row.get(f) is not None for row in rows for f in fields)
+    ]
 
 
 def fetch_one(day: Date, market: str, dataset: str) -> dict[str, dict]:

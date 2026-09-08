@@ -10,6 +10,7 @@ import pytest
 
 from etl import build as build_mod
 from etl import config, storage
+from etl.pipeline import missing_datasets
 from etl.storage import build_panel, save_daily
 from tests.synthetic import flat_series, ideal_series
 
@@ -157,6 +158,66 @@ class TestPatchDaily:
         storage.patch_daily("2026-09-08", {"2330": {"foreign_shares": 20}})
         _, panel = build_panel(10)
         assert panel["2330"]["foreign_shares"] == [10, 20]
+
+
+class TestMissingDatasets:
+    """偵測快照裡整組缺漏的資料集。
+
+    backfill 只補「完全沒有快照」的日期，對**部分完成**的快照無效。
+    實測 2026-09-08 全市場 1950 檔的融資餘額都是 None（那天抓取時端點路徑
+    還是錯的），而前後幾天都有 1050 檔左右——路徑修好之後，那個洞如果沒有
+    專門的偵測就永遠不會被補上。
+    """
+
+    def test_detects_a_wholly_missing_dataset(self, workspace):
+        save_daily("2026-09-08", {
+            "2303": {"close": 137.0, "market": "twse", "total_net": 100,
+                     "foreign_shares": 5_000_000, "margin_balance": None},
+            "2330": {"close": 1200.0, "market": "twse", "total_net": 200,
+                     "foreign_shares": 6_000_000, "margin_balance": None},
+        }, ["twse"])
+        assert missing_datasets("2026-09-08") == ["margin"]
+
+    def test_complete_snapshot_reports_nothing(self, workspace):
+        save_daily("2026-09-07", {
+            "2303": {"close": 130.0, "market": "twse", "total_net": 1,
+                     "foreign_shares": 5_000_000, "margin_balance": 170_000},
+        }, ["twse"])
+        assert missing_datasets("2026-09-07") == []
+
+    def test_partial_coverage_is_not_missing(self, workspace):
+        """只要有任一檔有值就不算整組缺漏——多數個股本來就沒有融資交易。"""
+        save_daily("2026-09-07", {
+            "2303": {"close": 130.0, "market": "twse", "margin_balance": 170_000,
+                     "total_net": 1, "foreign_shares": 1},
+            "9999": {"close": 10.0, "market": "twse", "margin_balance": None,
+                     "total_net": 1, "foreign_shares": 1},
+        }, ["twse"])
+        assert "margin" not in missing_datasets("2026-09-07")
+
+    def test_multiple_missing_datasets(self, workspace):
+        save_daily("2026-09-08", {
+            "2303": {"close": 137.0, "market": "twse"},
+        }, ["twse"])
+        assert set(missing_datasets("2026-09-08")) == {
+            "institutional", "margin", "foreign"}
+
+    def test_foreign_counts_ratio_as_present(self, workspace):
+        """上櫃的來源只給持股比例、沒有股數，不該因此被判為缺漏。"""
+        save_daily("2026-09-08", {
+            "6488": {"close": 500.0, "market": "tpex", "total_net": 1,
+                     "margin_balance": 10, "foreign_shares": None,
+                     "foreign_ratio": 12.3},
+        }, ["tpex"])
+        assert "foreign" not in missing_datasets("2026-09-08")
+
+    def test_missing_snapshot_reports_nothing(self, workspace):
+        assert missing_datasets("1999-01-01") == []
+
+    def test_price_is_never_reported(self, workspace):
+        """價格是錨，沒有價格就不會有快照，不列入檢查。"""
+        save_daily("2026-09-08", {"2303": {"close": None, "market": "twse"}}, ["twse"])
+        assert "price" not in missing_datasets("2026-09-08")
 
 
 class TestBuildPanel:
