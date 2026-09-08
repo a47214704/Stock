@@ -46,6 +46,9 @@ def noisy(series: dict, seed: int, drift: float) -> dict:
     out["open"] = closes[:]
     out["high"] = [round(c * (1 + abs(rng.gauss(0, .009))), 2) for c in closes]
     out["low"] = [round(c * (1 - abs(rng.gauss(0, .009))), 2) for c in closes]
+    # 成交額必須有值，流動性門檻才判得出來
+    out["volume"] = [int(rng.uniform(3e6, 2e7)) for _ in closes]
+    out["amount"] = [int(v * c) for v, c in zip(out["volume"], closes)]
     margin_dir = -1 if drift <= 0 else 1
     out["margin_balance"] = [
         max(300, int(30000 + margin_dir * -110 * i + rng.gauss(0, 400)))

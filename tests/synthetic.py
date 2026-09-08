@@ -1,16 +1,16 @@
 """測試用的合成股票走勢。
 
-`ideal_pattern` 產生一檔同時符合全部四組條件的走勢：高檔緩跌 → 加速趕底 →
+`ideal_series` 產生一檔同時符合全部四組條件的走勢：高檔緩跌 → 加速趕底 →
 底部盤整三個月 → 尾段轉強，搭配融資遞減、外資加碼、法人買超。
-參數是掃描出來的——六項條件同時成立的空間很窄，改動請重新確認。
+參數是掃描出來的（28 組可行解中取中間值），改動請重新確認六項是否仍全過。
 """
 from __future__ import annotations
 
 import math
 
 
-def ideal_closes(n: int = 200, amp: float = 1.0, rally: int = 182,
-                 lift: float = 1.2) -> list[float]:
+def ideal_closes(n: int = 200, amp: float = 0.8, rally: int = 176,
+                 lift: float = 1.0) -> list[float]:
     closes = []
     for i in range(n):
         if i < 70:                      # 高檔緩跌 120 → 90
@@ -39,7 +39,8 @@ def ideal_series(n: int = 200) -> dict:
         "total_net": [0] * (n - 5) + [1200, 800, 1500, 600, 2000],
         "short_balance": [1000] * n,
         "volume": [10_000_000] * n,
-        "amount": [None] * n,
+        # 成交額要填，否則流動性門檻判不出來（見 screen.check_liquidity）
+        "amount": [int(10_000_000 * c) for c in closes],
         "open": closes[:],
         "foreign_ratio": [None] * n,
         "trust_net": [0] * n,
@@ -54,7 +55,8 @@ def flat_series(n: int = 200, price: float = 50.0) -> dict:
         "name": "對照組", "market": "twse",
         "close": [price] * n, "high": [price] * n, "low": [price] * n,
         "margin_balance": [10000] * n, "foreign_shares": [1_000_000] * n,
-        "total_net": [0] * n, "short_balance": [0] * n, "volume": [1000] * n,
-        "amount": [None] * n, "open": [price] * n, "foreign_ratio": [None] * n,
+        "total_net": [0] * n, "short_balance": [0] * n, "volume": [1_000_000] * n,
+        "amount": [int(1_000_000 * price)] * n, "open": [price] * n,
+        "foreign_ratio": [None] * n,
         "trust_net": [0] * n, "dealer_net": [0] * n, "foreign_net": [0] * n,
     }

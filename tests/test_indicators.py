@@ -98,6 +98,33 @@ class TestMACDTurnsRed:
     def test_zero_counts_as_green(self):
         assert macd_turns_red([-1, 0.0, 0.3])["turned_red"] is True
 
+    def test_convergence_tolerates_noise(self):
+        """「連續 N 天嚴格縮小」一次跳動就歸零，對真實資料太脆。
+
+        這組數字取自實跑：綠柱絕對值 0.009 → 0.031 → 0.005，整段明顯在衰竭，
+        但嚴格連續數只有 1。改用迴歸斜率判斷才抓得到。
+        """
+        state = macd_turns_red([-0.009, -0.031, -0.005, 0.042], converge_days=3)
+        assert state["turned_red"] is True
+        assert state["converge_days"] == 1          # 嚴格連續數確實只有 1
+        assert state["converge_slope"] < 0
+        assert state["converging"] is True
+
+    def test_expanding_green_is_not_converging(self):
+        state = macd_turns_red([-0.005, -0.020, -0.040, 0.010], converge_days=3)
+        assert state["converge_slope"] > 0
+        assert state["converging"] is False
+
+    def test_reports_green_run_length(self):
+        state = macd_turns_red([-1, -2, -3, 0.5])
+        assert state["green_run"] == 3
+
+    def test_single_green_bar_cannot_show_convergence(self):
+        state = macd_turns_red([0.5, -0.1, 0.2], converge_days=3)
+        assert state["green_run"] == 1
+        assert state["converge_slope"] is None
+        assert state["converging"] is False
+
 
 class TestMADeduction:
     """扣抵值是整套季線判斷的地基，這裡驗證它的數學恆等式。"""

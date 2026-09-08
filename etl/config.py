@@ -110,17 +110,31 @@ class ScreenConfig:
 
     # 2. 季線扣抵翻揚
     ma_period: int = 60
-    ma_slope_lookback: int = 5              # 判斷「目前仍下彎或走平」的回看天數
-    ma_slope_max: float = 0.0               # 季線斜率須 <= 0（尚未翻揚）
+    # 「季線往下剛剛要往上」是個轉折，要用兩段窗口表示：
+    #   近 ma_slope_lookback 日的季線斜率已翻正或走平（剛剛要往上）
+    #   而該點之前的 ma_downtrend_lookback 日季線是下降的（原本往下）
+    # 只用「近 5 日斜率 <= 0」表示「還在往下」會與「明日就會上揚」互斥，
+    # 實測全市場只有 2 檔同時成立。
+    ma_slope_lookback: int = 5
+    ma_downtrend_lookback: int = 20
     deduction_forward_days: int = 20        # 觀察未來 N 日的扣抵值
     # 扣抵值須落在近 M 日收盤的低檔（「扣底」）
     deduction_low_lookback: int = 120
     deduction_low_percentile: float = 0.5
 
+    # 0. 流動性下限。成交量太小的個股不但買不到，籌碼數字也全是雜訊——
+    # 實測入選的兩檔 20 日中位成交額只有 70 萬與 170 萬，融資餘額 130 張與
+    # 10 張，「融資三個月減少 40%」其實是減少 4 張。加上門檻後四組全過歸零，
+    # 也就是說原本那兩檔完全是低流動性造成的假訊號。
+    liquidity_window: int = 20
+    min_median_amount: float = 1e7          # 20 日中位成交額至少 1000 萬元
+
     # 3a. 融資遞減
     margin_window: int = 60                 # 約 3 個月
     margin_min_decline_pct: float = 0.10    # 期間至少減少 10%
     margin_max_slope: float = 0.0           # 迴歸斜率須為負
+    # 融資餘額太小時，百分比變化沒有意義（10 張減到 6 張就是 -40%）
+    margin_min_balance: int = 500
 
     # 3b. 外資庫存增加
     foreign_window: int = 60
@@ -135,7 +149,11 @@ class ScreenConfig:
     macd_fast: int = 12
     macd_slow: int = 26
     macd_signal: int = 9
-    macd_converge_days: int = 3             # 轉正前柱狀體須連續收斂的天數
+    macd_converge_days: int = 3             # 連續嚴格縮小幾天也算收斂（回報用）
+    # 是否把「收斂」列為必要條件。實測全市場 1955 檔：列為必要時四組全過 0 檔，
+    # 非必要時 2 檔。「MACD 收斂，由綠轉紅」的訊號本體是翻紅，收斂是品質描述，
+    # 因此預設不強制，但仍計算並顯示，要嚴格篩選可改為 True。
+    macd_require_convergence: bool = False
     # 轉紅是單日事件。設 1 為「只認當天翻紅」，放寬到 3 可避免晚看一天就錯過，
     # 代價是名單會納入已經紅了兩三天的股票。
     macd_within_days: int = 3

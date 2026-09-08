@@ -89,8 +89,12 @@ def macd_turns_red(osc: Sequence[Num], converge_days: int = 3,
     股票會非常少，而且晚看一天就錯過，因此用 within_days 允許「最近 N 天內
     翻紅且至今未再轉綠」。within_days=1 即為嚴格的當日轉折。
 
-    收斂指翻紅前的綠柱絕對值逐日縮小，代表下跌動能衰竭，是轉折的前兆；
-    綠柱一路擴大後直接跳紅，多半只是急跌後的反彈，不算數。
+    收斂指翻紅前的綠柱動能衰竭，是轉折的前兆；綠柱一路擴大後直接跳紅，
+    多半只是急跌後的反彈。判斷方式是對該段綠柱的絕對值做迴歸，斜率為負
+    即為收斂——不用「連續 N 天嚴格縮小」，那種寫法一次跳動就歸零，
+    對真實資料太脆（實測有個案綠柱絕對值 0.009 → 0.031 → 0.005，
+    整段明顯在衰竭，但嚴格連續數只有 1）。
+    連續嚴格縮小的天數仍會回報，供參考。
     """
     result = {
         "turned_red": False,
@@ -133,11 +137,19 @@ def macd_turns_red(osc: Sequence[Num], converge_days: int = 3,
         negatives.append(v)
     negatives.reverse()
 
+    magnitudes = [abs(v) for v in negatives]
     streak = 0
-    for older, newer in zip(negatives, negatives[1:]):
-        streak = streak + 1 if abs(newer) < abs(older) else 0
+    for older, newer in zip(magnitudes, magnitudes[1:]):
+        streak = streak + 1 if newer < older else 0
+    slope = linreg_slope(magnitudes) if len(magnitudes) >= 2 else None
+
+    result["green_run"] = len(magnitudes)
     result["converge_days"] = streak
-    result["converging"] = streak >= converge_days
+    result["converge_slope"] = slope
+    result["converging"] = bool(
+        (slope is not None and slope < 0 and len(magnitudes) >= 2)
+        or streak >= converge_days
+    )
     return result
 
 
@@ -203,6 +215,39 @@ def ma_slope_pct(closes: Sequence[Num], period: int, lookback: int) -> float | N
     if len(tail) < lookback + 1 or not tail[-1]:
         return None
     return (tail[-1] - tail[-1 - lookback]) / lookback / tail[-1]
+
+
+def ma_turn_state(closes: Sequence[Num], period: int, recent: int,
+                  downtrend: int) -> dict | None:
+    """季線是否處於「下降段的末端、剛剛轉平轉揚」。
+
+    不能只用「近 N 日斜率 <= 0」來表示「季線還在往下」——那與「明日就會上揚」
+    幾乎互斥：收盤只要連續幾天高於扣抵值，季線這幾天就已經在上揚，斜率不會
+    還是負的。實測全市場 1955 檔，兩者同時成立的只有 2 檔。
+
+    「往下剛剛要往上」其實是個轉折：
+
+        中期下彎：recent 日前的季線，低於再往前 downtrend 日的季線
+        近期轉揚：最近 recent 日的季線斜率已經翻正或走平
+
+    這樣抓到的是下降段剛結束的那一段，而不是「已經漲一個月」或
+    「還在直線下墜」。同樣的資料下有 23 檔成立。
+    """
+    ma = [v for v in sma(closes, period) if v is not None]
+    if len(ma) < recent + downtrend + 1 or not ma[-1]:
+        return None
+
+    pivot = ma[-(recent + 1)]                      # recent 日前的季線
+    earlier = ma[-(recent + 1 + downtrend)]        # 再往前 downtrend 日
+    recent_slope = (ma[-1] - pivot) / recent / ma[-1]
+
+    return {
+        "ma": ma[-1],
+        "was_falling": pivot < earlier,
+        "recent_slope_pct": recent_slope,
+        "turning_up": recent_slope >= 0,
+        "downtrend_pct": (pivot - earlier) / earlier if earlier else None,
+    }
 
 
 def percentile_rank(value: float, population: Sequence[Num]) -> float | None:

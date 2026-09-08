@@ -57,6 +57,11 @@ const CONDITIONS = {
     label: "季線扣底翻揚", group: "ma_turn_up",
     rows: c => [
       ["季線", fmt.num(c.ma)],
+      // 「往下剛剛要往上」是轉折：中期下彎、近期斜率翻正
+      ["中期下彎", c.was_falling ? "是" : "否"],
+      ["季線中期變化", c.downtrend_pct === null || c.downtrend_pct === undefined
+        ? "—" : fmt.pct(c.downtrend_pct)],
+      ["近期斜率", c.ma_slope_pct === null ? "—" : fmt.pct(c.ma_slope_pct, 3) + "/日"],
       ["目前扣抵值", fmt.num(c.deduction)],
       ["未來扣抵均價", fmt.num(c.future_deduction_mean)],
       ["扣抵值分位", c.deduction_percentile === null ? "—" : fmt.pct(c.deduction_percentile, 0)],
@@ -243,12 +248,30 @@ function renderList(root) {
   // 顯示出來才不會讓人把「還不知道」誤讀成「不符合」。
   const pending = (s.results ?? []).filter(r => (r.insufficient ?? []).length).length;
 
+  const gaps = s.missing_breakdown ?? {};
+  const topGap = Object.entries(gaps).sort((a, b) => b[1] - a[1])[0];
+
   root.appendChild(h("div", { class: "hero-row" }, [
-    tile("符合全部條件", String(matched), `共 ${s.universe ?? "—"} 檔上市櫃普通股`, true),
-    tile("入選名單", String((s.results ?? []).length), `另含通過 ${s.criteria?.min_score_to_list ?? 4} 項以上者`),
+    tile("符合全部條件", String(matched),
+      `可交易 ${s.tradable ?? "—"} / 全市場 ${s.universe ?? "—"} 檔`, true),
+    // 四項同時成立於可交易個股的機率極低，「差一項」才是實用的觀察名單
+    tile("差一項", String(s.near_miss ?? 0),
+      topGap && topGap[1] ? `多數缺「${GROUPS[topGap[0]] ?? topGap[0]}」` : "—"),
     tile("累積交易日", String(s.trading_days ?? 0), `資料至 ${s.data_date ?? "—"}`),
     tile("資料不足", String(pending), pending ? "尚無法完整判斷" : "全部條件均可判斷"),
   ]));
+
+  if (!matched) {
+    root.appendChild(h("div", { class: "notice" }, [
+      h("div", {}, [
+        h("strong", { text: "今日沒有個股符合全部四組條件。" }),
+        h("span", {
+          text: "這是常態而非異常——MACD 由綠轉紅是單日事件，要和季線剛翻揚"
+            + "在同一天發生本就罕見。下方名單依符合項數排序，並標出各檔缺哪一組。",
+        }),
+      ]),
+    ]));
+  }
 
   // 篩選列：單獨一排，位於所有內容之上，所有下方內容共用同一份切片
   const search = h("input", {
@@ -326,6 +349,7 @@ function renderList(root) {
       h("th", { class: "num", text: "已盤整" }),
       h("th", { class: "num", text: "符合" }),
       h("th", { text: "條件" }),
+      h("th", { text: "缺" }),
     ])]);
     const tbody = h("tbody");
     for (const r of rows) {
@@ -356,6 +380,11 @@ function renderList(root) {
               : (r.groups[key] ? "pass" : "fail");
             return badge(label, status);
           }))]),
+        h("td", {
+          text: Object.entries(GROUPS)
+            .filter(([key]) => !r.groups[key])
+            .map(([, label]) => label).join("、") || "—",
+        }),
       ]);
       tbody.appendChild(tr);
     }

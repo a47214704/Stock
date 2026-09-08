@@ -12,12 +12,13 @@
 """
 from __future__ import annotations
 
+import statistics
 from typing import Sequence
 
 from .config import ScreenConfig, DEFAULT_SCREEN
 from .indicators import (
-    consolidation, consolidation_run, ma_deduction, ma_slope_pct, macd,
-    macd_turns_red, percentile_rank, trend,
+    consolidation, consolidation_run, ma_deduction, ma_slope_pct, ma_turn_state,
+    macd, macd_turns_red, percentile_rank, trend,
 )
 
 PASS = "pass"
@@ -31,6 +32,27 @@ def _result(status: str, **detail) -> dict:
 
 def _count_valid(values: Sequence) -> int:
     return sum(1 for v in values if v is not None)
+
+
+def check_liquidity(amounts, cfg: ScreenConfig) -> dict:
+    """流動性門檻。這不是選股條件，而是「這檔能不能買」的前提。
+
+    成交量太小的個股不只買不到，籌碼數字也全是雜訊：融資餘額 10 張減到
+    6 張就是 -40%，會直接通過「融資三個月遞減」。實測不設門檻時四組全過的
+    兩檔，20 日中位成交額只有 70 萬與 170 萬；設門檻後歸零——那兩檔完全是
+    低流動性造成的假訊號。
+    """
+    window = [v for v in amounts[-cfg.liquidity_window:] if v]
+    if not window:
+        return _result(INSUFFICIENT, need=cfg.liquidity_window, have=0)
+
+    median = statistics.median(window)
+    return _result(
+        PASS if median >= cfg.min_median_amount else FAIL,
+        median_amount=int(median),
+        threshold=int(cfg.min_median_amount),
+        days=len(window),
+    )
 
 
 def check_consolidation(highs, lows, closes, cfg: ScreenConfig) -> dict:
@@ -78,23 +100,27 @@ def check_consolidation(highs, lows, closes, cfg: ScreenConfig) -> dict:
 def check_ma_turn_up(closes, cfg: ScreenConfig) -> dict:
     """條件 2：季線扣底翻揚。
 
-    「剛剛要往上」拆成三個同時成立的判斷：
-      a. 季線目前仍下彎或剛走平（還沒翻揚，否則就追高了）
+    「往下剛剛要往上」拆成四個同時成立的判斷：
+      a. 季線處於下降段的末端且剛轉平轉揚——中期下彎、近期斜率翻正。
+         不能只寫「近 5 日斜率 <= 0」，那與 b 幾乎互斥：收盤連續幾天高於
+         扣抵值，季線這幾天就已經在上揚了。實測兩者同時成立的只有 2 檔。
       b. 今日收盤 > 目前扣抵值 → 明日季線就會上揚
       c. 未來 N 日扣抵值的均價低於現價 → 價格只要守住，季線會「持續」上揚，
          而不是只揚一天。這條才是扣抵判斷的核心。
       d. 這段扣抵值落在近半年收盤的下半部 → 確認是在底檔扣低，不是高檔換手
     """
-    need = cfg.ma_period + cfg.ma_slope_lookback
+    need = cfg.ma_period + cfg.ma_slope_lookback + cfg.ma_downtrend_lookback
     if _count_valid(closes) < need:
         return _result(INSUFFICIENT, need=need, have=_count_valid(closes))
 
     ded = ma_deduction(closes, cfg.ma_period, cfg.deduction_forward_days)
-    if ded is None:
+    turn = ma_turn_state(closes, cfg.ma_period, cfg.ma_slope_lookback,
+                         cfg.ma_downtrend_lookback)
+    if ded is None or turn is None:
         return _result(INSUFFICIENT, need=need, have=_count_valid(closes))
 
-    slope = ma_slope_pct(closes, cfg.ma_period, cfg.ma_slope_lookback)
-    still_falling = slope is not None and slope <= cfg.ma_slope_max
+    slope = turn["recent_slope_pct"]
+    turning = bool(turn["was_falling"] and turn["turning_up"])
 
     population = [c for c in closes[-cfg.deduction_low_lookback:] if c is not None]
     mean_future = ded["future_deduction_mean"]
@@ -107,7 +133,7 @@ def check_ma_turn_up(closes, cfg: ScreenConfig) -> dict:
         and float(last_close) > mean_future
     )
 
-    passed = bool(still_falling and ded["rises_tomorrow"]
+    passed = bool(turning and ded["rises_tomorrow"]
                   and future_supports and deducting_low)
     return _result(
         PASS if passed else FAIL,
@@ -116,7 +142,11 @@ def check_ma_turn_up(closes, cfg: ScreenConfig) -> dict:
         future_deduction_mean=round(mean_future, 2) if mean_future is not None else None,
         deduction_percentile=round(rank, 3) if rank is not None else None,
         ma_slope_pct=round(slope, 6) if slope is not None else None,
-        still_falling=still_falling,
+        downtrend_pct=round(turn["downtrend_pct"], 4)
+        if turn["downtrend_pct"] is not None else None,
+        was_falling=turn["was_falling"],
+        turning_up=turn["turning_up"],
+        turning=turning,
         rises_tomorrow=ded["rises_tomorrow"],
         future_supports=future_supports,
         deducting_low=deducting_low,
@@ -137,12 +167,15 @@ def check_margin_declining(margin, cfg: ScreenConfig) -> dict:
 
     declined = t["change_pct"] <= -cfg.margin_min_decline_pct
     downtrend = t["slope"] < cfg.margin_max_slope
+    # 融資餘額太小時百分比變化沒有意義：10 張減到 6 張就是 -40%
+    meaningful = t["first"] >= cfg.margin_min_balance
     return _result(
-        PASS if (declined and downtrend) else FAIL,
+        PASS if (declined and downtrend and meaningful) else FAIL,
         change_pct=round(t["change_pct"], 4),
         first=t["first"], last=t["last"],
         slope=round(t["slope"], 3),
         declined=declined, downtrend=downtrend,
+        meaningful=meaningful, min_balance=cfg.margin_min_balance,
     )
 
 
@@ -206,7 +239,8 @@ def check_macd(closes, cfg: ScreenConfig) -> dict:
     if state["osc"] is None:
         return _result(INSUFFICIENT, need=need, have=_count_valid(closes))
 
-    passed = bool(state["turned_red"] and state["converging"])
+    passed = bool(state["turned_red"]
+                  and (state["converging"] or not cfg.macd_require_convergence))
     return _result(
         PASS if passed else FAIL,
         osc=round(state["osc"], 4),
@@ -214,6 +248,9 @@ def check_macd(closes, cfg: ScreenConfig) -> dict:
         turned_red=state["turned_red"],
         converging=state["converging"],
         converge_days=state["converge_days"],
+        green_run=state.get("green_run"),
+        converge_slope=round(state["converge_slope"], 6)
+        if state.get("converge_slope") is not None else None,
         days_since_cross=state["days_since_cross"],
     )
 
@@ -229,6 +266,7 @@ GROUPS = {
 
 def screen_stock(stock_id: str, series: dict, cfg: ScreenConfig = DEFAULT_SCREEN) -> dict:
     closes = series.get("close", [])
+    liquidity = check_liquidity(series.get("amount", []), cfg)
     conditions = {
         "consolidation": check_consolidation(
             series.get("high", []), series.get("low", []), closes, cfg),
@@ -255,7 +293,12 @@ def screen_stock(stock_id: str, series: dict, cfg: ScreenConfig = DEFAULT_SCREEN
         "groups": groups,
         "score": sum(1 for c in conditions.values() if c["pass"]),
         "insufficient": [k for k, c in conditions.items() if c["status"] == INSUFFICIENT],
-        "pass_all": all(groups.values()),
+        # 缺哪幾組。四項同時成立於可交易個股的機率極低，實用的產出是
+        # 「差一項」的觀察名單，所以把缺口一併算好給前端。
+        "missing": [name for name, ok in groups.items() if not ok],
+        "liquidity": liquidity,
+        "tradable": liquidity["pass"],
+        "pass_all": all(groups.values()) and liquidity["pass"],
     }
 
 

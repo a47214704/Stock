@@ -76,14 +76,29 @@ def build(days: int = 260, cfg: ScreenConfig = DEFAULT_SCREEN) -> dict:
     data_date = dates[-1]
     generated_at = now_iso()
 
-    listed = [r for r in results if r["pass_all"] or r["score"] >= cfg.min_score_to_list]
+    # 買不到的個股不進名單。實測不設流動性門檻時，四組全過的兩檔 20 日中位
+    # 成交額只有 70 萬與 170 萬，籌碼訊號全是雜訊。
+    tradable = [r for r in results if r["tradable"]]
+    matched = [r for r in tradable if r["pass_all"]]
+    # 四項同時成立於可交易個股的機率極低，「差一項」才是實用的觀察名單
+    near_miss = [r for r in tradable if len(r["missing"]) == 1]
+
+    listed = [r for r in tradable
+              if r["pass_all"] or r["score"] >= cfg.min_score_to_list]
     write_json(config.SIGNALS_PATH, {
         "generated_at": generated_at,
         "data_date": data_date,
         "trading_days": len(dates),
         "universe": len(results),
+        "tradable": len(tradable),
         "criteria": cfg.to_dict(),
-        "matched": sum(1 for r in results if r["pass_all"]),
+        "matched": len(matched),
+        "near_miss": len(near_miss),
+        # 差一項的名單缺的是哪一組，用來說明市場現在卡在哪裡
+        "missing_breakdown": {
+            group: sum(1 for r in near_miss if r["missing"] == [group])
+            for group in ("consolidation", "ma_turn_up", "chips", "macd")
+        },
         "results": listed,
     })
 
@@ -91,12 +106,13 @@ def build(days: int = 260, cfg: ScreenConfig = DEFAULT_SCREEN) -> dict:
         "generated_at": generated_at,
         "data_date": data_date,
         "columns": ["stock_id", "name", "market", "close", "score",
-                    "consolidation", "ma_turn_up", "chips", "macd", "run_days"],
+                    "consolidation", "ma_turn_up", "chips", "macd",
+                    "run_days", "tradable"],
         "rows": [
             [r["stock_id"], r["name"], r["market"], r["close"], r["score"],
              int(r["groups"]["consolidation"]), int(r["groups"]["ma_turn_up"]),
              int(r["groups"]["chips"]), int(r["groups"]["macd"]),
-             r["conditions"]["consolidation"].get("run_days")]
+             r["conditions"]["consolidation"].get("run_days"), int(r["tradable"])]
             for r in results
         ],
     }, compact=True)
@@ -108,8 +124,10 @@ def build(days: int = 260, cfg: ScreenConfig = DEFAULT_SCREEN) -> dict:
 
     summary = {
         "stocks": len(results),
+        "tradable": len(tradable),
         "listed": len(listed),
-        "matched": sum(1 for r in results if r["pass_all"]),
+        "matched": len(matched),
+        "near_miss": len(near_miss),
         "dates": len(dates),
         "data_date": data_date,
         "history_pruned": pruned,
