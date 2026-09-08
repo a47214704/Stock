@@ -10,7 +10,7 @@ import json
 from typing import Any
 
 from . import config
-from .http import get_json
+from .http import NotJSON, get_json
 from .parsing import clean_text, iter_tables, resolve_columns
 from .sources import twse
 from .storage import to_api_date, parse_date
@@ -189,6 +189,80 @@ def discover(market: str, grep: str | None = None) -> int:
             print("\n（以上只是關鍵字命中的第一個候選，請對照上面的說明挑對的那個）")
 
     return problems
+
+
+def probe_twse(date_text: str) -> int:
+    """逐一試出 TWSE 各報表正確的 rwd 路徑。
+
+    rwd 的路徑分段無法從網頁路徑推導，而且猜錯時伺服器回的是 HTML 而不是 404，
+    只看 JSON 解析失敗的訊息完全查不出原因。這個指令把候選路徑一個個打過去，
+    直接告訴你哪個可用。
+    """
+    api_date = to_api_date(parse_date(date_text))
+    print(f"以 {api_date} 逐一測試候選路徑\n")
+    working: dict[str, str] = {}
+
+    for kind, candidates in config.TWSE_PATH_CANDIDATES.items():
+        spec, required = SPECS[kind]
+        params = dict(config.TWSE_PARAMS[kind])
+        params["date"] = api_date
+        print(f"{'=' * 72}\n[{kind}]  params={params}")
+
+        for suffix in candidates:
+            url = f"{config.TWSE_BASE}/{suffix}"
+            try:
+                payload = get_json(url, params)
+            except NotJSON:
+                print(f"  ✗ {suffix:<32} 回應不是 JSON（路徑不存在）")
+                continue
+            except Exception as exc:                  # noqa: BLE001
+                print(f"  ✗ {suffix:<32} {type(exc).__name__}: {str(exc)[:90]}")
+                continue
+
+            if not isinstance(payload, dict):
+                print(f"  ✗ {suffix:<32} 回應不是 JSON 物件")
+                continue
+
+            stat = clean_text(payload.get("stat"))
+            if stat and stat.upper() != "OK":
+                # 路徑是對的，只是這個日期沒有資料——仍算可用
+                print(f"  △ {suffix:<32} 路徑可用，但 stat={stat!r}")
+                working.setdefault(kind, suffix)
+                continue
+
+            rows = 0
+            matched = False
+            for fields, data in iter_tables(payload):
+                if not data:
+                    continue
+                rows = len(data)
+                try:
+                    resolve_columns(fields, spec, required)
+                    matched = True
+                    break
+                except LookupError:
+                    continue
+            if matched:
+                print(f"  ✓ {suffix:<32} 可用，{rows} 列，欄位對得上")
+                working.setdefault(kind, suffix)
+            else:
+                print(f"  △ {suffix:<32} 有回應（{rows} 列）但欄位對不上，"
+                      f"請用 verify 看表頭")
+                working.setdefault(kind, suffix)
+
+    print(f"\n{'=' * 72}")
+    missing = [k for k in config.TWSE_PATH_CANDIDATES if k not in working]
+    if missing:
+        print(f"以下資料集所有候選都失敗：{missing}")
+        print("請到 TWSE 網站按下查詢、從瀏覽器的開發者工具 Network 分頁複製實際網址，"
+              "再把路徑加進 etl/config.py 的 TWSE_PATH_CANDIDATES。")
+    if working:
+        print("\n可用的路徑（填回 etl/config.py 的 TWSE_ENDPOINTS）：\n")
+        print("TWSE_ENDPOINTS = {")
+        for kind, suffix in working.items():
+            print(f'    "{kind}": f"{{TWSE_BASE}}/{suffix}",')
+        print("}")
+    return len(missing)
 
 
 def verify_tpex() -> int:

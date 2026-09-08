@@ -63,6 +63,12 @@ jobs:
             ${{ inputs.end && format('--end {0}', inputs.end) || '' }} \
             --markets "${{ inputs.markets || 'twse' }}"
 
+      - name: 補抓延遲公布的報表
+        # 外資持股當天抓不到（TWSE 回「查詢日期大於可查詢最大日期」），
+        # 要等下一個交易日才公布，所以每次執行都往回補幾天。
+        if: inputs.mode != 'build-only'
+        run: python -m etl refresh --days 5
+
       - name: 重算指標與選股結果
         run: python -m etl build
 

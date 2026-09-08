@@ -9,7 +9,7 @@ from datetime import date as Date, datetime, timedelta, timezone
 
 from . import build as build_mod
 from . import config, storage, verify as verify_mod
-from .pipeline import MARKETS, fetch_date
+from .pipeline import MARKETS, fetch_date, fetch_one
 
 # 台北時間。GitHub Actions 的 runner 跑在 UTC，交易日的判斷要用台北日期。
 TAIPEI = timezone(timedelta(hours=8))
@@ -109,6 +109,45 @@ def cmd_coverage(args) -> int:
     return 0
 
 
+def cmd_probe(args) -> int:
+    date_text = args.date or storage.to_key(today_taipei() - timedelta(days=1))
+    missing = verify_mod.probe_twse(date_text)
+    return 1 if missing else 0
+
+
+def cmd_refresh(args) -> int:
+    """補抓延遲公布的報表，寫進既有快照。
+
+    外資持股一類的報表當天抓不到（TWSE 會回「查詢日期大於可查詢最大日期」），
+    要等下一個交易日才公布。每日 ETL 之後跑這個，把前幾天缺的補回去。
+    """
+    datasets = [d.strip() for d in args.datasets.split(",") if d.strip()]
+    markets = parse_markets(args.markets)
+    dates = storage.list_daily_dates()[-args.days:]
+    if not dates:
+        log.info("還沒有任何快照可補")
+        return 0
+
+    log.info("補抓 %s 的 %s，共 %s 個交易日", markets, datasets, len(dates))
+    total = 0
+    for key in dates:
+        day = storage.parse_date(key)
+        updates: dict[str, dict] = {}
+        for market in markets:
+            for dataset in datasets:
+                for stock_id, fields in fetch_one(day, market, dataset).items():
+                    updates.setdefault(stock_id, {}).update(fields)
+        if not updates:
+            log.info("%s 沒有取得資料", key)
+            continue
+        changed = storage.patch_daily(key, updates)
+        total += changed
+        log.info("%s ✓ 更新 %s 檔", key, changed)
+
+    log.info("補抓結束，共更新 %s 筆", total)
+    return 0
+
+
 def cmd_discover(args) -> int:
     problems = verify_mod.discover(args.market, args.grep)
     if problems:
@@ -157,6 +196,21 @@ def main(argv=None) -> int:
 
     p = sub.add_parser("coverage", help="檢查已累積的資料是否足以判斷各條件")
     p.set_defaults(func=cmd_coverage)
+
+    p = sub.add_parser(
+        "probe",
+        help="逐一試出 TWSE 各報表正確的 rwd 路徑")
+    p.add_argument("--date", help="YYYY-MM-DD，預設為昨天")
+    p.set_defaults(func=cmd_probe)
+
+    p = sub.add_parser(
+        "refresh",
+        help="補抓延遲公布的報表（例如外資持股），寫進既有快照")
+    p.add_argument("--datasets", default=",".join(config.LATE_DATASETS),
+                   help=f"要補的資料集，預設 {','.join(config.LATE_DATASETS)}")
+    p.add_argument("--days", type=int, default=5, help="往回補幾個交易日")
+    p.add_argument("--markets", default="twse")
+    p.set_defaults(func=cmd_refresh)
 
     p = sub.add_parser(
         "discover",

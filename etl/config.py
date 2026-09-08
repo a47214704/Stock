@@ -34,6 +34,32 @@ TWSE_ENDPOINTS = {
     "foreign": f"{TWSE_BASE}/fund/MI_QFIIS",
 }
 
+# TWSE 的 rwd 路徑分段無法從網頁路徑推導——T86 的網頁在 /trading/foreign/
+# 但 rwd 路徑是 /rwd/zh/fund/T86，兩者的分段名稱不一致。猜錯時伺服器回的是
+# HTML 而不是 404，所以用 `python -m etl probe` 逐一試出正確的那個。
+# 每個資料集的第一項就是 TWSE_ENDPOINTS 目前採用的路徑。
+TWSE_PATH_CANDIDATES = {
+    "price": [
+        "afterTrading/MI_INDEX", "exchangeReport/MI_INDEX",
+        "afterTrading/STOCK_DAY_ALL",
+    ],
+    "institutional": [
+        "fund/T86", "fund/BFI82U", "foreign/T86", "afterTrading/T86",
+    ],
+    "margin": [
+        "margin/MI_MARGN", "marginTrading/MI_MARGN", "exchange/MI_MARGN",
+        "afterTrading/MI_MARGN", "fund/MI_MARGN", "credit/MI_MARGN",
+    ],
+    "foreign": [
+        "fund/MI_QFIIS", "foreign/MI_QFIIS", "afterTrading/MI_QFIIS",
+        "fund/MI_QFIIS_sort_20",
+    ],
+}
+
+# 部分報表當日盤後才會公布，甚至隔一個交易日。這些資料集在當天抓不到是正常的，
+# 要靠 `python -m etl refresh` 事後補進既有快照。
+LATE_DATASETS = ("foreign",)
+
 TWSE_PARAMS = {
     "price": {"type": "ALLBUT0999", "response": "json"},
     "institutional": {"selectType": "ALL", "response": "json"},

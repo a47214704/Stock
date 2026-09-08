@@ -32,8 +32,8 @@
 | 個股日 K | `https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=YYYYMMDD&stockNo=2330&response=json` | 一次回傳該月整月日 K |
 | 全市場當日收盤 | `https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL` | 只有**當日**快照，適合每日增量 |
 | 三大法人買賣超 | `https://www.twse.com.tw/rwd/zh/fund/T86?date=YYYYMMDD&selectType=ALL&response=json` | 全市場個股，可指定日期回補歷史 |
-| 融資融券餘額 | `https://www.twse.com.tw/rwd/zh/margin/MI_MARGN?date=YYYYMMDD&selectType=STOCK&response=json` | `selectType=STOCK` 才是個股明細 |
-| 外資及陸資持股 | `https://www.twse.com.tw/rwd/zh/fund/MI_QFIIS?date=YYYYMMDD&selectType=ALLBUT0999&response=json` | **條件 3b 的核心**：持股張數與比率 |
+| 融資融券餘額 | `MI_MARGN`，路徑分段待 `python -m etl probe` 試出（`margin/` 實測不正確） | `selectType=STOCK` 才是個股明細 |
+| 外資及陸資持股 | `https://www.twse.com.tw/rwd/zh/fund/MI_QFIIS?date=YYYYMMDD&selectType=ALLBUT0999&response=json` | **條件 3b 的核心**：持股張數與比率。當日查不到，隔一個交易日才公布 |
 | 上市公司基本資料 | `https://openapi.twse.com.tw/v1/opendata/t187ap03_L` | 建立股票代號主檔 |
 
 **上櫃 — 證券櫃檯買賣中心**
@@ -68,7 +68,7 @@ API 目錄與 schema：`https://www.tpex.org.tw/openapi/`（Swagger：`https://w
 
 **必須自建資料庫每日落地，不能即時查 API。** 三個理由：
 
-1. **`MI_QFIIS`（外資持股）官方只給當日快照**，沒有歷史查詢。條件 3b 要看「3 個月庫存趨勢」，只能靠自己每天抓、每天存，**今天不開始存，三個月後才有資料可判斷**。這是最該優先啟動的一件事。
+1. **`MI_QFIIS`（外資持股）當天查不到，要隔一個交易日才公布。** 實測當日查詢會回「查詢日期大於可查詢最大日期，請重新查詢!」。所以每日 ETL 之後要再跑一次補抓，把前幾天缺的填回既有快照。這份報表本身**吃 `date` 參數、可以回補歷史**（先前推測「只有當日快照、無法回補」是錯的，已修正）。
 2. 交易所網站 API 沒有正式使用授權，流量大會被限速／擋 IP。全市場約 1,800 檔逐檔查詢絕不能放在使用者請求路徑上。
 3. 選股掃描是全市場交叉比對，DB 一次 query 遠快於 N 次 HTTP。
 

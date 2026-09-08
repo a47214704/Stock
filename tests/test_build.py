@@ -104,6 +104,61 @@ class TestSnapshotRoundTrip:
         assert not storage.has_daily("1999-01-01")
 
 
+class TestPatchDaily:
+    """快照原則上 append-only，補抓延遲公布的報表是唯一例外。
+
+    外資持股當天抓不到（TWSE 回「查詢日期大於可查詢最大日期」），
+    要等下一個交易日才公布，只能事後補進既有快照。
+    """
+
+    def test_merges_new_fields(self, workspace):
+        save_daily("2026-09-07", {
+            "2330": {"close": 1210.0, "market": "twse", "foreign_shares": None},
+        }, ["twse"])
+        changed = storage.patch_daily("2026-09-07", {
+            "2330": {"foreign_shares": 18_000_000_000, "foreign_ratio": 69.4},
+        })
+        assert changed == 1
+        rows = dict(storage.snapshot_rows(storage.load_daily("2026-09-07")))
+        assert rows["2330"]["foreign_shares"] == 18_000_000_000
+        assert rows["2330"]["close"] == 1210.0        # 原有欄位不動
+
+    def test_ignores_stocks_absent_from_the_snapshot(self, workspace):
+        """價格是錨。沒有 K 線的個股不該憑空長出籌碼資料。"""
+        save_daily("2026-09-07", {"2330": {"close": 1210.0, "market": "twse"}}, ["twse"])
+        changed = storage.patch_daily("2026-09-07", {
+            "2330": {"foreign_shares": 100},
+            "9999": {"foreign_shares": 200},       # 當天沒有這檔的行情
+        })
+        assert changed == 1
+        rows = dict(storage.snapshot_rows(storage.load_daily("2026-09-07")))
+        assert "9999" not in rows
+
+    def test_missing_snapshot_is_a_noop(self, workspace):
+        assert storage.patch_daily("1999-01-01", {"2330": {"foreign_shares": 1}}) == 0
+
+    def test_keeps_the_columnar_format(self, workspace):
+        save_daily("2026-09-07", {"2330": {"close": 1210.0, "market": "twse"}}, ["twse"])
+        storage.patch_daily("2026-09-07", {"2330": {"foreign_shares": 5}})
+        loaded = storage.load_daily("2026-09-07")
+        assert loaded["version"] == storage.SNAPSHOT_VERSION
+        assert isinstance(loaded["stocks"]["2330"], list)
+
+    def test_preserves_markets_list(self, workspace):
+        save_daily("2026-09-07", {"2330": {"close": 1.0, "market": "twse"}}, ["twse", "tpex"])
+        storage.patch_daily("2026-09-07", {"2330": {"foreign_shares": 5}})
+        assert storage.load_daily("2026-09-07")["markets"] == ["twse", "tpex"]
+
+    def test_patched_values_reach_the_panel(self, workspace):
+        """補進去的值必須真的進到選股用的時間序列。"""
+        for day, close in (("2026-09-07", 100.0), ("2026-09-08", 101.0)):
+            save_daily(day, {"2330": {"close": close, "market": "twse"}}, ["twse"])
+        storage.patch_daily("2026-09-07", {"2330": {"foreign_shares": 10}})
+        storage.patch_daily("2026-09-08", {"2330": {"foreign_shares": 20}})
+        _, panel = build_panel(10)
+        assert panel["2330"]["foreign_shares"] == [10, 20]
+
+
 class TestBuildPanel:
     def test_series_align_with_dates(self, workspace):
         seed_snapshots(30)

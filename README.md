@@ -17,12 +17,26 @@
 
 ```bash
 pip install -r requirements-dev.txt
-python -m pytest -q          # 181 個測試，不需要網路
+python -m pytest -q          # 187 個測試，不需要網路
 ```
 
 ### 第一次部署，請照這個順序
 
-**第 1 步：確認 TPEx 端點路徑**（必做）
+**第 1 步：試出 TWSE 的報表路徑**（必做）
+
+```bash
+python -m etl probe
+```
+
+TWSE 的 rwd 路徑分段無法從網頁路徑推導——三大法人的網頁在 `/trading/foreign/`
+但 rwd 路徑是 `/rwd/zh/fund/T86`，兩者的分段名稱不一致。猜錯時伺服器回的是
+HTML 而不是 404。這個指令會把候選路徑一個個打過去，直接指出哪個可用，
+並印出可貼回 `TWSE_ENDPOINTS` 的片段。
+
+若所有候選都失敗：到 TWSE 網站按下查詢，從瀏覽器開發者工具的 Network 分頁
+複製實際網址，把路徑加進 `etl/config.py` 的 `TWSE_PATH_CANDIDATES`。
+
+**第 2 步：確認 TPEx 端點路徑**（必做）
 
 ```bash
 python -m etl discover
@@ -38,7 +52,7 @@ TPEx 的端點名稱無法從公開文件可靠推斷，而且猜錯時伺服器
 
 TWSE 用的是 `rwd` 報表端點，不在 OpenAPI 規格裡，所以這步只查上櫃。
 
-**第 2 步：驗證欄位**（必做，5 分鐘）
+**第 3 步：驗證欄位**（必做，5 分鐘）
 
 ```bash
 python -m etl verify --date 2026-09-05
@@ -49,7 +63,7 @@ python -m etl verify --date 2026-09-05
 照著印出的表頭去補 `etl/sources/twse.py` 裡的別名清單即可——欄位是以**表頭
 文字**定位的，所以只需要加別名，不必改索引。
 
-**第 3 步：回補歷史**
+**第 4 步：回補歷史**
 
 ```bash
 python -m etl backfill --start 2026-03-01 --markets twse
@@ -59,9 +73,9 @@ python -m etl backfill --start 2026-03-01 --markets twse
 Actions → 每日 ETL → Run workflow，選 `mode=backfill` 執行。
 
 > 上櫃（TPEx）的 OpenAPI 多半只提供當日資料，**無法回補歷史**，
-> 只能從導入日起每日累積。
+> 只能從導入日起每日累積。上市（TWSE）的報表都吃 `date` 參數，可以回補。
 
-**第 4 步：確認資料是否足以判斷**
+**第 5 步：確認資料是否足以判斷**
 
 ```bash
 python -m etl coverage
@@ -71,7 +85,7 @@ python -m etl coverage
 `insufficient` 而不是 `fail`——這兩者的差別很重要，別把「還不知道」
 當成「不符合」。
 
-**第 5 步：開啟排程**
+**第 6 步：開啟排程**
 
 `.github/workflows/etl.yml` 已設定台北時間每個交易日 19:00 自動執行。
 推上 GitHub 後在 Actions 頁面啟用即可。
@@ -82,9 +96,16 @@ python -m etl coverage
 python -m etl fetch                      # 抓今天（已有快照會略過）
 python -m etl fetch --date 2026-09-05    # 抓指定日期
 python -m etl build                      # 重算指標與選股結果
+python -m etl refresh --days 5            # 補抓延遲公布的報表（外資持股）
 python -m etl coverage                   # 檢查資料累積進度
-python -m etl discover --grep 融資       # 在官方規格裡搜端點
+python -m etl probe                      # 試出 TWSE 報表路徑
+python -m etl discover --grep 融資       # 在 TPEx 官方規格裡搜端點
 ```
+
+**外資持股要靠 refresh 補。** TWSE 的 `MI_QFIIS` 當天查會回
+「查詢日期大於可查詢最大日期」——這份報表要等下一個交易日才公布。
+每日 ETL 之後跑 `refresh` 會往回把前幾天缺的補進既有快照，
+排程裡已經包含這一步。
 
 ---
 
@@ -103,12 +124,14 @@ python -m etl discover --grep 融資       # 在官方規格裡搜端點
                         前端 fetch 同源 JSON
 ```
 
-**每日快照是唯一的真實來源，寫入後不再改動。** 這樣做有三個理由：
+**每日快照是真實來源，原則上寫入後不再改動。** 這樣做有兩個理由：
 
-- 外資持股（`MI_QFIIS`）官方只給當日快照、沒有歷史查詢端點。每日累積是
-  取得庫存趨勢的唯一辦法——**今天不開始存，三個月後才有得分析**。
 - git 每天只新增一個 blob，不必重寫既有檔案，repo 成長線性可控。
 - 所有衍生產物都能從快照重建，算錯了重跑 `build` 就好。
+
+唯一的例外是 `refresh`：外資持股一類的報表當天查不到，要等下一個交易日
+才公布，只能事後補進既有快照。補的時候只更新快照裡已存在的個股——價格是錨，
+沒有 K 線的日期不該憑空長出籌碼資料。
 
 一個交易日只需要 4 個「全市場報表」端點 × 市場數，約 8 次請求就能取得
 全部 1800 檔的價量與籌碼，**不需要逐檔迴圈**。這是整套架構能用免費排程
@@ -189,7 +212,7 @@ etl/
   indicators.py   SMA / EMA / MACD / 季線扣抵 / 盤整持續天數 / 迴歸斜率（純函式）
   screen.py       四組選股條件
   build.py        產出前端檔案
-  verify.py       端點探測與 OpenAPI 規格查詢
+  verify.py       端點探測、路徑試誤與 OpenAPI 規格查詢
 web/
   index.html      單頁應用，hash 路由
   styles.css      設計 token、深淺色
@@ -198,7 +221,7 @@ web/
   demo/           示範資料，由 tools/gen_demo_data.py 產生
 tools/
   gen_demo_data.py
-tests/            181 個測試，全部離線執行
+tests/            187 個測試，全部離線執行
 ```
 
 ---

@@ -19,6 +19,20 @@ MARKETS = {"twse": twse, "tpex": tpex}
 DATASETS = ("price", "institutional", "margin", "foreign")
 
 
+def fetch_one(day: Date, market: str, dataset: str) -> dict[str, dict]:
+    """只抓單一市場的單一資料集。供 refresh 事後補延遲公布的報表使用。"""
+    api_date = to_api_date(day)
+    try:
+        return MARKETS[market].FETCHERS[dataset](api_date) or {}
+    except NoDataForDate as exc:
+        log.info("%s %s %s：無資料（%s）", market, dataset, api_date, exc)
+    except DateMismatch as exc:
+        log.warning("%s", exc)
+    except Exception as exc:                              # noqa: BLE001
+        log.error("%s %s %s 抓取失敗：%s", market, dataset, api_date, exc)
+    return {}
+
+
 def fetch_date(day: Date, markets: list[str]) -> dict[str, dict] | None:
     """抓取指定日期的全市場資料。
 

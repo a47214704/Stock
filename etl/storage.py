@@ -110,6 +110,33 @@ def snapshot_rows(snapshot: dict):
             yield stock_id, dict(zip(fields, row))
 
 
+def patch_daily(date: str, updates: dict[str, dict]) -> int:
+    """把補抓到的欄位併進既有快照。
+
+    快照原則上是 append-only，這是唯一的例外：外資持股一類的報表當天抓不到，
+    要等下一個交易日才公布，只能事後補。只更新快照裡已存在的個股——價格是錨，
+    沒有 K 線的日期不該憑空長出籌碼資料。回傳實際更新的檔數。
+    """
+    snapshot = load_daily(date)
+    if not snapshot:
+        return 0
+
+    rows = dict(snapshot_rows(snapshot))
+    changed = 0
+    for stock_id, patch in updates.items():
+        row = rows.get(stock_id)
+        if row is None:
+            continue
+        before = {k: row.get(k) for k in patch}
+        row.update(patch)
+        if before != patch:
+            changed += 1
+
+    if changed:
+        save_daily(date, rows, snapshot.get("markets", []))
+    return changed
+
+
 def load_daily(date: str) -> dict | None:
     return read_json(daily_path(date))
 
