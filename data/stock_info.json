@@ -599,6 +599,10 @@
     "market": "twse",
     "name": "吉茂"
   },
+  "1589": {
+    "market": "twse",
+    "name": "永冠-KY"
+  },
   "1590": {
     "market": "twse",
     "name": "亞德客-KY"
@@ -2107,6 +2111,10 @@
     "market": "twse",
     "name": "彰銀"
   },
+  "2809": {
+    "market": "twse",
+    "name": "京城銀"
+  },
   "2812": {
     "market": "twse",
     "name": "台中銀"
@@ -3046,6 +3054,10 @@
   "3450": {
     "market": "twse",
     "name": "聯鈞"
+  },
+  "3454": {
+    "market": "twse",
+    "name": "晶睿"
   },
   "3455": {
     "market": "tpex",
@@ -5624,8 +5636,8 @@
     "name": "京晨科"
   },
   "6423": {
-    "market": "tpex",
-    "name": "億而得"
+    "market": "twse",
+    "name": "億而得-創"
   },
   "6425": {
     "market": "tpex",
