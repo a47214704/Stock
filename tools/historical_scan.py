@@ -33,6 +33,13 @@ HORIZONS = (5, 10, 20)
 GROUP_LABELS = {"consolidation": "盤整", "ma_turn_up": "季線扣底",
                 "chips": "籌碼面", "macd": "MACD"}
 
+# 籌碼面是三個條件的交集，拆開才看得出是三者都有貢獻，還是其中一個在帶動。
+CHIP_LABELS = {
+    "margin_declining": "融資遞減",
+    "foreign_increasing": "外資庫存增加",
+    "institutional_net_buy": "法人合計買超",
+}
+
 
 def trim(panel: dict) -> dict:
     return {sid: {**{k: s.get(k, []) for k in NEEDED},
@@ -74,6 +81,9 @@ def scan(cfg: ScreenConfig = DEFAULT_SCREEN, days: int = 400) -> dict:
             "date": dates[t], "index": t, "tradable": len(results),
             "groups": {g: [r["stock_id"] for r in results if r["groups"][g]]
                        for g in GROUPS},
+            "conditions": {c: [r["stock_id"] for r in results
+                               if r["conditions"][c]["pass"]]
+                           for c in CHIP_LABELS},
             "matched": [r["stock_id"] for r in results if r["pass_all"]],
             "near_miss": [r["stock_id"] for r in results if len(r["missing"]) == 1],
             "universe": [r["stock_id"] for r in results],
@@ -157,6 +167,24 @@ def render(scan_result: dict) -> str:
         signals.append(measure(scan_result, (lambda g: lambda r: r["groups"][g])(g),
                                f"單獨：{GROUP_LABELS[g]}"))
 
+    # 籌碼面拆解：三個子條件各自，以及兩兩交集
+    chip_signals = []
+    for c, label in CHIP_LABELS.items():
+        chip_signals.append(measure(
+            scan_result, (lambda c: lambda r: r["conditions"][c])(c),
+            f"單獨：{label}"))
+    keys = list(CHIP_LABELS)
+    for i in range(len(keys)):
+        for j in range(i + 1, len(keys)):
+            a, b = keys[i], keys[j]
+            chip_signals.append(measure(
+                scan_result,
+                (lambda a, b: lambda r: sorted(
+                    set(r["conditions"][a]) & set(r["conditions"][b])))(a, b),
+                f"{CHIP_LABELS[a]} ＋ {CHIP_LABELS[b]}"))
+    chip_signals.append(measure(scan_result, lambda r: r["groups"]["chips"],
+                                "三者全過（＝籌碼面）"))
+
     lines = [
         "# 歷史掃描",
         "",
@@ -218,6 +246,36 @@ def render(scan_result: dict) -> str:
     ]
 
     for sig in signals:
+        lines += [
+            f"### {sig['label']}",
+            "",
+            f"出現 {sig['occurrences']} 次，分布在 {sig['dates_with_signal']} 個基準日。",
+            "",
+        ]
+        if not sig["occurrences"]:
+            lines += ["整個期間都沒有出現。", ""]
+            continue
+        lines += [
+            "| 期間 | 樣本 | 報酬中位數 | 勝率 | 同日全市場中位數 "
+            "| 超額中位數 | 贏過同日市場 |",
+            "|---|---|---|---|---|---|---|",
+        ]
+        for h in HORIZONS:
+            d = sig["horizons"][h]
+            win = "—" if d["win_rate"] is None else f"{d['win_rate'] * 100:.0f}%"
+            beat = "—" if d["beat_rate"] is None else f"{d['beat_rate'] * 100:.0f}%"
+            lines.append(f"| {h} 日 | {d['n']} | {pct(d['median'])} | {win} "
+                         f"| {pct(d['baseline'])} | {pct(d['excess'])} | {beat} |")
+        lines.append("")
+
+    lines += [
+        "## 籌碼面拆解",
+        "",
+        "籌碼面是三個條件的交集。拆開看才知道是三者都有貢獻，"
+        "還是其中一個在帶動、其他兩個只是在減少樣本。",
+        "",
+    ]
+    for sig in chip_signals:
         lines += [
             f"### {sig['label']}",
             "",

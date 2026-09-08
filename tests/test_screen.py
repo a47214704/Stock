@@ -307,7 +307,8 @@ class TestScreenStock:
         """四項同時成立於可交易個股的機率極低，實用的產出是「差一項」的
         觀察名單，所以缺口要算好給前端。"""
         series = ideal_series()
-        series["total_net"] = [0] * len(series["close"])     # 法人沒買超
+        # 融資改成增加：籌碼面的必要條件之一不成立
+        series["margin_balance"] = [int(1e4 + 50 * i) for i in range(len(series["close"]))]
         result = screen_stock("9999", series)
         assert result["missing"] == ["chips"]
         assert result["pass_all"] is False
@@ -315,9 +316,30 @@ class TestScreenStock:
     def test_nothing_missing_when_all_pass(self):
         assert screen_stock("9999", ideal_series())["missing"] == []
 
-    def test_chips_group_needs_all_three(self):
+    def test_chips_group_needs_margin_and_foreign(self):
         series = ideal_series()
         series["margin_balance"] = [int(1e4 + 50 * i) for i in range(200)]   # 融資反而增加
         result = screen_stock("9999", series)
         assert result["groups"]["chips"] is False
         assert result["pass_all"] is False
+
+    def test_institutional_net_buy_is_optional_by_default(self):
+        """歷史掃描顯示法人合計買超對籌碼面沒有貢獻：
+        「融資遞減＋外資庫存增加」20 日超額 +1.02%、贏過市場 54%（樣本 12817），
+        加上法人買超後是 +1.01%、54%（樣本 7723）——效果相同、樣本少 66%。
+        因此預設不列為必要條件，但仍計算並顯示。
+        """
+        series = ideal_series()
+        series["total_net"] = [0] * len(series["close"])     # 法人沒買超
+        result = screen_stock("9999", series)
+        assert result["conditions"]["institutional_net_buy"]["pass"] is False
+        assert result["groups"]["chips"] is True, "法人買超不該擋住籌碼面"
+        assert result["pass_all"] is True
+
+    def test_institutional_can_be_made_mandatory(self):
+        series = ideal_series()
+        series["total_net"] = [0] * len(series["close"])
+        strict = dataclasses.replace(CFG, institutional_required=True)
+        result = screen_stock("9999", series, strict)
+        assert result["groups"]["chips"] is False
+        assert result["missing"] == ["chips"]

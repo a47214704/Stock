@@ -256,12 +256,26 @@ def check_macd(closes, cfg: ScreenConfig) -> dict:
 
 
 # 條件 → 所屬群組。群組全過才算符合該項需求。
+# 這份是完整對應（含所有條件），供前端列出標籤與工具列舉群組使用；
+# 實際評估時用 group_conditions()，籌碼面的成員會依設定調整。
 GROUPS = {
     "consolidation": ["consolidation"],
     "ma_turn_up": ["ma_turn_up"],
     "chips": ["margin_declining", "foreign_increasing", "institutional_net_buy"],
     "macd": ["macd"],
 }
+
+
+def group_conditions(cfg: ScreenConfig) -> dict[str, list[str]]:
+    """評估時實際採用的群組成員。
+
+    法人合計買超是否列入籌碼面由 cfg.institutional_required 決定——
+    歷史掃描顯示它對籌碼面沒有貢獻，只會砍掉一半以上的候選（見 config 註解）。
+    """
+    chips = ["margin_declining", "foreign_increasing"]
+    if cfg.institutional_required:
+        chips.append("institutional_net_buy")
+    return {**GROUPS, "chips": chips}
 
 
 def screen_stock(stock_id: str, series: dict, cfg: ScreenConfig = DEFAULT_SCREEN) -> dict:
@@ -280,7 +294,7 @@ def screen_stock(stock_id: str, series: dict, cfg: ScreenConfig = DEFAULT_SCREEN
 
     groups = {
         name: all(conditions[key]["pass"] for key in keys)
-        for name, keys in GROUPS.items()
+        for name, keys in group_conditions(cfg).items()
     }
     last_close = next((c for c in reversed(closes) if c is not None), None)
 
