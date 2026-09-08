@@ -149,7 +149,7 @@ def cmd_refresh(args) -> int:
 
 
 def cmd_discover(args) -> int:
-    problems = verify_mod.discover(args.market, args.grep)
+    problems = verify_mod.discover(args.market, args.grep, args.all)
     if problems:
         print(f"\n有 {problems} 個端點需要更正。")
     return 0
@@ -217,6 +217,7 @@ def main(argv=None) -> int:
         help="讀交易所的 OpenAPI 規格，列出實際端點並檢查設定是否正確")
     p.add_argument("--market", choices=["tpex", "twse"], default="tpex")
     p.add_argument("--grep", help="只列出路徑或說明含此關鍵字的端點")
+    p.add_argument("--all", action="store_true", help="列出規格中的全部端點")
     p.set_defaults(func=cmd_discover)
 
     p = sub.add_parser("verify", help="探測端點並印出實際欄位，用來校正欄位別名")

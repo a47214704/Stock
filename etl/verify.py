@@ -114,7 +114,26 @@ def _endpoint_paths(spec: dict) -> dict[str, str]:
     return out
 
 
-def discover(market: str, grep: str | None = None) -> int:
+def _spec_base(spec: dict) -> str:
+    """從規格取出 server 的基底路徑，用來判斷實際網址要不要加前綴。"""
+    servers = spec.get("servers")
+    if isinstance(servers, list) and servers and isinstance(servers[0], dict):
+        return str(servers[0].get("url", ""))
+    return str(spec.get("basePath", ""))
+
+
+def _same_endpoint(url: str, spec_paths: set[str]) -> bool:
+    """比對設定的網址是否對應規格中的某個路徑。
+
+    TPEx 的 swagger.json 裡路徑不含 /v1，但實際網址要加 /openapi/v1 前綴，
+    直接比字串會把可用的端點誤判為不存在（price 就被誤判過）。
+    因此比對時忽略前綴差異，以最後一段為準。
+    """
+    last = url.rstrip("/").rsplit("/", 1)[-1]
+    return any(p.rstrip("/").rsplit("/", 1)[-1] == last for p in spec_paths)
+
+
+def discover(market: str, grep: str | None = None, show_all: bool = False) -> int:
     """列出交易所實際提供的端點，並比對目前設定的路徑是否存在。
 
     TPEx 的端點名稱無法從公開文件可靠地推斷，猜錯時伺服器會回 HTML 錯誤頁，
@@ -137,7 +156,17 @@ def discover(market: str, grep: str | None = None) -> int:
     if not endpoints:
         print(f"✗ 規格中沒有 paths 區段：{_preview(spec, 200)}")
         return 1
-    print(f"規格共 {len(endpoints)} 個端點\n")
+    base = _spec_base(spec)
+    print(f"規格共 {len(endpoints)} 個端點")
+    print(f"規格宣告的 server 基底：{base or '（未宣告）'}")
+    print("注意：規格裡的路徑可能不含實際網址的版本前綴，"
+          "以本專案實測可用的網址為準。\n")
+
+    if show_all:
+        print(f"{'=' * 72}\n全部端點（共 {len(endpoints)} 個）")
+        for path, note in sorted(endpoints.items()):
+            print(f"  {path:<52} {note or ''}")
+        return 0
 
     if grep:
         needle = grep.lower()
@@ -154,10 +183,9 @@ def discover(market: str, grep: str | None = None) -> int:
     print(f"{'=' * 72}\n目前設定的端點是否存在於規格中")
     known = set(endpoints)
     for kind, full_url in configured.items():
-        suffix = "/" + full_url.split("/openapi/", 1)[-1] if "/openapi/" in full_url \
-            else "/" + full_url.rsplit("/", 1)[-1]
-        exists = suffix in known or any(k.endswith(suffix) for k in known)
-        print(f"  {kind:<15} {suffix:<48} {'✓ 存在' if exists else '✗ 不存在'}")
+        exists = _same_endpoint(full_url, known)
+        name = full_url.rstrip("/").rsplit("/", 1)[-1]
+        print(f"  {kind:<15} {name:<48} {'✓ 存在' if exists else '✗ 不存在'}")
         if not exists:
             problems += 1
 
@@ -179,14 +207,19 @@ def discover(market: str, grep: str | None = None) -> int:
             suggestions[kind] = matches[0][0]
 
         if suggestions:
-            base = SWAGGER[market].rsplit("/", 1)[0]
+            # 用目前設定的網址推出前綴，而不是從 swagger.json 的位置推——
+            # 規格路徑不含 /v1，照 swagger 位置拼會產出打不通的網址。
+            sample = next(iter(configured.values()), "")
+            prefix = sample.rstrip("/").rsplit("/", 1)[0] if sample else ""
             print(f"\n{'=' * 72}\n把確認過的路徑填回 etl/config.py 的 "
                   f"{market.upper()}_ENDPOINTS，例如：\n")
             print(f"{market.upper()}_ENDPOINTS = {{")
             for kind, path in suggestions.items():
-                print(f'    "{kind}": "{base}{path}",')
+                name = path.rstrip("/").rsplit("/", 1)[-1]
+                print(f'    "{kind}": f"{{{market.upper()}_OPENAPI}}/{name}",')
             print("}")
-            print("\n（以上只是關鍵字命中的第一個候選，請對照上面的說明挑對的那個）")
+            print(f"\n（前綴以目前設定的 {prefix} 為準；"
+                  f"以上只是關鍵字命中的第一個候選，請對照上面的說明挑對的那個）")
 
     return problems
 

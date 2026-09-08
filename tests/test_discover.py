@@ -4,10 +4,13 @@ TPEx 的端點名稱無法從公開文件可靠推斷，猜錯時伺服器回 HT
 discover 直接讀官方規格，所以規格的形狀要吃得夠寬。
 """
 from etl import config, verify
-from etl.verify import _endpoint_paths, discover
+from etl.verify import _endpoint_paths, _same_endpoint, _spec_base, discover
 
+# TPEx 的實際情形：swagger.json 裡的路徑**不含** /v1，
+# 但真正打得通的網址是 https://www.tpex.org.tw/openapi/v1/<path>。
 OAS3 = {
     "openapi": "3.0.1",
+    "servers": [{"url": "https://www.tpex.org.tw/openapi"}],
     "paths": {
         "/v1/tpex_mainboard_daily_close_quotes": {
             "get": {"summary": "上櫃股票每日收盤行情"},
@@ -49,10 +52,50 @@ class TestEndpointPaths:
         assert _endpoint_paths({}) == {}
 
 
+class TestSpecBase:
+    def test_reads_oas3_servers(self):
+        assert _spec_base(OAS3) == "https://www.tpex.org.tw/openapi"
+
+    def test_reads_oas2_base_path(self):
+        assert _spec_base({"basePath": "/openapi"}) == "/openapi"
+
+    def test_missing_is_empty(self):
+        assert _spec_base({}) == ""
+
+
+class TestSameEndpoint:
+    """規格路徑不含版本前綴，直接比字串會把可用的端點誤判為不存在。
+
+    這是實跑時真的發生過的誤判：設定的
+    /openapi/v1/tpex_mainboard_daily_close_quotes 明明可用（回傳 10991 列），
+    卻因為規格裡寫的是 /tpex_mainboard_daily_close_quotes 而被報成「不存在」。
+    """
+
+    SPEC = {"/tpex_mainboard_daily_close_quotes", "/tpex_3insti_daily_trading"}
+
+    def test_matches_despite_version_prefix(self):
+        assert _same_endpoint(
+            "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quotes",
+            self.SPEC)
+
+    def test_matches_without_prefix(self):
+        assert _same_endpoint(
+            "https://www.tpex.org.tw/openapi/tpex_3insti_daily_trading", self.SPEC)
+
+    def test_rejects_unknown_endpoint(self):
+        assert not _same_endpoint(
+            "https://www.tpex.org.tw/openapi/v1/tpex_3itrade_hedge_daily", self.SPEC)
+
+    def test_trailing_slash_is_ignored(self):
+        assert _same_endpoint(
+            "https://www.tpex.org.tw/openapi/v1/tpex_3insti_daily_trading/", self.SPEC)
+
+
 class TestDiscover:
     def test_reports_configured_endpoints_that_do_not_exist(self, monkeypatch, capsys):
         monkeypatch.setattr(verify, "get_json", lambda url, params=None: OAS3)
         monkeypatch.setattr(config, "TPEX_ENDPOINTS", {
+            # 設定含 /v1，規格不含——不該因此被誤判為不存在
             "price": "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quotes",
             "institutional": "https://www.tpex.org.tw/openapi/v1/tpex_3itrade_hedge_daily",
         })
@@ -64,8 +107,23 @@ class TestDiscover:
         assert "tpex_3itrade_hedge_daily" in out and "✗ 不存在" in out
         # 要給出候選，而不是只說「找不到」
         assert "tpex_3insti_trading_stock" in out
-        # 要能直接貼回設定檔
+        # 產生的片段要沿用設定檔的前綴常數，不能自己從 swagger 位置拼
         assert "TPEX_ENDPOINTS = {" in out
+        assert "{TPEX_OPENAPI}/tpex_3insti_trading_stock" in out
+
+    def test_all_lists_every_endpoint(self, monkeypatch, capsys):
+        monkeypatch.setattr(verify, "get_json", lambda url, params=None: OAS3)
+        assert discover("tpex", show_all=True) == 0
+        out = capsys.readouterr().out
+        for path in OAS3["paths"]:
+            assert path in out
+        assert "全部端點" in out
+
+    def test_reports_the_declared_server_base(self, monkeypatch, capsys):
+        monkeypatch.setattr(verify, "get_json", lambda url, params=None: OAS3)
+        monkeypatch.setattr(config, "TPEX_ENDPOINTS", {})
+        discover("tpex")
+        assert "https://www.tpex.org.tw/openapi" in capsys.readouterr().out
 
     def test_all_endpoints_present_reports_no_problem(self, monkeypatch, capsys):
         monkeypatch.setattr(verify, "get_json", lambda url, params=None: OAS3)

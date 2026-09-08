@@ -54,7 +54,8 @@ jobs:
           # 三個步驟都是唯讀探測，任一失敗不該中斷後面的診斷
           for step in \
             "TWSE 報表路徑試誤|probe $DATE_ARG" \
-            "TPEx OpenAPI 端點清單|discover --market tpex" \
+            "TPEx OpenAPI 端點比對|discover --market tpex" \
+            "TPEx 全部端點清單|discover --market tpex --all" \
             "欄位別名驗證|verify --market both $DATE_ARG"
           do
             title="${step%%|*}"

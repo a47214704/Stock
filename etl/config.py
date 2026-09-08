@@ -29,7 +29,8 @@ TWSE_ENDPOINTS = {
     # 三大法人買賣超日報
     "institutional": f"{TWSE_BASE}/fund/T86",
     # 融資融券餘額（selectType=STOCK 才有個股明細）
-    "margin": f"{TWSE_BASE}/margin/MI_MARGN",
+    # 分段是 marginTrading 而非 margin——由 probe 實測確認
+    "margin": f"{TWSE_BASE}/marginTrading/MI_MARGN",
     # 外資及陸資投資持股統計（外資庫存）
     "foreign": f"{TWSE_BASE}/fund/MI_QFIIS",
 }
@@ -47,7 +48,7 @@ TWSE_PATH_CANDIDATES = {
         "fund/T86", "fund/BFI82U", "foreign/T86", "afterTrading/T86",
     ],
     "margin": [
-        "margin/MI_MARGN", "marginTrading/MI_MARGN", "exchange/MI_MARGN",
+        "marginTrading/MI_MARGN", "exchange/MI_MARGN",
         "afterTrading/MI_MARGN", "fund/MI_MARGN", "credit/MI_MARGN",
     ],
     "foreign": [
@@ -72,10 +73,14 @@ TWSE_PARAMS = {
 # 使用前請先跑 `python -m etl discover`，它會讀官方 OpenAPI 規格、列出真實路徑，
 # 並直接指出這裡哪幾個對不上。
 # 另外 TPEx 的 openapi 端點多半只提供當日資料，上櫃無法回補歷史。
+# 注意：swagger.json 裡的路徑不含 /v1，實際網址要加上 /openapi/v1 前綴。
+# price 已實測可用（回傳 10991 列，含 ETF 與權證，程式會濾成普通股）。
 TPEX_ENDPOINTS = {
     "price": f"{TPEX_OPENAPI}/tpex_mainboard_daily_close_quotes",
-    "institutional": f"{TPEX_OPENAPI}/tpex_3itrade_hedge_daily",
-    "margin": f"{TPEX_OPENAPI}/tpex_margin_balance",
+    "institutional": f"{TPEX_OPENAPI}/tpex_3insti_daily_trading",
+    "margin": f"{TPEX_OPENAPI}/tpex_mainboard_margin_balance",
+    # 外資持股：關鍵字搜尋只找到董監事持股相關的端點，正確的還沒確認。
+    # 待 discover --all 列出全部 225 個端點後挑選。
     "foreign": f"{TPEX_OPENAPI}/tpex_foreign_dealers_hold",
 }
 
