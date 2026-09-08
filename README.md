@@ -123,8 +123,9 @@ python -m etl coverage
 推上 GitHub 後在 Actions 頁面啟用即可。
 
 前端要另外部署：Settings → Pages 把 Source 設為 **GitHub Actions**，
-然後跑一次 **Actions → 部署前端**。`pages.yml` 平常只在 push 到 `main`
-時自動觸發，所以在功能分支上開發時要用 Run workflow 手動部署。
+然後跑一次 **Actions → 部署前端**。之後 `main` 只要有 `web/` 或 `data/`
+的變動就會自動重新部署，所以每日 ETL commit 完資料，網站會跟著更新。
+在功能分支上開發時不會自動觸發，要用 Run workflow 手動部署。
 
 ### 日常指令
 
@@ -184,6 +185,18 @@ python -m etl discover --grep 融資       # 在 TPEx 官方規格裡搜端點
 
 五年約 128 MB，在 GitHub 的建議範圍內。若日後想再壓，可把兩年前的快照
 合併成年度檔案封存。
+
+---
+
+## 分支
+
+`main` 是主要分支，也是 GitHub Pages 與每日排程運作的分支：
+
+- **每日 ETL** 的 cron 在預設分支上執行，資料 commit 回同一個分支
+- **部署前端** 在 push 到 `main` 且動到 `web/` 或 `data/` 時自動觸發
+
+功能分支上開發時，ETL 與部署都要用 Run workflow 手動觸發，
+資料會 commit 到該功能分支而不是 `main`。
 
 ---
 
