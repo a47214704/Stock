@@ -1,0 +1,96 @@
+name: 端點診斷
+
+# 用途：不必在本機裝 Python，按一下就能試出交易所的正確端點路徑與欄位名稱。
+# 結果會寫成 docs/endpoint-report.md 並 commit 回 repo，方便直接讀與追蹤變化。
+on:
+  workflow_dispatch:
+    inputs:
+      date:
+        description: "測試用的交易日 YYYY-MM-DD（留空為昨天）"
+        type: string
+      commit_report:
+        description: "把報告 commit 回 repo"
+        type: boolean
+        default: true
+
+concurrency:
+  group: diagnose
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: 安裝相依套件
+        run: pip install -r requirements.txt
+
+      - name: 產生診斷報告
+        env:
+          DATE_ARG: ${{ inputs.date && format('--date {0}', inputs.date) || '' }}
+        run: |
+          mkdir -p docs
+          REPORT=docs/endpoint-report.md
+          {
+            echo "# 端點診斷報告"
+            echo
+            echo "產生時間：$(date -u '+%Y-%m-%d %H:%M:%S') UTC"
+            echo "測試日期參數：\`${DATE_ARG:-（預設：昨天）}\`"
+            echo
+            echo "此檔由 \`.github/workflows/diagnose.yml\` 產生，請勿手動編輯。"
+            echo "把下面各段列出的可用路徑填回 \`etl/config.py\` 即可。"
+          } > "$REPORT"
+
+          # 三個步驟都是唯讀探測，任一失敗不該中斷後面的診斷
+          for step in \
+            "TWSE 報表路徑試誤|probe $DATE_ARG" \
+            "TPEx OpenAPI 端點清單|discover --market tpex" \
+            "欄位別名驗證|verify --market both $DATE_ARG"
+          do
+            title="${step%%|*}"
+            cmd="${step#*|}"
+            echo "產生「$title」…"
+            {
+              echo
+              echo "## $title"
+              echo
+              echo '```'
+              echo "\$ python -m etl $cmd"
+            } >> "$REPORT"
+            python -m etl $cmd >> "$REPORT" 2>&1 || echo "（此步驟回報有問題，詳見上方輸出）" >> "$REPORT"
+            echo '```' >> "$REPORT"
+          done
+
+          echo "::group::報告內容"
+          cat "$REPORT"
+          echo "::endgroup::"
+
+      - name: 提交報告
+        if: inputs.commit_report
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/endpoint-report.md
+          if git diff --cached --quiet; then
+            echo "報告內容無變化，不產生 commit"
+            exit 0
+          fi
+          git commit -m "chore: 更新端點診斷報告"
+          for i in 1 2 3 4; do
+            if git push; then exit 0; fi
+            echo "推送失敗，第 $i 次重試"
+            sleep $((2 ** i))
+            git pull --rebase origin "${GITHUB_REF_NAME}"
+          done
+          echo "::error::推送失敗"
+          exit 1

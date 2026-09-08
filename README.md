@@ -20,6 +20,19 @@ pip install -r requirements-dev.txt
 python -m pytest -q          # 187 個測試，不需要網路
 ```
 
+### 不想在本機裝 Python？
+
+診斷步驟都能在 GitHub 上跑，runner 已經有 Python：
+
+**Actions → 端點診斷 → Run workflow**
+
+它會把三項診斷（TWSE 路徑試誤、TPEx 端點清單、欄位驗證）的結果寫成
+`docs/endpoint-report.md` 並 commit 回 repo，直接在 GitHub 上就能讀。
+回補歷史與每日抓取也一樣走 Actions（見下方第 4、6 步），
+全程不需要本機環境。
+
+下面每一步都同時給出本機指令與對應的 Actions 操作。
+
 ### 第一次部署，請照這個順序
 
 **第 1 步：試出 TWSE 的報表路徑**（必做）
@@ -27,6 +40,9 @@ python -m pytest -q          # 187 個測試，不需要網路
 ```bash
 python -m etl probe
 ```
+
+> 在 GitHub 上跑：**Actions → 端點診斷 → Run workflow**，
+> 結果看 `docs/endpoint-report.md` 的「TWSE 報表路徑試誤」一節。
 
 TWSE 的 rwd 路徑分段無法從網頁路徑推導——三大法人的網頁在 `/trading/foreign/`
 但 rwd 路徑是 `/rwd/zh/fund/T86`，兩者的分段名稱不一致。猜錯時伺服器回的是
@@ -50,6 +66,9 @@ TPEx 的端點名稱無法從公開文件可靠推斷，而且猜錯時伺服器
 並依關鍵字給出候選，最後印出可直接貼回 `TPEX_ENDPOINTS` 的片段。
 要自己找的話用 `python -m etl discover --grep 法人`。
 
+> 在 GitHub 上跑：同一個「端點診斷」workflow，
+> 結果看報告的「TPEx OpenAPI 端點清單」一節。
+
 TWSE 用的是 `rwd` 報表端點，不在 OpenAPI 規格裡，所以這步只查上櫃。
 
 **第 3 步：驗證欄位**（必做，5 分鐘）
@@ -63,14 +82,20 @@ python -m etl verify --date 2026-09-05
 照著印出的表頭去補 `etl/sources/twse.py` 裡的別名清單即可——欄位是以**表頭
 文字**定位的，所以只需要加別名，不必改索引。
 
+> 在 GitHub 上跑：同一個「端點診斷」workflow，
+> 結果看報告的「欄位別名驗證」一節。
+
 **第 4 步：回補歷史**
 
 ```bash
 python -m etl backfill --start 2026-03-01 --markets twse
 ```
 
-一天約 4 次請求、每次間隔 4 秒，回補一季約需 40 分鐘。也可以在 GitHub 上用
-Actions → 每日 ETL → Run workflow，選 `mode=backfill` 執行。
+一天約 4 次請求、每次間隔 4 秒，回補一季約需 40 分鐘。
+
+> 在 GitHub 上跑：**Actions → 每日 ETL → Run workflow**，`mode` 選
+> `backfill`、填入 `start`。回補完它會自動接著跑 `refresh` 與 `build` 並
+> commit 結果。
 
 > 上櫃（TPEx）的 OpenAPI 多半只提供當日資料，**無法回補歷史**，
 > 只能從導入日起每日累積。上市（TWSE）的報表都吃 `date` 參數，可以回補。
@@ -89,6 +114,10 @@ python -m etl coverage
 
 `.github/workflows/etl.yml` 已設定台北時間每個交易日 19:00 自動執行。
 推上 GitHub 後在 Actions 頁面啟用即可。
+
+前端要另外部署：Settings → Pages 把 Source 設為 **GitHub Actions**，
+然後跑一次 **Actions → 部署前端**。`pages.yml` 平常只在 push 到 `main`
+時自動觸發，所以在功能分支上開發時要用 Run workflow 手動部署。
 
 ### 日常指令
 
@@ -268,3 +297,4 @@ tests/            187 個測試，全部離線執行
 - 交易所公開 API 沒有正式使用授權，請維持低頻率抓取。
 
 相關評估文件見 `docs/data-sources.md` 與 `docs/frontend-only-architecture.md`。
+端點診斷的最新結果見 `docs/endpoint-report.md`（由 workflow 產生）。
