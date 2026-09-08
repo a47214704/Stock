@@ -434,9 +434,10 @@ async function renderDetail(root, stockId) {
   }
   const compact = store.compact.get(stockId) ?? null;
 
-  // 歷史檔只為入選名單產生，不在名單就不必發一次註定 404 的請求
+  // 圖資在部署時為全市場每一檔現算（見 etl/build.py 的 export_history），
+  // 所以任何個股都試著抓。本機只跑過 build 時只有入選名單有檔案，抓不到就降級。
   let history = store.history.get(stockId) ?? null;
-  if (result && !history) {
+  if (!history) {
     try {
       history = await getJSON(`${store.base}/history/${stockId}.json`);
       store.history.set(stockId, history);
@@ -482,8 +483,9 @@ async function renderDetail(root, stockId) {
       h("h2", { text: "四組條件" }),
       h("p", {
         class: "card-sub",
-        text: "此檔不在入選名單，只有各組的過／不過；完整的判斷依據與圖表"
-          + "只為入選名單產生。",
+        text: "此檔不在入選名單，只有各組的過／不過。每一項條件的實際數字"
+          + "（區間幅度、扣抵值、融資變化率等）只為入選名單產生，"
+          + "下方圖表則是全市場都有。",
       }),
       h("div", { style: "padding: 14px 20px 20px" }, [
         h("div", { class: "badges" }, Object.entries(GROUPS).map(([key, label]) =>
@@ -505,14 +507,13 @@ async function renderDetail(root, stockId) {
 
   if (history) {
     root.appendChild(chartsFor(history));
-  } else if (!result) {
+  } else {
     root.appendChild(h("div", { class: "notice" }, [
       h("div", {}, [
         h("strong", { text: "沒有歷史圖表。" }),
         h("span", {
-          text: "K 線與指標圖只為入選名單產生——全市場 1900 多檔每天全量改寫，"
-            + "repo 會無謂膨脹。若要看這檔的圖，把它的條件門檻調鬆讓它進名單，"
-            + "或直接查 data/daily 的每日快照。",
+          text: "圖資是在部署時為全市場現算的，本機只跑過 build 時只有入選名單"
+            + "有檔案。跑 python -m etl export --out web/demo/history 即可補上。",
         }),
       ]),
     ]));

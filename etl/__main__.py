@@ -100,6 +100,13 @@ def cmd_build(args) -> int:
     return 0
 
 
+def cmd_export(args) -> int:
+    """輸出全市場的歷史圖資到指定目錄，供部署時使用。"""
+    summary = build_mod.export_history(args.out, days=args.days)
+    print(json.dumps(summary, ensure_ascii=False, indent=2))
+    return 0
+
+
 def cmd_coverage(args) -> int:
     info = build_mod.coverage()
     print(json.dumps(info, ensure_ascii=False, indent=2))
@@ -208,6 +215,13 @@ def main(argv=None) -> int:
     p = sub.add_parser("build", help="由快照重建 signals 與前端資料")
     p.add_argument("--days", type=int, default=260, help="納入計算的交易日數")
     p.set_defaults(func=cmd_build)
+
+    p = sub.add_parser(
+        "export",
+        help="輸出全市場歷史圖資（不進 git，部署時現算）")
+    p.add_argument("--out", default="_site/data/history", help="輸出目錄")
+    p.add_argument("--days", type=int, default=260)
+    p.set_defaults(func=cmd_export)
 
     p = sub.add_parser("coverage", help="檢查已累積的資料是否足以判斷各條件")
     p.set_defaults(func=cmd_coverage)

@@ -30,7 +30,7 @@ def _round(values, digits=2):
 
 
 def write_history(stock_id: str, dates: list[str], series: dict,
-                  cfg: ScreenConfig) -> None:
+                  cfg: ScreenConfig, out_dir: str | None = None) -> None:
     closes = series.get("close", [])
     osc = macd(closes, cfg.macd_fast, cfg.macd_slow, cfg.macd_signal)["osc"]
     ma = sma(closes, cfg.ma_period)
@@ -48,8 +48,8 @@ def write_history(stock_id: str, dates: list[str], series: dict,
         for i in range(len(closes))
     ]
 
-    write_json(os.path.join(config.HISTORY_DIR, f"{stock_id}.json"), payload,
-               compact=True)
+    write_json(os.path.join(out_dir or config.HISTORY_DIR, f"{stock_id}.json"),
+               payload, compact=True)
 
 
 def prune_history(keep: set[str]) -> int:
@@ -133,6 +133,32 @@ def build(days: int = 260, cfg: ScreenConfig = DEFAULT_SCREEN) -> dict:
         "history_pruned": pruned,
     }
     log.info("build 完成：%s", summary)
+    return summary
+
+
+def export_history(out_dir: str, days: int = 260,
+                   cfg: ScreenConfig = DEFAULT_SCREEN) -> dict:
+    """為**全市場每一檔**輸出歷史序列，供前端畫圖。
+
+    這些檔案刻意不 commit 進 repo：1900 多檔每檔約 30KB，每天全量改寫等於
+    一天新增 59MB 的 blob，git 會無謂膨脹。改在部署時從每日快照現算，
+    產物只存在 GitHub Pages 的 artifact 裡——快照才是真實來源，
+    衍生的圖資隨時能重算。
+
+    這麼做才能讓名單外的個股也點得進去看圖。價格、季線、扣抵值與 MACD
+    四條線全部只由收盤價推導，資料本來就在快照裡，沒有理由看不到。
+    """
+    dates, panel = build_panel(days)
+    if not dates:
+        log.warning("data/daily 沒有任何快照，無法輸出圖資")
+        return {"stocks": 0, "dates": 0}
+
+    os.makedirs(out_dir, exist_ok=True)
+    for stock_id, series in panel.items():
+        write_history(stock_id, dates, series, cfg, out_dir=out_dir)
+
+    summary = {"stocks": len(panel), "dates": len(dates), "dir": out_dir}
+    log.info("圖資輸出完成：%s", summary)
     return summary
 
 

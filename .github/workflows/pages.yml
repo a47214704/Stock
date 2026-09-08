@@ -40,6 +40,14 @@ jobs:
           # 不含它剛推上去的資料。取分支名才拿得到含新資料的最新狀態。
           ref: ${{ github.event.workflow_run.head_branch || github.ref }}
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: 安裝相依套件
+        run: pip install -r requirements.txt
+
       - name: 組裝靜態站台
         run: |
           mkdir -p _site
@@ -53,6 +61,16 @@ jobs:
           fi
           # Pages 預設會走 Jekyll，跳過它以免底線開頭的檔案被忽略
           touch _site/.nojekyll
+
+      - name: 產生全市場歷史圖資
+        # 圖資刻意不進 git：1900 多檔每天全量改寫等於一天新增十幾 MB 的 blob。
+        # 改在這裡從每日快照現算，產物只存在 Pages 的 artifact 裡，
+        # 這樣名單外的個股也點得進去看圖。實測 1955 檔約 1.7 秒、16 MB。
+        if: hashFiles('data/daily/*.json') != ''
+        run: |
+          python -m etl export --out _site/data/history
+          echo "圖資檔數：$(ls _site/data/history | wc -l)"
+          du -sh _site/data/history
 
       - uses: actions/upload-pages-artifact@v3
         with:

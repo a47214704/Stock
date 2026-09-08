@@ -24,7 +24,7 @@
 
 ```bash
 pip install -r requirements-dev.txt
-python -m pytest -q          # 226 個測試，不需要網路
+python -m pytest -q          # 233 個測試，不需要網路
 ```
 
 ### 不想在本機裝 Python？
@@ -139,6 +139,7 @@ python -m etl fetch --date 2026-09-05    # 抓指定日期
 python -m etl build                      # 重算指標與選股結果
 python -m etl refresh --days 5            # 補抓延遲公布的報表（外資持股）
 python -m etl coverage                   # 檢查資料累積進度
+python -m etl export --out _site/data/history   # 全市場圖資（部署時自動跑）
 python -m etl probe                      # 試出 TWSE 報表路徑
 python -m etl discover --grep 融資       # 在 TPEx 官方規格裡搜端點
 ```
@@ -167,9 +168,18 @@ python -m etl discover --grep 融資       # 在 TPEx 官方規格裡搜端點
                   data/screen_all.json   全市場精簡結果
                   data/history/*.json    入選個股的 K 線與指標
                               │
-                              ▼
+                              ├── 部署時 export ──▶ 全市場每一檔的 K 線與指標
+                              ▼                     （只進 Pages，不進 git）
                         前端 fetch 同源 JSON
 ```
+
+**個股圖資不進 git。** K 線與指標序列在部署時由每日快照現算，只存在
+GitHub Pages 的 artifact 裡——1900 多檔每檔約 8 KB，每天全量改寫等於一天
+新增十幾 MB 的 blob，git 會無謂膨脹。快照才是真實來源，衍生的圖資隨時能
+重算，沒有理由存進版本控制。實測 1955 檔約 1.7 秒、16 MB。
+
+這麼做的好處是**全市場每一檔都點得進去看圖**，不限入選名單。
+`build` 仍會把入選名單的圖資寫進 `data/history/`，方便本機開發時不必跑 export。
 
 **每日快照是真實來源，原則上寫入後不再改動。** 這樣做有兩個理由：
 
@@ -242,8 +252,9 @@ ETL 每天 commit 新資料後會自動觸發重新部署。
 
 - **名單頁**：符合全部條件的檔數（英雄數字）、入選名單、可切換「顯示全市場」。
   搜尋、條件、排序在同一排篩選列，作用於下方所有內容。
-- **個股頁**：六項條件各自的判斷依據（含實際數字，不只是過／不過），
-  以及四張圖：價格與季線扣抵值、MACD 柱狀體、融資餘額、外資庫存。
+- **個股頁**：四張圖（價格與季線扣抵值、MACD 柱狀體、融資餘額、外資庫存），
+  全市場每一檔都有。入選名單另外顯示六項條件各自的判斷依據，
+  含實際數字而不只是過／不過。
 
 ### 幾個刻意的取捨
 
@@ -286,7 +297,7 @@ web/
   demo/           示範資料，由 tools/gen_demo_data.py 產生
 tools/
   gen_demo_data.py
-tests/            226 個測試，全部離線執行
+tests/            233 個測試，全部離線執行
 ```
 
 ---
