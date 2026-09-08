@@ -16,8 +16,8 @@ from typing import Sequence
 
 from .config import ScreenConfig, DEFAULT_SCREEN
 from .indicators import (
-    consolidation, ma_deduction, ma_slope_pct, macd, macd_turns_red,
-    percentile_rank, trend,
+    consolidation, consolidation_run, ma_deduction, ma_slope_pct, macd,
+    macd_turns_red, percentile_rank, trend,
 )
 
 PASS = "pass"
@@ -34,7 +34,12 @@ def _count_valid(values: Sequence) -> int:
 
 
 def check_consolidation(highs, lows, closes, cfg: ScreenConfig) -> dict:
-    """條件 1：近三個月高低區間夠窄，且季線接近水平（排除緩跌股）。"""
+    """條件 1：近三個月高低區間夠窄，且季線接近水平（排除緩跌股）。
+
+    過與不過看固定窗口（最近 60 日）；另外回報 `run_days`，即這個箱型實際
+    已經走了多久。通過與否只要求「至少三個月」，run_days 讓盤整四個月的
+    個股能和剛好三個月的區分開來——箱型走得越久，累積的能量越多。
+    """
     window = cfg.consolidation_window
     if _count_valid(closes) < window:
         return _result(INSUFFICIENT, need=window, have=_count_valid(closes))
@@ -47,6 +52,13 @@ def check_consolidation(highs, lows, closes, cfg: ScreenConfig) -> dict:
     narrow = box["range_pct"] <= cfg.consolidation_max_range_pct
     flat = slope is None or abs(slope) <= cfg.consolidation_max_abs_slope_pct
 
+    run = consolidation_run(
+        highs, lows, closes,
+        cfg.consolidation_max_range_pct,
+        cfg.consolidation_max_drift_ratio,
+        cfg.consolidation_run_min_days,
+    )
+
     return _result(
         PASS if (narrow and flat) else FAIL,
         range_pct=round(box["range_pct"], 4),
@@ -57,6 +69,9 @@ def check_consolidation(highs, lows, closes, cfg: ScreenConfig) -> dict:
         narrow=narrow,
         flat=flat,
         days=window,
+        run_days=run["days"] if run else None,
+        run_range_pct=round(run["range_pct"], 4) if run else None,
+        drift_ratio=round(run["drift_ratio"], 3) if run else None,
     )
 
 

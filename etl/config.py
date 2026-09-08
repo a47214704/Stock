@@ -68,6 +68,10 @@ class ScreenConfig:
     consolidation_max_range_pct: float = 0.15
     # 季線斜率接近零才算真盤整（避免抓到緩跌股）
     consolidation_max_abs_slope_pct: float = 0.0008   # 每日均線變動 / 價格
+    # 實際盤整持續天數的判定：淨漂移不得超過區間寬度的這個比例。
+    # 趨勢股單向走完整個區間，比值接近 1；箱型來回震盪，比值明顯偏低。
+    consolidation_max_drift_ratio: float = 0.5
+    consolidation_run_min_days: int = 20    # 短於此不回報持續天數（統計量不穩）
 
     # 2. 季線扣抵翻揚
     ma_period: int = 60

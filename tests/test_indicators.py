@@ -4,8 +4,8 @@ import math
 import pytest
 
 from etl.indicators import (
-    consolidation, ema, linreg_slope, ma_deduction, ma_slope_pct, macd,
-    macd_turns_red, percentile_rank, sma, trend,
+    consolidation, consolidation_run, ema, linreg_slope, ma_deduction,
+    ma_slope_pct, macd, macd_turns_red, percentile_rank, sma, trend,
 )
 
 
@@ -192,6 +192,80 @@ class TestConsolidation:
 
     def test_insufficient_data(self):
         assert consolidation([1.0] * 10, [1.0] * 10, [1.0] * 10, 60) is None
+
+
+class TestConsolidationRun:
+    """盤整持續天數。兩步判定：先用幅度往前擴張，再對最終區段檢驗淨漂移。"""
+
+    MAX_RANGE = 0.15
+    MAX_DRIFT = 0.5
+
+    def run(self, closes, **kwargs):
+        highs = [c * 1.01 for c in closes]
+        lows = [c * 0.99 for c in closes]
+        return consolidation_run(highs, lows, closes,
+                                 kwargs.get("max_range", self.MAX_RANGE),
+                                 kwargs.get("max_drift", self.MAX_DRIFT),
+                                 kwargs.get("min_window", 20))
+
+    def test_flat_series_runs_the_whole_length(self):
+        result = self.run([100.0 + (i % 3) * 0.5 for i in range(160)])
+        assert result["days"] == 160
+        assert result["drift_ratio"] < 0.05
+
+    def test_uptrend_is_not_a_consolidation(self):
+        """關鍵案例：趨勢股在區間拉開前必然有一段『夠窄』的天數，
+        只看幅度會把一路上漲報成盤整一個月。淨漂移檢驗就是為了擋這個。"""
+        assert self.run([float(50 + i) for i in range(160)]) is None
+
+    def test_slow_decline_is_not_a_consolidation(self):
+        assert self.run([100 - 0.15 * i for i in range(200)]) is None
+
+    def test_run_stops_at_the_edge_of_the_box(self):
+        """崩跌後才進入箱型：持續天數應該約等於箱型長度，不含崩跌段。"""
+        closes = [200 - 1.5 * i for i in range(60)] + [110 + (i % 4) * 0.8 for i in range(100)]
+        result = self.run(closes)
+        # 幅度門檻允許往前多吃幾天崩跌，但不該回推到整段崩跌
+        assert 100 <= result["days"] <= 115
+
+    def test_breakout_ends_the_run(self):
+        """已經突破起漲的股票，現在不是在盤整。"""
+        closes = [100.0 + (i % 3) * 0.5 for i in range(140)] + [101 + i * 0.9 for i in range(20)]
+        assert self.run(closes) is None
+
+    def test_oscillating_box_survives_a_directional_final_leg(self):
+        """箱型內部本來就有方向性波段。最後二十天剛好是其中一段上行時，
+        整個箱型不該被否定——這是漂移檢驗只做在最終區段而非逐長度的理由。"""
+        closes = [100 + 6 * math.sin(i / 9) for i in range(120)]
+        result = self.run(closes)
+        assert result is not None
+        assert result["days"] >= 40
+
+    def test_returns_none_below_min_window(self):
+        assert self.run([100.0] * 10, min_window=20) is None
+
+    def test_data_gap_stops_the_run(self):
+        closes = [100.0] * 50 + [None] + [100.0] * 40
+        highs = [None if c is None else c * 1.01 for c in closes]
+        lows = [None if c is None else c * 0.99 for c in closes]
+        result = consolidation_run(highs, lows, closes, 0.15, 0.5, 20)
+        assert result["days"] == 40          # 只算到斷點為止
+
+    def test_tighter_drift_threshold_rejects_more(self):
+        closes = [100 + 6 * math.sin(i / 9) for i in range(120)]
+        assert self.run(closes) is not None
+        assert self.run(closes, max_drift=0.05) is None
+
+    def test_reports_the_box_bounds(self):
+        closes = [100.0 if i % 2 else 104.0 for i in range(60)]
+        result = self.run(closes)
+        assert result["days"] == 60
+        assert result["low"] == pytest.approx(99.0)     # 100 × 0.99
+        assert result["high"] == pytest.approx(105.04)  # 104 × 1.01
+
+    def test_a_single_step_to_a_new_level_is_not_a_box(self):
+        """價格換到另一個水位後停住，淨漂移會超過箱寬——那是重新評價，不是箱型。"""
+        assert self.run([100.0] * 30 + [104.0] * 30) is None
 
 
 class TestTrend:

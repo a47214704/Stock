@@ -43,9 +43,13 @@ const CONDITIONS = {
   consolidation: {
     label: "盤整三個月以上", group: "consolidation",
     rows: c => [
-      ["區間幅度", fmt.pct(c.range_pct)],
+      // 判定看固定 60 日窗口，這裡另外顯示箱型實際已經走了多久
+      ["已盤整", c.run_days ? `${c.run_days} 個交易日` : "—"],
+      ["區間幅度（60 日）", fmt.pct(c.range_pct)],
       ["區間高／低", `${fmt.num(c.high)} / ${fmt.num(c.low)}`],
       ["現價在區間位置", c.position === null ? "—" : fmt.pct(c.position, 0)],
+      ["淨漂移／箱寬", c.drift_ratio === null || c.drift_ratio === undefined
+        ? "—" : fmt.num(c.drift_ratio, 2)],
       ["季線斜率", c.ma_slope_pct === null ? "—" : fmt.pct(c.ma_slope_pct, 3) + "/日"],
     ],
   },
@@ -196,6 +200,7 @@ function listRows() {
     return listed.map(r => ({
       id: r.stock_id, name: r.name, market: r.market, close: r.close,
       score: r.score, groups: r.groups, detail: r,
+      runDays: r.conditions?.consolidation?.run_days ?? null,
       statuses: Object.fromEntries(
         Object.entries(r.conditions).map(([k, v]) => [k, v.status])),
     }));
@@ -207,6 +212,7 @@ function listRows() {
   return all.rows.map(row => ({
     id: row[idx.stock_id], name: row[idx.name], market: row[idx.market],
     close: row[idx.close], score: row[idx.score],
+    runDays: idx.run_days === undefined ? null : row[idx.run_days],
     groups: {
       consolidation: !!row[idx.consolidation], ma_turn_up: !!row[idx.ma_turn_up],
       chips: !!row[idx.chips], macd: !!row[idx.macd],
@@ -254,6 +260,7 @@ function renderList(root) {
     onchange: e => { ui.sort = e.target.value; repaint(); },
   }, [
     h("option", { value: "score", text: "符合項數" }),
+    h("option", { value: "run", text: "盤整天數" }),
     h("option", { value: "code", text: "代號" }),
     h("option", { value: "close", text: "收盤價" }),
   ]);
@@ -289,7 +296,9 @@ function renderList(root) {
     rows.sort((a, b) => (
       ui.sort === "code" ? a.id.localeCompare(b.id)
         : ui.sort === "close" ? (b.close ?? 0) - (a.close ?? 0)
-          : (b.score - a.score) || a.id.localeCompare(b.id)
+          : ui.sort === "run" ? (b.runDays ?? -1) - (a.runDays ?? -1)
+            || a.id.localeCompare(b.id)
+            : (b.score - a.score) || a.id.localeCompare(b.id)
     ));
 
     if (!rows.length) {
@@ -304,6 +313,7 @@ function renderList(root) {
       h("th", { text: "代號 / 名稱" }),
       h("th", { text: "市場" }),
       h("th", { class: "num", text: "收盤" }),
+      h("th", { class: "num", text: "已盤整" }),
       h("th", { class: "num", text: "符合" }),
       h("th", { text: "條件" }),
     ])]);
@@ -326,6 +336,7 @@ function renderList(root) {
         ]),
         h("td", { text: r.market === "tpex" ? "上櫃" : "上市" }),
         h("td", { class: "num", text: fmt.num(r.close) }),
+        h("td", { class: "num", text: r.runDays ? `${r.runDays} 日` : "—" }),
         h("td", { class: "num", text: `${r.score} / 6` }),
         h("td", {}, [h("div", { class: "badges" },
           Object.entries(GROUPS).map(([key, label]) => {

@@ -1,7 +1,9 @@
 {
   "criteria": {
     "consolidation_max_abs_slope_pct": 0.0008,
+    "consolidation_max_drift_ratio": 0.5,
     "consolidation_max_range_pct": 0.15,
+    "consolidation_run_min_days": 20,
     "consolidation_window": 60,
     "deduction_forward_days": 20,
     "deduction_low_lookback": 120,
@@ -25,7 +27,7 @@
     "min_score_to_list": 4
   },
   "data_date": "2026-10-09",
-  "generated_at": "2026-09-08T09:36:27Z",
+  "generated_at": "2026-09-08T10:07:02Z",
   "matched": 1,
   "results": [
     {
@@ -33,6 +35,7 @@
       "conditions": {
         "consolidation": {
           "days": 60,
+          "drift_ratio": 0.207,
           "flat": true,
           "high": 63.92,
           "low": 60.27,
@@ -41,6 +44,8 @@
           "pass": true,
           "position": 0.792,
           "range_pct": 0.0586,
+          "run_days": 80,
+          "run_range_pct": 0.1413,
           "status": "pass"
         },
         "foreign_increasing": {
@@ -111,6 +116,7 @@
       "conditions": {
         "consolidation": {
           "days": 60,
+          "drift_ratio": 0.215,
           "flat": true,
           "high": 83.11,
           "low": 78.04,
@@ -119,6 +125,8 @@
           "pass": true,
           "position": 0.692,
           "range_pct": 0.0628,
+          "run_days": 81,
+          "run_range_pct": 0.1346,
           "status": "pass"
         },
         "foreign_increasing": {
@@ -189,6 +197,7 @@
       "conditions": {
         "consolidation": {
           "days": 60,
+          "drift_ratio": 0.043,
           "flat": true,
           "high": 149.85,
           "low": 136.44,
@@ -197,6 +206,8 @@
           "pass": true,
           "position": 0.726,
           "range_pct": 0.094,
+          "run_days": 81,
+          "run_range_pct": 0.1398,
           "status": "pass"
         },
         "foreign_increasing": {
@@ -267,6 +278,7 @@
       "conditions": {
         "consolidation": {
           "days": 60,
+          "drift_ratio": 0.017,
           "flat": true,
           "high": 173.01,
           "low": 159.49,
@@ -275,6 +287,8 @@
           "pass": true,
           "position": 0.984,
           "range_pct": 0.0812,
+          "run_days": 82,
+          "run_range_pct": 0.1458,
           "status": "pass"
         },
         "foreign_increasing": {

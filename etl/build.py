@@ -91,11 +91,12 @@ def build(days: int = 260, cfg: ScreenConfig = DEFAULT_SCREEN) -> dict:
         "generated_at": generated_at,
         "data_date": data_date,
         "columns": ["stock_id", "name", "market", "close", "score",
-                    "consolidation", "ma_turn_up", "chips", "macd"],
+                    "consolidation", "ma_turn_up", "chips", "macd", "run_days"],
         "rows": [
             [r["stock_id"], r["name"], r["market"], r["close"], r["score"],
              int(r["groups"]["consolidation"]), int(r["groups"]["ma_turn_up"]),
-             int(r["groups"]["chips"]), int(r["groups"]["macd"])]
+             int(r["groups"]["chips"]), int(r["groups"]["macd"]),
+             r["conditions"]["consolidation"].get("run_days")]
             for r in results
         ],
     }, compact=True)

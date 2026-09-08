@@ -240,6 +240,92 @@ def consolidation(highs: Sequence[Num], lows: Sequence[Num], closes: Sequence[Nu
     }
 
 
+def consolidation_run(highs: Sequence[Num], lows: Sequence[Num],
+                      closes: Sequence[Num], max_range_pct: float,
+                      max_drift_ratio: float, min_window: int = 20) -> dict | None:
+    """從最後一天往前擴張，回報「仍維持在同一個箱型內」的最長連續天數。
+
+    condition 檢查的是固定窗口（最近 60 日）夠不夠窄；這裡回答另一個問題：
+    這個箱型**已經走了多久**。盤整四個月和剛好三個月，用固定窗口看分數一樣，
+    但前者的能量累積更久。
+
+    做法分兩步，順序很重要：
+
+    1. **只用幅度往前擴張**，直到區間幅度超過門檻為止，取最長的那個長度。
+       箱型的定義就是價格待在一個範圍內，這一步在找那個範圍能回推多遠。
+    2. **對找到的區段檢驗淨漂移**：
+
+           drift_ratio = |迴歸斜率| × (天數 − 1) / (區間高 − 區間低)
+
+       趨勢股單向走完整個區間，比值接近 1；盤整股在區間內來回，淨漂移遠小於
+       區間寬度，比值明顯偏低。超過門檻表示這段其實是趨勢的前半段，不是箱型。
+
+    漂移檢驗只做在最終區段上，不是每個長度都做。箱型內部本來就會有方向性的
+    波段，最後二十天剛好是其中一段上行或下行時，逐長度檢驗會把整個箱型否定掉。
+
+    幅度門檻單獨用會誤判：任何趨勢股在區間拉開前都有一段「夠窄」的天數
+    （約為門檻 ÷ 每日漲跌幅），所以第 2 步不能省。反過來，固定的「每日斜率」
+    門檻也不適用——那是為 60 日窗口定的，短窗口雜訊主導、長度不同不可比，
+    改用相對於區間寬度的淨漂移才與長度和價位無關。
+
+    回傳 None 表示構不成 min_window 天以上的箱型。
+    """
+    n = len(closes)
+    if n == 0:
+        return None
+
+    high = float("-inf")
+    low = float("inf")
+    # 迴歸用的累加量。x 取「距今天數」的負值（昨天 -1、前天 -2……），
+    # 這樣往前擴張只是新增一個點，四個累加量都能 O(1) 更新。
+    sum_x = sum_y = sum_xy = sum_xx = 0.0
+    count = 0
+    best: dict | None = None
+
+    for length in range(1, n + 1):
+        i = n - length
+        close = closes[i]
+        if close is None:
+            break                      # 資料斷點，無法再往前認定為連續
+        close = float(close)
+        h = highs[i] if i < len(highs) and highs[i] is not None else close
+        low_i = lows[i] if i < len(lows) and lows[i] is not None else close
+        high = max(high, float(h))
+        low = min(low, float(low_i))
+
+        x = float(i - n)
+        sum_x += x
+        sum_y += close
+        sum_xy += x * close
+        sum_xx += x * x
+        count += 1
+
+        mean = sum_y / count
+        if mean <= 0:
+            break
+        range_pct = (high - low) / mean
+        if range_pct > max_range_pct:
+            break                      # 第 1 步：幅度撐不住就停在這裡
+
+        if length < min_window:
+            continue
+
+        denom = count * sum_xx - sum_x * sum_x
+        slope = ((count * sum_xy - sum_x * sum_y) / denom) if denom else 0.0
+        best = {"days": length, "range_pct": range_pct,
+                "slope": slope, "high": high, "low": low, "mean": mean}
+
+    if best is None:
+        return None
+
+    # 第 2 步：只對最終區段檢驗淨漂移
+    width = best["high"] - best["low"]
+    best["drift_ratio"] = (
+        abs(best["slope"]) * (best["days"] - 1) / width if width > 0 else 0.0
+    )
+    return best if best["drift_ratio"] <= max_drift_ratio else None
+
+
 def trend(values: Sequence[Num], window: int) -> dict | None:
     """籌碼序列的趨勢：期間變化率 + 迴歸斜率（正規化為每日變化率）。"""
     series = [float(v) for v in values[-window:] if v is not None]

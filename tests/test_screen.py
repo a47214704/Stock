@@ -46,6 +46,22 @@ class TestConsolidation:
         assert result["pass"] is False
         assert result["narrow"] is False
 
+    def test_reports_actual_run_length(self):
+        """過與不過看固定 60 日窗口，run_days 另外回報箱型實際走了多久。"""
+        closes = ideal_closes()
+        result = check_consolidation(
+            [c * 1.01 for c in closes], [c * 0.99 for c in closes], closes, CFG)
+        assert result["pass"] is True
+        assert result["days"] == CFG.consolidation_window      # 判定用的窗口
+        assert result["run_days"] > CFG.consolidation_window   # 實際走得更久
+        assert result["drift_ratio"] < CFG.consolidation_max_drift_ratio
+
+    def test_run_length_absent_when_not_a_box(self):
+        closes = [float(50 + i) for i in range(200)]
+        result = check_consolidation(closes, closes, closes, CFG)
+        assert result["pass"] is False
+        assert result["run_days"] is None
+
     def test_slow_decline_fails_even_when_narrow(self):
         """緩跌股的高低區間可能夠窄，但季線持續下彎，不該算盤整。
 
