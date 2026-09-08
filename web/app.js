@@ -452,23 +452,20 @@ function chartsFor(history) {
     },
   ));
 
-  // 2. MACD 柱狀體。正負由零軸上下的位置表達，顏色只是附帶台股慣例，
-  //    所以切成色盲友善配色不會讓任何資訊消失，但文字得跟著換。
-  const negLabel = colorblindSafe() ? "藍" : "綠";
+  // 2. MACD 柱狀體。正負由零軸上下的位置表達，紅綠只是附帶台股慣例。
   cards.appendChild(chartCard(
     "MACD 柱狀體",
-    `零軸之上為紅、之下為${negLabel}`,
+    "零軸之上為紅、之下為綠",
     null,
     plot => divergingBars(plot, {
-      dates, values: history.macd_osc ?? [], height: 180, negLabel,
-      negColor: colorblindSafe() ? "var(--down-safe)" : "var(--down)",
+      dates, values: history.macd_osc ?? [], height: 180,
     }),
     {
-      columns: [{ label: "日期" }, { label: "柱狀體", num: true }, { label: `紅／${negLabel}` }],
+      columns: [{ label: "日期" }, { label: "柱狀體", num: true }, { label: "紅／綠" }],
       rows: () => dates.map((d, i) => {
         const v = history.macd_osc?.[i];
         return [d, fmt.num(v, 3),
-          v === null || v === undefined ? "—" : (v >= 0 ? "紅" : negLabel)];
+          v === null || v === undefined ? "—" : (v >= 0 ? "紅" : "綠")];
       }).reverse(),
     },
   ));
@@ -512,7 +509,6 @@ function pref(key, fallback) {
 function setPref(key, value) {
   try { localStorage.setItem(key, value); } catch { /* 隱私模式下忽略 */ }
 }
-function colorblindSafe() { return pref("cbSafe", "0") === "1"; }
 
 function mountControls() {
   const host = document.getElementById("controls");
@@ -528,21 +524,8 @@ function mountControls() {
     },
   });
 
-  const cbBtn = h("button", {
-    class: "btn", type: "button",
-    "aria-pressed": String(colorblindSafe()),
-    text: "色盲友善",
-    title: "把 MACD 的綠柱換成藍色。紅綠對紅綠色盲的區辨度極低（ΔE 4.1），"
-      + "雖然柱狀體的正負是靠零軸上下的位置表達、資訊不會消失，仍提供這個選項。",
-    onclick: () => {
-      const next = colorblindSafe() ? "0" : "1";
-      setPref("cbSafe", next);
-      cbBtn.setAttribute("aria-pressed", String(next === "1"));
-      route();
-    },
-  });
 
-  host.replaceChildren(themeBtn, cbBtn);
+  host.replaceChildren(themeBtn);
 }
 
 /* --------------------------------------------------------------- 路由 */

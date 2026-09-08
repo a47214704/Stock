@@ -17,7 +17,6 @@
 
   --up:             #d03b3b;   /* 紅：柱狀體為正（台股慣例） */
   --down:           #0ca30c;   /* 綠：柱狀體為負 */
-  --down-safe:      #2a78d6;   /* 色盲友善模式下取代綠色 */
 
   --good:           #0ca30c;
   --warn:           #fab219;
@@ -36,7 +35,6 @@
     --grid: #2c2c2a;   --axis: #383835;
     --hairline: rgba(255, 255, 255, .10);
     --series-1: #3987e5; --series-2: #d95926; --series-3: #199e70;
-    --down-safe: #3987e5;
     --success-text: #0ca30c;
   }
 }
@@ -47,7 +45,6 @@
   --grid: #2c2c2a;   --axis: #383835;
   --hairline: rgba(255, 255, 255, .10);
   --series-1: #3987e5; --series-2: #d95926; --series-3: #199e70;
-  --down-safe: #3987e5;
   --success-text: #0ca30c;
 }
 
