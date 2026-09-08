@@ -27,9 +27,2954 @@
     "min_score_to_list": 4
   },
   "data_date": "2026-09-08",
-  "generated_at": "2026-09-08T11:30:47Z",
+  "generated_at": "2026-09-08T13:28:06Z",
   "matched": 0,
-  "results": [],
-  "trading_days": 1,
-  "universe": 1950
+  "results": [
+    {
+      "close": 41.7,
+      "conditions": {
+        "consolidation": {
+          "days": 60,
+          "drift_ratio": 0.014,
+          "flat": true,
+          "high": 44.2,
+          "low": 39.7,
+          "ma_slope_pct": 0.000181,
+          "narrow": true,
+          "pass": true,
+          "position": 0.444,
+          "range_pct": 0.1084,
+          "run_days": 74,
+          "run_range_pct": 0.1386,
+          "status": "pass"
+        },
+        "foreign_increasing": {
+          "basis": "shares",
+          "change_pct": 0.036,
+          "first": 159613430.0,
+          "increased": true,
+          "last": 165359746.0,
+          "pass": true,
+          "slope": 95171.812,
+          "status": "pass",
+          "uptrend": true
+        },
+        "institutional_net_buy": {
+          "days": 5,
+          "net_shares": 1943212,
+          "pass": true,
+          "status": "pass"
+        },
+        "ma_turn_up": {
+          "deducting_low": false,
+          "deduction": 41.75,
+          "deduction_percentile": 0.778,
+          "future_deduction_mean": 42.04,
+          "future_supports": false,
+          "ma": 41.52,
+          "ma_slope_pct": 0.000181,
+          "pass": false,
+          "rises_tomorrow": false,
+          "status": "fail",
+          "still_falling": false
+        },
+        "macd": {
+          "converge_days": 0,
+          "converging": false,
+          "days_since_cross": null,
+          "osc": -0.0268,
+          "pass": false,
+          "prev_osc": -0.0118,
+          "status": "fail",
+          "turned_red": false
+        },
+        "margin_declining": {
+          "change_pct": -0.1525,
+          "declined": true,
+          "downtrend": true,
+          "first": 3364.0,
+          "last": 2851.0,
+          "pass": true,
+          "slope": -4.401,
+          "status": "pass"
+        }
+      },
+      "groups": {
+        "chips": true,
+        "consolidation": true,
+        "ma_turn_up": false,
+        "macd": false
+      },
+      "insufficient": [],
+      "market": "twse",
+      "name": "聯華",
+      "pass_all": false,
+      "score": 4,
+      "stock_id": "1229"
+    },
+    {
+      "close": 33.4,
+      "conditions": {
+        "consolidation": {
+          "days": 60,
+          "drift_ratio": null,
+          "flat": true,
+          "high": 35.5,
+          "low": 33.0,
+          "ma_slope_pct": -0.000756,
+          "narrow": true,
+          "pass": true,
+          "position": 0.16,
+          "range_pct": 0.0741,
+          "run_days": null,
+          "run_range_pct": null,
+          "status": "pass"
+        },
+        "foreign_increasing": {
+          "basis": "shares",
+          "change_pct": 0.0571,
+          "first": 19122315.0,
+          "increased": true,
+          "last": 20215089.0,
+          "pass": true,
+          "slope": 22349.08,
+          "status": "pass",
+          "uptrend": true
+        },
+        "institutional_net_buy": {
+          "days": 5,
+          "net_shares": 203942,
+          "pass": true,
+          "status": "pass"
+        },
+        "ma_turn_up": {
+          "deducting_low": false,
+          "deduction": 35.15,
+          "deduction_percentile": 0.633,
+          "future_deduction_mean": 34.06,
+          "future_supports": false,
+          "ma": 33.73,
+          "ma_slope_pct": -0.000756,
+          "pass": false,
+          "rises_tomorrow": false,
+          "status": "fail",
+          "still_falling": true
+        },
+        "macd": {
+          "converge_days": 2,
+          "converging": false,
+          "days_since_cross": 3,
+          "osc": 0.016,
+          "pass": false,
+          "prev_osc": 0.0105,
+          "status": "fail",
+          "turned_red": false
+        },
+        "margin_declining": {
+          "change_pct": -0.5909,
+          "declined": true,
+          "downtrend": true,
+          "first": 22.0,
+          "last": 9.0,
+          "pass": true,
+          "slope": -0.236,
+          "status": "pass"
+        }
+      },
+      "groups": {
+        "chips": true,
+        "consolidation": true,
+        "ma_turn_up": false,
+        "macd": false
+      },
+      "insufficient": [],
+      "market": "twse",
+      "name": "黑松",
+      "pass_all": false,
+      "score": 4,
+      "stock_id": "1234"
+    },
+    {
+      "close": 11.0,
+      "conditions": {
+        "consolidation": {
+          "days": 60,
+          "drift_ratio": 0.269,
+          "flat": true,
+          "high": 12.0,
+          "low": 10.85,
+          "ma_slope_pct": -0.000533,
+          "narrow": true,
+          "pass": true,
+          "position": 0.13,
+          "range_pct": 0.1021,
+          "run_days": 90,
+          "run_range_pct": 0.1238,
+          "status": "pass"
+        },
+        "foreign_increasing": {
+          "basis": "shares",
+          "change_pct": 0.1208,
+          "first": 713704.0,
+          "increased": true,
+          "last": 799942.0,
+          "pass": true,
+          "slope": 2160.838,
+          "status": "pass",
+          "uptrend": true
+        },
+        "institutional_net_buy": {
+          "days": 5,
+          "net_shares": 9008,
+          "pass": true,
+          "status": "pass"
+        },
+        "ma_turn_up": {
+          "deducting_low": false,
+          "deduction": 11.6,
+          "deduction_percentile": 0.733,
+          "future_deduction_mean": 11.42,
+          "future_supports": false,
+          "ma": 11.26,
+          "ma_slope_pct": -0.000533,
+          "pass": false,
+          "rises_tomorrow": false,
+          "status": "fail",
+          "still_falling": true
+        },
+        "macd": {
+          "converge_days": 0,
+          "converging": false,
+          "days_since_cross": null,
+          "osc": -0.0311,
+          "pass": false,
+          "prev_osc": -0.0261,
+          "status": "fail",
+          "turned_red": false
+        },
+        "margin_declining": {
+          "change_pct": -0.2829,
+          "declined": true,
+          "downtrend": true,
+          "first": 1163.0,
+          "last": 834.0,
+          "pass": true,
+          "slope": -6.286,
+          "status": "pass"
+        }
+      },
+      "groups": {
+        "chips": true,
+        "consolidation": true,
+        "ma_turn_up": false,
+        "macd": false
+      },
+      "insufficient": [],
+      "market": "twse",
+      "name": "大將",
+      "pass_all": false,
+      "score": 4,
+      "stock_id": "1453"
+    },
+    {
+      "close": 10.05,
+      "conditions": {
+        "consolidation": {
+          "days": 60,
+          "drift_ratio": 0.007,
+          "flat": true,
+          "high": 11.45,
+          "low": 10.0,
+          "ma_slope_pct": -0.000483,
+          "narrow": true,
+          "pass": true,
+          "position": 0.034,
+          "range_pct": 0.14,
+          "run_days": 87,
+          "run_range_pct": 0.1464,
+          "status": "pass"
+        },
+        "foreign_increasing": {
+          "basis": "shares",
+          "change_pct": 0.0629,
+          "first": 8514920.0,
+          "increased": true,
+          "last": 9050733.0,
+          "pass": true,
+          "slope": 3945.818,
+          "status": "pass",
+          "uptrend": true
+        },
+        "institutional_net_buy": {
+          "days": 5,
+          "net_shares": 140507,
+          "pass": true,
+          "status": "pass"
+        },
+        "ma_turn_up": {
+          "deducting_low": false,
+          "deduction": 10.45,
+          "deduction_percentile": 0.822,
+          "future_deduction_mean": 10.49,
+          "future_supports": false,
+          "ma": 10.36,
+          "ma_slope_pct": -0.000483,
+          "pass": false,
+          "rises_tomorrow": false,
+          "status": "fail",
+          "still_falling": true
+        },
+        "macd": {
+          "converge_days": 0,
+          "converging": false,
+          "days_since_cross": null,
+          "osc": -0.0112,
+          "pass": false,
+          "prev_osc": -0.0122,
+          "status": "fail",
+          "turned_red": false
+        },
+        "margin_declining": {
+          "change_pct": -0.1787,
+          "declined": true,
+          "downtrend": true,
+          "first": 2373.0,
+          "last": 1949.0,
+          "pass": true,
+          "slope": -6.174,
+          "status": "pass"
+        }
+      },
+      "groups": {
+        "chips": true,
+        "consolidation": true,
+        "ma_turn_up": false,
+        "macd": false
+      },
+      "insufficient": [],
+      "market": "twse",
+      "name": "得力",
+      "pass_all": false,
+      "score": 4,
+      "stock_id": "1464"
+    },
+    {
+      "close": 66.4,
+      "conditions": {
+        "consolidation": {
+          "days": 60,
+          "drift_ratio": 0.069,
+          "flat": true,
+          "high": 69.8,
+          "low": 62.1,
+          "ma_slope_pct": 1.5e-05,
+          "narrow": true,
+          "pass": true,
+          "position": 0.558,
+          "range_pct": 0.1151,
+          "run_days": 72,
+          "run_range_pct": 0.1432,
+          "status": "pass"
+        },
+        "foreign_increasing": {
+          "basis": "shares",
+          "change_pct": 0.5182,
+          "first": 216643.0,
+          "increased": true,
+          "last": 328904.0,
+          "pass": true,
+          "slope": 2419.061,
+          "status": "pass",
+          "uptrend": true
+        },
+        "institutional_net_buy": {
+          "days": 5,
+          "net_shares": 2661,
+          "pass": true,
+          "status": "pass"
+        },
+        "ma_turn_up": {
+          "deducting_low": true,
+          "deduction": 65.3,
+          "deduction_percentile": 0.311,
+          "future_deduction_mean": 65.9,
+          "future_supports": true,
+          "ma": 66.93,
+          "ma_slope_pct": 1.5e-05,
+          "pass": false,
+          "rises_tomorrow": true,
+          "status": "fail",
+          "still_falling": false
+        },
+        "macd": {
+          "converge_days": 0,
+          "converging": false,
+          "days_since_cross": null,
+          "osc": -0.1337,
+          "pass": false,
+          "prev_osc": -0.133,
+          "status": "fail",
+          "turned_red": false
+        },
+        "margin_declining": {
+          "change_pct": -0.168,
+          "declined": true,
+          "downtrend": true,
+          "first": 244.0,
+          "last": 203.0,
+          "pass": true,
+          "slope": -0.301,
+          "status": "pass"
+        }
+      },
+      "groups": {
+        "chips": true,
+        "consolidation": true,
+        "ma_turn_up": false,
+        "macd": false
+      },
+      "insufficient": [],
+      "market": "twse",
+      "name": "江申",
+      "pass_all": false,
+      "score": 4,
+      "stock_id": "1525"
+    },
+    {
+      "close": 30.65,
+      "conditions": {
+        "consolidation": {
+          "days": 60,
+          "drift_ratio": 0.325,
+          "flat": true,
+          "high": 32.45,
+          "low": 30.45,
+          "ma_slope_pct": -0.000549,
+          "narrow": true,
+          "pass": true,
+          "position": 0.1,
+          "range_pct": 0.0639,
+          "run_days": 90,
+          "run_range_pct": 0.1099,
+          "status": "pass"
+        },
+        "foreign_increasing": {
+          "basis": "shares",
+          "change_pct": 0.0326,
+          "first": 6078891.0,
+          "increased": true,
+          "last": 6277106.0,
+          "pass": true,
+          "slope": 3548.589,
+          "status": "pass",
+          "uptrend": true
+        },
+        "institutional_net_buy": {
+          "days": 5,
+          "net_shares": 46585,
+          "pass": true,
+          "status": "pass"
+        },
+        "ma_turn_up": {
+          "deducting_low": false,
+          "deduction": 31.9,
+          "deduction_percentile": 0.8,
+          "future_deduction_mean": 31.93,
+          "future_supports": false,
+          "ma": 31.28,
+          "ma_slope_pct": -0.000549,
+          "pass": false,
+          "rises_tomorrow": false,
+          "status": "fail",
+          "still_falling": true
+        },
+        "macd": {
+          "converge_days": 1,
+          "converging": false,
+          "days_since_cross": 12,
+          "osc": 0.0254,
+          "pass": false,
+          "prev_osc": 0.0291,
+          "status": "fail",
+          "turned_red": false
+        },
+        "margin_declining": {
+          "change_pct": -0.1962,
+          "declined": true,
+          "downtrend": true,
+          "first": 372.0,
+          "last": 299.0,
+          "pass": true,
+          "slope": -1.441,
+          "status": "pass"
+        }
+      },
+      "groups": {
+        "chips": true,
+        "consolidation": true,
+        "ma_turn_up": false,
+        "macd": false
+      },
+      "insufficient": [],
+      "market": "twse",
+      "name": "三洋電",
+      "pass_all": false,
+      "score": 4,
+      "stock_id": "1614"
+    },
+    {
+      "close": 32.6,
+      "conditions": {
+        "consolidation": {
+          "days": 60,
+          "drift_ratio": 0.061,
+          "flat": true,
+          "high": 34.5,
+          "low": 31.25,
+          "ma_slope_pct": 0.000661,
+          "narrow": true,
+          "pass": true,
+          "position": 0.415,
+          "range_pct": 0.0992,
+          "run_days": 89,
+          "run_range_pct": 0.1484,
+          "status": "pass"
+        },
+        "foreign_increasing": {
+          "basis": "shares",
+          "change_pct": 0.1202,
+          "first": 22997293.0,
+          "increased": true,
+          "last": 25762686.0,
+          "pass": true,
+          "slope": 45565.311,
+          "status": "pass",
+          "uptrend": true
+        },
+        "institutional_net_buy": {
+          "days": 5,
+          "net_shares": 64907,
+          "pass": true,
+          "status": "pass"
+        },
+        "ma_turn_up": {
+          "deducting_low": true,
+          "deduction": 31.5,
+          "deduction_percentile": 0.278,
+          "future_deduction_mean": 32.04,
+          "future_supports": true,
+          "ma": 32.75,
+          "ma_slope_pct": 0.000661,
+          "pass": false,
+          "rises_tomorrow": true,
+          "status": "fail",
+          "still_falling": false
+        },
+        "macd": {
+          "converge_days": 0,
+          "converging": false,
+          "days_since_cross": null,
+          "osc": -0.0115,
+          "pass": false,
+          "prev_osc": -0.0154,
+          "status": "fail",
+          "turned_red": false
+        },
+        "margin_declining": {
+          "change_pct": -0.3151,
+          "declined": true,
+          "downtrend": true,
+          "first": 384.0,
+          "last": 263.0,
+          "pass": true,
+          "slope": -1.81,
+          "status": "pass"
+        }
+      },
+      "groups": {
+        "chips": true,
+        "consolidation": true,
+        "ma_turn_up": false,
+        "macd": false
+      },
+      "insufficient": [],
+      "market": "twse",
+      "name": "南僑",
+      "pass_all": false,
+      "score": 4,
+      "stock_id": "1702"
+    },
+    {
+      "close": 19.1,
+      "conditions": {
+        "consolidation": {
+          "days": 60,
+          "drift_ratio": 0.036,
+          "flat": true,
+          "high": 19.95,
+          "low": 18.25,
+          "ma_slope_pct": 0.000298,
+          "narrow": true,
+          "pass": true,
+          "position": 0.5,
+          "range_pct": 0.0895,
+          "run_days": 75,
+          "run_range_pct": 0.1447,
+          "status": "pass"
+        },
+        "foreign_increasing": {
+          "basis": "shares",
+          "change_pct": 0.2156,
+          "first": 1938499936.0,
+          "increased": true,
+          "last": 2356423642.0,
+          "pass": true,
+          "slope": 5826426.761,
+          "status": "pass",
+          "uptrend": true
+        },
+        "institutional_net_buy": {
+          "days": 5,
+          "net_shares": 9123947,
+          "pass": true,
+          "status": "pass"
+        },
+        "ma_turn_up": {
+          "deducting_low": true,
+          "deduction": 19.0,
+          "deduction_percentile": 0.433,
+          "future_deduction_mean": 18.87,
+          "future_supports": true,
+          "ma": 18.99,
+          "ma_slope_pct": 0.000298,
+          "pass": false,
+          "rises_tomorrow": true,
+          "status": "fail",
+          "still_falling": false
+        },
+        "macd": {
+          "converge_days": 0,
+          "converging": false,
+          "days_since_cross": null,
+          "osc": -0.0212,
+          "pass": false,
+          "prev_osc": -0.0283,
+          "status": "fail",
+          "turned_red": false
+        },
+        "margin_declining": {
+          "change_pct": -0.1255,
+          "declined": true,
+          "downtrend": true,
+          "first": 45573.0,
+          "last": 39854.0,
+          "pass": true,
+          "slope": -116.384,
+          "status": "pass"
+        }
+      },
+      "groups": {
+        "chips": true,
+        "consolidation": true,
+        "ma_turn_up": false,
+        "macd": false
+      },
+      "insufficient": [],
+      "market": "twse",
+      "name": "中鋼",
+      "pass_all": false,
+      "score": 4,
+      "stock_id": "2002"
+    },
+    {
+      "close": 30.75,
+      "conditions": {
+        "consolidation": {
+          "days": 60,
+          "drift_ratio": null,
+          "flat": true,
+          "high": 31.9,
+          "low": 28.85,
+          "ma_slope_pct": 0.000657,
+          "narrow": true,
+          "pass": true,
+          "position": 0.623,
+          "range_pct": 0.0994,
+          "run_days": null,
+          "run_range_pct": null,
+          "status": "pass"
+        },
+        "foreign_increasing": {
+          "basis": "shares",
+          "change_pct": 0.02,
+          "first": 14710183.0,
+          "increased": true,
+          "last": 15004607.0,
+          "pass": true,
+          "slope": 6404.46,
+          "status": "pass",
+          "uptrend": true
+        },
+        "institutional_net_buy": {
+          "days": 4,
+          "net_shares": 24124,
+          "pass": true,
+          "status": "pass"
+        },
+        "ma_turn_up": {
+          "deducting_low": true,
+          "deduction": 30.3,
+          "deduction_percentile": 0.422,
+          "future_deduction_mean": 30.44,
+          "future_supports": true,
+          "ma": 30.69,
+          "ma_slope_pct": 0.000657,
+          "pass": false,
+          "rises_tomorrow": true,
+          "status": "fail",
+          "still_falling": false
+        },
+        "macd": {
+          "converge_days": 1,
+          "converging": false,
+          "days_since_cross": 1,
+          "osc": 0.013,
+          "pass": false,
+          "prev_osc": 0.0263,
+          "status": "fail",
+          "turned_red": true
+        },
+        "margin_declining": {
+          "change_pct": -0.3867,
+          "declined": true,
+          "downtrend": true,
+          "first": 150.0,
+          "last": 92.0,
+          "pass": true,
+          "slope": -1.179,
+          "status": "pass"
+        }
+      },
+      "groups": {
+        "chips": true,
+        "consolidation": true,
+        "ma_turn_up": false,
+        "macd": false
+      },
+      "insufficient": [],
+      "market": "twse",
+      "name": "高興昌",
+      "pass_all": false,
+      "score": 4,
+      "stock_id": "2008"
+    },
+    {
+      "close": 64.7,
+      "conditions": {
+        "consolidation": {
+          "days": 60,
+          "drift_ratio": 0.415,
+          "flat": true,
+          "high": 67.6,
+          "low": 60.2,
+          "ma_slope_pct": 0.000678,
+          "narrow": true,
+          "pass": true,
+          "position": 0.608,
+          "range_pct": 0.1166,
+          "run_days": 90,
+          "run_range_pct": 0.1173,
+          "status": "pass"
+        },
+        "foreign_increasing": {
+          "basis": "shares",
+          "change_pct": 0.0317,
+          "first": 72395566.0,
+          "increased": true,
+          "last": 74690574.0,
+          "pass": true,
+          "slope": 58475.882,
+          "status": "pass",
+          "uptrend": true
+        },
+        "institutional_net_buy": {
+          "days": 5,
+          "net_shares": 165417,
+          "pass": true,
+          "status": "pass"
+        },
+        "ma_turn_up": {
+          "deducting_low": true,
+          "deduction": 64.0,
+          "deduction_percentile": 0.167,
+          "future_deduction_mean": 61.69,
+          "future_supports": true,
+          "ma": 63.46,
+          "ma_slope_pct": 0.000678,
+          "pass": false,
+          "rises_tomorrow": true,
+          "status": "fail",
+          "still_falling": false
+        },
+        "macd": {
+          "converge_days": 0,
+          "converging": false,
+          "days_since_cross": null,
+          "osc": -0.001,
+          "pass": false,
+          "prev_osc": -0.0041,
+          "status": "fail",
+          "turned_red": false
+        },
+        "margin_declining": {
+          "change_pct": -0.1892,
+          "declined": true,
+          "downtrend": true,
+          "first": 37.0,
+          "last": 30.0,
+          "pass": true,
+          "slope": -0.028,
+          "status": "pass"
+        }
+      },
+      "groups": {
+        "chips": true,
+        "consolidation": true,
+        "ma_turn_up": false,
+        "macd": false
+      },
+      "insufficient": [],
+      "market": "twse",
+      "name": "豐興",
+      "pass_all": false,
+      "score": 4,
+      "stock_id": "2015"
+    },
+    {
+      "close": 21.8,
+      "conditions": {
+        "consolidation": {
+          "days": 60,
+          "drift_ratio": 0.035,
+          "flat": true,
+          "high": 22.3,
+          "low": 20.85,
+          "ma_slope_pct": 0.000248,
+          "narrow": true,
+          "pass": true,
+          "position": 0.655,
+          "range_pct": 0.0675,
+          "run_days": 90,
+          "run_range_pct": 0.079,
+          "status": "pass"
+        },
+        "foreign_increasing": {
+          "basis": "shares",
+          "change_pct": 0.199,
+          "first": 4427189.0,
+          "increased": true,
+          "last": 5308121.0,
+          "pass": true,
+          "slope": 18572.105,
+          "status": "pass",
+          "uptrend": true
+        },
+        "institutional_net_buy": {
+          "days": 5,
+          "net_shares": 132319,
+          "pass": true,
+          "status": "pass"
+        },
+        "ma_turn_up": {
+          "deducting_low": false,
+          "deduction": 21.4,
+          "deduction_percentile": 0.567,
+          "future_deduction_mean": 21.56,
+          "future_supports": true,
+          "ma": 21.49,
+          "ma_slope_pct": 0.000248,
+          "pass": false,
+          "rises_tomorrow": true,
+          "status": "fail",
+          "still_falling": false
+        },
+        "macd": {
+          "converge_days": 0,
+          "converging": false,
+          "days_since_cross": null,
+          "osc": -0.011,
+          "pass": false,
+          "prev_osc": -0.0095,
+          "status": "fail",
+          "turned_red": false
+        },
+        "margin_declining": {
+          "change_pct": -0.2667,
+          "declined": true,
+          "downtrend": true,
+          "first": 885.0,
+          "last": 649.0,
+          "pass": true,
+          "slope": -4.733,
+          "status": "pass"
+        }
+      },
+      "groups": {
+        "chips": true,
+        "consolidation": true,
+        "ma_turn_up": false,
+        "macd": false
+      },
+      "insufficient": [],
+      "market": "twse",
+      "name": "美亞",
+      "pass_all": false,
+      "score": 4,
+      "stock_id": "2020"
+    },
+    {
+      "close": 17.8,
+      "conditions": {
+        "consolidation": {
+          "days": 60,
+          "drift_ratio": 0.296,
+          "flat": true,
+          "high": 19.65,
+          "low": 17.7,
+          "ma_slope_pct": 9e-06,
+          "narrow": true,
+          "pass": true,
+          "position": 0.051,
+          "range_pct": 0.1045,
+          "run_days": 90,
+          "run_range_pct": 0.1053,
+          "status": "pass"
+        },
+        "foreign_increasing": {
+          "basis": "shares",
+          "change_pct": 0.3261,
+          "first": 13513471.0,
+          "increased": true,
+          "last": 17919952.0,
+          "pass": true,
+          "slope": 74578.48,
+          "status": "pass",
+          "uptrend": true
+        },
+        "institutional_net_buy": {
+          "days": 5,
+          "net_shares": 48788,
+          "pass": true,
+          "status": "pass"
+        },
+        "ma_turn_up": {
+          "deducting_low": true,
+          "deduction": 18.15,
+          "deduction_percentile": 0.433,
+          "future_deduction_mean": 18.43,
+          "future_supports": false,
+          "ma": 18.65,
+          "ma_slope_pct": 9e-06,
+          "pass": false,
+          "rises_tomorrow": false,
+          "status": "fail",
+          "still_falling": false
+        },
+        "macd": {
+          "converge_days": 0,
+          "converging": false,
+          "days_since_cross": null,
+          "osc": -0.0855,
+          "pass": false,
+          "prev_osc": -0.0703,
+          "status": "fail",
+          "turned_red": false
+        },
+        "margin_declining": {
+          "change_pct": -0.1939,
+          "declined": true,
+          "downtrend": true,
+          "first": 3977.0,
+          "last": 3206.0,
+          "pass": true,
+          "slope": -13.215,
+          "status": "pass"
+        }
+      },
+      "groups": {
+        "chips": true,
+        "consolidation": true,
+        "ma_turn_up": false,
+        "macd": false
+      },
+      "insufficient": [],
+      "market": "twse",
+      "name": "泰豐",
+      "pass_all": false,
+      "score": 4,
+      "stock_id": "2102"
+    },
+    {
+      "close": 233.0,
+      "conditions": {
+        "consolidation": {
+          "days": 60,
+          "drift_ratio": 0.137,
+          "flat": true,
+          "high": 246.5,
+          "low": 218.0,
+          "ma_slope_pct": 5.8e-05,
+          "narrow": true,
+          "pass": true,
+          "position": 0.526,
+          "range_pct": 0.1241,
+          "run_days": 71,
+          "run_range_pct": 0.1461,
+          "status": "pass"
+        },
+        "foreign_increasing": {
+          "basis": "shares",
+          "change_pct": 0.0594,
+          "first": 3038251.0,
+          "increased": true,
+          "last": 3218589.0,
+          "pass": true,
+          "slope": 3868.016,
+          "status": "pass",
+          "uptrend": true
+        },
+        "institutional_net_buy": {
+          "days": 5,
+          "net_shares": 67778,
+          "pass": true,
+          "status": "pass"
+        },
+        "ma_turn_up": {
+          "deducting_low": false,
+          "deduction": 238.0,
+          "deduction_percentile": 0.889,
+          "future_deduction_mean": 235.3,
+          "future_supports": false,
+          "ma": 229.6,
+          "ma_slope_pct": 5.8e-05,
+          "pass": false,
+          "rises_tomorrow": false,
+          "status": "fail",
+          "still_falling": false
+        },
+        "macd": {
+          "converge_days": 3,
+          "converging": true,
+          "days_since_cross": 10,
+          "osc": 0.756,
+          "pass": false,
+          "prev_osc": 0.7939,
+          "status": "fail",
+          "turned_red": false
+        },
+        "margin_declining": {
+          "change_pct": -0.3137,
+          "declined": true,
+          "downtrend": true,
+          "first": 153.0,
+          "last": 105.0,
+          "pass": true,
+          "slope": -0.577,
+          "status": "pass"
+        }
+      },
+      "groups": {
+        "chips": true,
+        "consolidation": true,
+        "ma_turn_up": false,
+        "macd": false
+      },
+      "insufficient": [],
+      "market": "twse",
+      "name": "汎德永業",
+      "pass_all": false,
+      "score": 4,
+      "stock_id": "2247"
+    },
+    {
+      "close": 17.9,
+      "conditions": {
+        "consolidation": {
+          "days": 60,
+          "drift_ratio": 0.461,
+          "flat": true,
+          "high": 18.85,
+          "low": 16.45,
+          "ma_slope_pct": -0.000527,
+          "narrow": true,
+          "pass": true,
+          "position": 0.604,
+          "range_pct": 0.1355,
+          "run_days": 65,
+          "run_range_pct": 0.1351,
+          "status": "pass"
+        },
+        "foreign_increasing": {
+          "basis": "shares",
+          "change_pct": 0.075,
+          "first": 3074079.0,
+          "increased": true,
+          "last": 3304696.0,
+          "pass": true,
+          "slope": 6575.982,
+          "status": "pass",
+          "uptrend": true
+        },
+        "institutional_net_buy": {
+          "days": 5,
+          "net_shares": 20038,
+          "pass": true,
+          "status": "pass"
+        },
+        "ma_turn_up": {
+          "deducting_low": false,
+          "deduction": 18.45,
+          "deduction_percentile": 0.589,
+          "future_deduction_mean": 18.22,
+          "future_supports": false,
+          "ma": 17.72,
+          "ma_slope_pct": -0.000527,
+          "pass": false,
+          "rises_tomorrow": false,
+          "status": "fail",
+          "still_falling": true
+        },
+        "macd": {
+          "converge_days": 3,
+          "converging": true,
+          "days_since_cross": 21,
+          "osc": 0.0504,
+          "pass": false,
+          "prev_osc": 0.0569,
+          "status": "fail",
+          "turned_red": false
+        },
+        "margin_declining": {
+          "change_pct": -0.3626,
+          "declined": true,
+          "downtrend": true,
+          "first": 91.0,
+          "last": 58.0,
+          "pass": true,
+          "slope": -0.632,
+          "status": "pass"
+        }
+      },
+      "groups": {
+        "chips": true,
+        "consolidation": true,
+        "ma_turn_up": false,
+        "macd": false
+      },
+      "insufficient": [],
+      "market": "twse",
+      "name": "燦坤",
+      "pass_all": false,
+      "score": 4,
+      "stock_id": "2430"
+    },
+    {
+      "close": 8.47,
+      "conditions": {
+        "consolidation": {
+          "days": 60,
+          "drift_ratio": null,
+          "flat": true,
+          "high": 8.73,
+          "low": 8.04,
+          "ma_slope_pct": 0.000698,
+          "narrow": true,
+          "pass": true,
+          "position": 0.623,
+          "range_pct": 0.0826,
+          "run_days": null,
+          "run_range_pct": null,
+          "status": "pass"
+        },
+        "foreign_increasing": {
+          "basis": "shares",
+          "change_pct": 0.0769,
+          "first": 41066178.0,
+          "increased": true,
+          "last": 44224472.0,
+          "pass": true,
+          "slope": 13333.56,
+          "status": "pass",
+          "uptrend": true
+        },
+        "institutional_net_buy": {
+          "days": 5,
+          "net_shares": 1842119,
+          "pass": true,
+          "status": "pass"
+        },
+        "ma_turn_up": {
+          "deducting_low": false,
+          "deduction": 8.13,
+          "deduction_percentile": 0.533,
+          "future_deduction_mean": 8.27,
+          "future_supports": true,
+          "ma": 8.35,
+          "ma_slope_pct": 0.000698,
+          "pass": false,
+          "rises_tomorrow": true,
+          "status": "fail",
+          "still_falling": false
+        },
+        "macd": {
+          "converge_days": 4,
+          "converging": true,
+          "days_since_cross": 9,
+          "osc": 0.0201,
+          "pass": false,
+          "prev_osc": 0.0183,
+          "status": "fail",
+          "turned_red": false
+        },
+        "margin_declining": {
+          "change_pct": -0.3373,
+          "declined": true,
+          "downtrend": true,
+          "first": 3629.0,
+          "last": 2405.0,
+          "pass": true,
+          "slope": -23.519,
+          "status": "pass"
+        }
+      },
+      "groups": {
+        "chips": true,
+        "consolidation": true,
+        "ma_turn_up": false,
+        "macd": false
+      },
+      "insufficient": [],
+      "market": "twse",
+      "name": "太子",
+      "pass_all": false,
+      "score": 4,
+      "stock_id": "2511"
+    },
+    {
+      "close": 10.35,
+      "conditions": {
+        "consolidation": {
+          "days": 60,
+          "drift_ratio": 0.267,
+          "flat": true,
+          "high": 11.0,
+          "low": 10.3,
+          "ma_slope_pct": -3.1e-05,
+          "narrow": true,
+          "pass": true,
+          "position": 0.071,
+          "range_pct": 0.0657,
+          "run_days": 90,
+          "run_range_pct": 0.0756,
+          "status": "pass"
+        },
+        "foreign_increasing": {
+          "basis": "shares",
+          "change_pct": 0.1653,
+          "first": 2471818.0,
+          "increased": true,
+          "last": 2880438.0,
+          "pass": true,
+          "slope": 5540.135,
+          "status": "pass",
+          "uptrend": true
+        },
+        "institutional_net_buy": {
+          "days": 5,
+          "net_shares": 56650,
+          "pass": true,
+          "status": "pass"
+        },
+        "ma_turn_up": {
+          "deducting_low": false,
+          "deduction": 10.6,
+          "deduction_percentile": 0.578,
+          "future_deduction_mean": 10.65,
+          "future_supports": false,
+          "ma": 10.65,
+          "ma_slope_pct": -3.1e-05,
+          "pass": false,
+          "rises_tomorrow": false,
+          "status": "fail",
+          "still_falling": true
+        },
+        "macd": {
+          "converge_days": 0,
+          "converging": false,
+          "days_since_cross": null,
+          "osc": -0.0293,
+          "pass": false,
+          "prev_osc": -0.0285,
+          "status": "fail",
+          "turned_red": false
+        },
+        "margin_declining": {
+          "change_pct": -0.4758,
+          "declined": true,
+          "downtrend": true,
+          "first": 683.0,
+          "last": 358.0,
+          "pass": true,
+          "slope": -5.848,
+          "status": "pass"
+        }
+      },
+      "groups": {
+        "chips": true,
+        "consolidation": true,
+        "ma_turn_up": false,
+        "macd": false
+      },
+      "insufficient": [],
+      "market": "twse",
+      "name": "萬企",
+      "pass_all": false,
+      "score": 4,
+      "stock_id": "2701"
+    },
+    {
+      "close": 14.3,
+      "conditions": {
+        "consolidation": {
+          "days": 60,
+          "drift_ratio": 0.258,
+          "flat": true,
+          "high": 15.8,
+          "low": 14.2,
+          "ma_slope_pct": null,
+          "narrow": true,
+          "pass": true,
+          "position": 0.063,
+          "range_pct": 0.1085,
+          "run_days": 22,
+          "run_range_pct": 0.0519,
+          "status": "pass"
+        },
+        "foreign_increasing": {
+          "basis": "shares",
+          "change_pct": 0.2489,
+          "first": 338282.0,
+          "increased": true,
+          "last": 422481.0,
+          "pass": true,
+          "slope": 1359.382,
+          "status": "pass",
+          "uptrend": true
+        },
+        "institutional_net_buy": {
+          "days": 4,
+          "net_shares": 22933,
+          "pass": true,
+          "status": "pass"
+        },
+        "ma_turn_up": {
+          "have": 88,
+          "need": 65,
+          "pass": false,
+          "status": "insufficient"
+        },
+        "macd": {
+          "have": 88,
+          "need": 35,
+          "pass": false,
+          "status": "insufficient"
+        },
+        "margin_declining": {
+          "change_pct": -0.1429,
+          "declined": true,
+          "downtrend": true,
+          "first": 7.0,
+          "last": 6.0,
+          "pass": true,
+          "slope": -0.021,
+          "status": "pass"
+        }
+      },
+      "groups": {
+        "chips": true,
+        "consolidation": true,
+        "ma_turn_up": false,
+        "macd": false
+      },
+      "insufficient": [
+        "ma_turn_up",
+        "macd"
+      ],
+      "market": "twse",
+      "name": "遠雄來",
+      "pass_all": false,
+      "score": 4,
+      "stock_id": "2712"
+    },
+    {
+      "close": 19.4,
+      "conditions": {
+        "consolidation": {
+          "days": 60,
+          "drift_ratio": 0.017,
+          "flat": true,
+          "high": 20.85,
+          "low": 18.4,
+          "ma_slope_pct": 0.0,
+          "narrow": true,
+          "pass": true,
+          "position": 0.408,
+          "range_pct": 0.1244,
+          "run_days": 90,
+          "run_range_pct": 0.1409,
+          "status": "pass"
+        },
+        "foreign_increasing": {
+          "basis": "shares",
+          "change_pct": 0.2895,
+          "first": 460266616.0,
+          "increased": true,
+          "last": 593503728.0,
+          "pass": true,
+          "slope": 1348805.999,
+          "status": "pass",
+          "uptrend": true
+        },
+        "institutional_net_buy": {
+          "days": 5,
+          "net_shares": 31063784,
+          "pass": true,
+          "status": "pass"
+        },
+        "ma_turn_up": {
+          "deducting_low": false,
+          "deduction": 19.6,
+          "deduction_percentile": 0.756,
+          "future_deduction_mean": 20.12,
+          "future_supports": false,
+          "ma": 19.7,
+          "ma_slope_pct": 0.0,
+          "pass": false,
+          "rises_tomorrow": false,
+          "status": "fail",
+          "still_falling": true
+        },
+        "macd": {
+          "converge_days": 10,
+          "converging": true,
+          "days_since_cross": 11,
+          "osc": 0.0979,
+          "pass": false,
+          "prev_osc": 0.0986,
+          "status": "fail",
+          "turned_red": false
+        },
+        "margin_declining": {
+          "change_pct": -0.3611,
+          "declined": true,
+          "downtrend": true,
+          "first": 6424.0,
+          "last": 4104.0,
+          "pass": true,
+          "slope": -50.87,
+          "status": "pass"
+        }
+      },
+      "groups": {
+        "chips": true,
+        "consolidation": true,
+        "ma_turn_up": false,
+        "macd": false
+      },
+      "insufficient": [],
+      "market": "twse",
+      "name": "台中銀",
+      "pass_all": false,
+      "score": 4,
+      "stock_id": "2812"
+    },
+    {
+      "close": 10.95,
+      "conditions": {
+        "consolidation": {
+          "days": 60,
+          "drift_ratio": 0.294,
+          "flat": true,
+          "high": 11.0,
+          "low": 10.0,
+          "ma_slope_pct": 0.000689,
+          "narrow": true,
+          "pass": true,
+          "position": 0.95,
+          "range_pct": 0.0962,
+          "run_days": 90,
+          "run_range_pct": 0.1087,
+          "status": "pass"
+        },
+        "foreign_increasing": {
+          "basis": "shares",
+          "change_pct": 0.2269,
+          "first": 223769014.0,
+          "increased": true,
+          "last": 274540179.0,
+          "pass": true,
+          "slope": 623929.503,
+          "status": "pass",
+          "uptrend": true
+        },
+        "institutional_net_buy": {
+          "days": 5,
+          "net_shares": 16006981,
+          "pass": true,
+          "status": "pass"
+        },
+        "ma_turn_up": {
+          "deducting_low": false,
+          "deduction": 10.5,
+          "deduction_percentile": 0.811,
+          "future_deduction_mean": 10.52,
+          "future_supports": true,
+          "ma": 10.4,
+          "ma_slope_pct": 0.000689,
+          "pass": false,
+          "rises_tomorrow": true,
+          "status": "fail",
+          "still_falling": false
+        },
+        "macd": {
+          "converge_days": 1,
+          "converging": false,
+          "days_since_cross": 15,
+          "osc": 0.0744,
+          "pass": false,
+          "prev_osc": 0.0713,
+          "status": "fail",
+          "turned_red": false
+        },
+        "margin_declining": {
+          "change_pct": -0.3665,
+          "declined": true,
+          "downtrend": true,
+          "first": 1962.0,
+          "last": 1243.0,
+          "pass": true,
+          "slope": -11.408,
+          "status": "pass"
+        }
+      },
+      "groups": {
+        "chips": true,
+        "consolidation": true,
+        "ma_turn_up": false,
+        "macd": false
+      },
+      "insufficient": [],
+      "market": "twse",
+      "name": "王道銀行",
+      "pass_all": false,
+      "score": 4,
+      "stock_id": "2897"
+    },
+    {
+      "close": 23.75,
+      "conditions": {
+        "consolidation": {
+          "days": 60,
+          "drift_ratio": 0.244,
+          "flat": true,
+          "high": 26.0,
+          "low": 23.15,
+          "ma_slope_pct": 0.000328,
+          "narrow": true,
+          "pass": true,
+          "position": 0.211,
+          "range_pct": 0.1193,
+          "run_days": 81,
+          "run_range_pct": 0.15,
+          "status": "pass"
+        },
+        "foreign_increasing": {
+          "basis": "shares",
+          "change_pct": 0.3533,
+          "first": 246920.0,
+          "increased": true,
+          "last": 334159.0,
+          "pass": true,
+          "slope": 1657.928,
+          "status": "pass",
+          "uptrend": true
+        },
+        "institutional_net_buy": {
+          "days": 5,
+          "net_shares": 8649,
+          "pass": true,
+          "status": "pass"
+        },
+        "ma_turn_up": {
+          "deducting_low": false,
+          "deduction": 23.7,
+          "deduction_percentile": 0.644,
+          "future_deduction_mean": 23.86,
+          "future_supports": false,
+          "ma": 23.89,
+          "ma_slope_pct": 0.000328,
+          "pass": false,
+          "rises_tomorrow": true,
+          "status": "fail",
+          "still_falling": false
+        },
+        "macd": {
+          "converge_days": 4,
+          "converging": true,
+          "days_since_cross": 0,
+          "osc": 0.0101,
+          "pass": true,
+          "prev_osc": -0.001,
+          "status": "pass",
+          "turned_red": true
+        },
+        "margin_declining": {
+          "change_pct": -0.0186,
+          "declined": false,
+          "downtrend": true,
+          "first": 485.0,
+          "last": 476.0,
+          "pass": false,
+          "slope": -0.246,
+          "status": "fail"
+        }
+      },
+      "groups": {
+        "chips": false,
+        "consolidation": true,
+        "ma_turn_up": false,
+        "macd": true
+      },
+      "insufficient": [],
+      "market": "twse",
+      "name": "欣欣",
+      "pass_all": false,
+      "score": 4,
+      "stock_id": "2901"
+    },
+    {
+      "close": 71.1,
+      "conditions": {
+        "consolidation": {
+          "days": 60,
+          "drift_ratio": 0.338,
+          "flat": true,
+          "high": 72.3,
+          "low": 68.3,
+          "ma_slope_pct": 0.000227,
+          "narrow": true,
+          "pass": true,
+          "position": 0.7,
+          "range_pct": 0.0567,
+          "run_days": 90,
+          "run_range_pct": 0.071,
+          "status": "pass"
+        },
+        "foreign_increasing": {
+          "basis": "shares",
+          "change_pct": 0.0372,
+          "first": 5873075.0,
+          "increased": true,
+          "last": 6091612.0,
+          "pass": true,
+          "slope": 16465.763,
+          "status": "pass",
+          "uptrend": true
+        },
+        "institutional_net_buy": {
+          "days": 5,
+          "net_shares": 50793,
+          "pass": true,
+          "status": "pass"
+        },
+        "ma_turn_up": {
+          "deducting_low": true,
+          "deduction": 69.6,
+          "deduction_percentile": 0.167,
+          "future_deduction_mean": 69.4,
+          "future_supports": true,
+          "ma": 70.52,
+          "ma_slope_pct": 0.000227,
+          "pass": false,
+          "rises_tomorrow": true,
+          "status": "fail",
+          "still_falling": false
+        },
+        "macd": {
+          "converge_days": 0,
+          "converging": false,
+          "days_since_cross": null,
+          "osc": -0.0723,
+          "pass": false,
+          "prev_osc": -0.0815,
+          "status": "fail",
+          "turned_red": false
+        },
+        "margin_declining": {
+          "change_pct": -0.5342,
+          "declined": true,
+          "downtrend": true,
+          "first": 146.0,
+          "last": 68.0,
+          "pass": true,
+          "slope": -0.058,
+          "status": "pass"
+        }
+      },
+      "groups": {
+        "chips": true,
+        "consolidation": true,
+        "ma_turn_up": false,
+        "macd": false
+      },
+      "insufficient": [],
+      "market": "twse",
+      "name": "佳醫",
+      "pass_all": false,
+      "score": 4,
+      "stock_id": "4104"
+    },
+    {
+      "close": 17.6,
+      "conditions": {
+        "consolidation": {
+          "days": 60,
+          "drift_ratio": 0.153,
+          "flat": true,
+          "high": 18.5,
+          "low": 17.0,
+          "ma_slope_pct": 0.000305,
+          "narrow": true,
+          "pass": true,
+          "position": 0.4,
+          "range_pct": 0.0858,
+          "run_days": 81,
+          "run_range_pct": 0.1308,
+          "status": "pass"
+        },
+        "foreign_increasing": {
+          "basis": "shares",
+          "change_pct": 2.2569,
+          "first": 426209.0,
+          "increased": true,
+          "last": 1388103.0,
+          "pass": true,
+          "slope": 19613.618,
+          "status": "pass",
+          "uptrend": true
+        },
+        "institutional_net_buy": {
+          "days": 5,
+          "net_shares": 52594,
+          "pass": true,
+          "status": "pass"
+        },
+        "ma_turn_up": {
+          "deducting_low": true,
+          "deduction": 17.25,
+          "deduction_percentile": 0.278,
+          "future_deduction_mean": 17.38,
+          "future_supports": true,
+          "ma": 17.48,
+          "ma_slope_pct": 0.000305,
+          "pass": false,
+          "rises_tomorrow": true,
+          "status": "fail",
+          "still_falling": false
+        },
+        "macd": {
+          "converge_days": 0,
+          "converging": false,
+          "days_since_cross": 2,
+          "osc": 0.0056,
+          "pass": false,
+          "prev_osc": 0.01,
+          "status": "fail",
+          "turned_red": true
+        },
+        "margin_declining": {
+          "change_pct": -0.1385,
+          "declined": true,
+          "downtrend": true,
+          "first": 130.0,
+          "last": 112.0,
+          "pass": true,
+          "slope": -0.14,
+          "status": "pass"
+        }
+      },
+      "groups": {
+        "chips": true,
+        "consolidation": true,
+        "ma_turn_up": false,
+        "macd": false
+      },
+      "insufficient": [],
+      "market": "twse",
+      "name": "宜新實業",
+      "pass_all": false,
+      "score": 4,
+      "stock_id": "4440"
+    },
+    {
+      "close": 56.6,
+      "conditions": {
+        "consolidation": {
+          "days": 60,
+          "drift_ratio": 0.409,
+          "flat": true,
+          "high": 57.0,
+          "low": 55.4,
+          "ma_slope_pct": 1.2e-05,
+          "narrow": true,
+          "pass": true,
+          "position": 0.75,
+          "range_pct": 0.0285,
+          "run_days": 90,
+          "run_range_pct": 0.0566,
+          "status": "pass"
+        },
+        "foreign_increasing": {
+          "basis": "shares",
+          "change_pct": 0.0332,
+          "first": 10066281.0,
+          "increased": true,
+          "last": 10400237.0,
+          "pass": true,
+          "slope": 6457.197,
+          "status": "pass",
+          "uptrend": true
+        },
+        "institutional_net_buy": {
+          "days": 5,
+          "net_shares": 39737,
+          "pass": true,
+          "status": "pass"
+        },
+        "ma_turn_up": {
+          "deducting_low": true,
+          "deduction": 56.5,
+          "deduction_percentile": 0.267,
+          "future_deduction_mean": 56.01,
+          "future_supports": true,
+          "ma": 56.19,
+          "ma_slope_pct": 1.2e-05,
+          "pass": false,
+          "rises_tomorrow": true,
+          "status": "fail",
+          "still_falling": false
+        },
+        "macd": {
+          "converge_days": 1,
+          "converging": false,
+          "days_since_cross": 1,
+          "osc": 0.042,
+          "pass": false,
+          "prev_osc": 0.0246,
+          "status": "fail",
+          "turned_red": true
+        },
+        "margin_declining": {
+          "change_pct": -0.4,
+          "declined": true,
+          "downtrend": true,
+          "first": 10.0,
+          "last": 6.0,
+          "pass": true,
+          "slope": -0.063,
+          "status": "pass"
+        }
+      },
+      "groups": {
+        "chips": true,
+        "consolidation": true,
+        "ma_turn_up": false,
+        "macd": false
+      },
+      "insufficient": [],
+      "market": "twse",
+      "name": "三星",
+      "pass_all": false,
+      "score": 4,
+      "stock_id": "5007"
+    },
+    {
+      "close": 22.2,
+      "conditions": {
+        "consolidation": {
+          "days": 60,
+          "drift_ratio": 0.123,
+          "flat": true,
+          "high": 23.9,
+          "low": 21.25,
+          "ma_slope_pct": 6e-05,
+          "narrow": true,
+          "pass": true,
+          "position": 0.358,
+          "range_pct": 0.1194,
+          "run_days": 72,
+          "run_range_pct": 0.1467,
+          "status": "pass"
+        },
+        "foreign_increasing": {
+          "basis": "shares",
+          "change_pct": 0.0866,
+          "first": 5332127.0,
+          "increased": true,
+          "last": 5793931.0,
+          "pass": true,
+          "slope": 7711.013,
+          "status": "pass",
+          "uptrend": true
+        },
+        "institutional_net_buy": {
+          "days": 5,
+          "net_shares": 139874,
+          "pass": true,
+          "status": "pass"
+        },
+        "ma_turn_up": {
+          "deducting_low": true,
+          "deduction": 22.3,
+          "deduction_percentile": 0.322,
+          "future_deduction_mean": 21.89,
+          "future_supports": true,
+          "ma": 22.2,
+          "ma_slope_pct": 6e-05,
+          "pass": false,
+          "rises_tomorrow": false,
+          "status": "fail",
+          "still_falling": false
+        },
+        "macd": {
+          "converge_days": 2,
+          "converging": false,
+          "days_since_cross": 2,
+          "osc": 0.0226,
+          "pass": false,
+          "prev_osc": 0.0164,
+          "status": "fail",
+          "turned_red": true
+        },
+        "margin_declining": {
+          "change_pct": -0.1974,
+          "declined": true,
+          "downtrend": true,
+          "first": 390.0,
+          "last": 313.0,
+          "pass": true,
+          "slope": -1.347,
+          "status": "pass"
+        }
+      },
+      "groups": {
+        "chips": true,
+        "consolidation": true,
+        "ma_turn_up": false,
+        "macd": false
+      },
+      "insufficient": [],
+      "market": "twse",
+      "name": "順天",
+      "pass_all": false,
+      "score": 4,
+      "stock_id": "5525"
+    },
+    {
+      "close": 24.65,
+      "conditions": {
+        "consolidation": {
+          "days": 60,
+          "drift_ratio": 0.132,
+          "flat": true,
+          "high": 25.95,
+          "low": 23.3,
+          "ma_slope_pct": -0.000472,
+          "narrow": true,
+          "pass": true,
+          "position": 0.509,
+          "range_pct": 0.1072,
+          "run_days": 67,
+          "run_range_pct": 0.1472,
+          "status": "pass"
+        },
+        "foreign_increasing": {
+          "basis": "shares",
+          "change_pct": 0.0919,
+          "first": 3976682.0,
+          "increased": true,
+          "last": 4342158.0,
+          "pass": true,
+          "slope": 21093.302,
+          "status": "pass",
+          "uptrend": true
+        },
+        "institutional_net_buy": {
+          "days": 5,
+          "net_shares": 196867,
+          "pass": true,
+          "status": "pass"
+        },
+        "ma_turn_up": {
+          "deducting_low": true,
+          "deduction": 25.25,
+          "deduction_percentile": 0.367,
+          "future_deduction_mean": 24.8,
+          "future_supports": false,
+          "ma": 24.72,
+          "ma_slope_pct": -0.000472,
+          "pass": false,
+          "rises_tomorrow": false,
+          "status": "fail",
+          "still_falling": true
+        },
+        "macd": {
+          "converge_days": 0,
+          "converging": false,
+          "days_since_cross": null,
+          "osc": -0.0732,
+          "pass": false,
+          "prev_osc": -0.092,
+          "status": "fail",
+          "turned_red": false
+        },
+        "margin_declining": {
+          "change_pct": -0.3657,
+          "declined": true,
+          "downtrend": true,
+          "first": 2778.0,
+          "last": 1762.0,
+          "pass": true,
+          "slope": -13.282,
+          "status": "pass"
+        }
+      },
+      "groups": {
+        "chips": true,
+        "consolidation": true,
+        "ma_turn_up": false,
+        "macd": false
+      },
+      "insufficient": [],
+      "market": "twse",
+      "name": "富爾特",
+      "pass_all": false,
+      "score": 4,
+      "stock_id": "6136"
+    },
+    {
+      "close": 92.5,
+      "conditions": {
+        "consolidation": {
+          "days": 60,
+          "drift_ratio": 0.214,
+          "flat": true,
+          "high": 95.0,
+          "low": 88.6,
+          "ma_slope_pct": 0.000521,
+          "narrow": true,
+          "pass": true,
+          "position": 0.609,
+          "range_pct": 0.0699,
+          "run_days": 90,
+          "run_range_pct": 0.0875,
+          "status": "pass"
+        },
+        "foreign_increasing": {
+          "basis": "shares",
+          "change_pct": 0.1103,
+          "first": 1545584.0,
+          "increased": true,
+          "last": 1716031.0,
+          "pass": true,
+          "slope": 3823.736,
+          "status": "pass",
+          "uptrend": true
+        },
+        "institutional_net_buy": {
+          "days": 5,
+          "net_shares": 31687,
+          "pass": true,
+          "status": "pass"
+        },
+        "ma_turn_up": {
+          "deducting_low": true,
+          "deduction": 91.0,
+          "deduction_percentile": 0.144,
+          "future_deduction_mean": 90.02,
+          "future_supports": true,
+          "ma": 91.52,
+          "ma_slope_pct": 0.000521,
+          "pass": false,
+          "rises_tomorrow": true,
+          "status": "fail",
+          "still_falling": false
+        },
+        "macd": {
+          "converge_days": 0,
+          "converging": false,
+          "days_since_cross": null,
+          "osc": -0.1598,
+          "pass": false,
+          "prev_osc": -0.233,
+          "status": "fail",
+          "turned_red": false
+        },
+        "margin_declining": {
+          "change_pct": -0.5556,
+          "declined": true,
+          "downtrend": true,
+          "first": 9.0,
+          "last": 4.0,
+          "pass": true,
+          "slope": -0.004,
+          "status": "pass"
+        }
+      },
+      "groups": {
+        "chips": true,
+        "consolidation": true,
+        "ma_turn_up": false,
+        "macd": false
+      },
+      "insufficient": [],
+      "market": "twse",
+      "name": "關貿",
+      "pass_all": false,
+      "score": 4,
+      "stock_id": "6183"
+    },
+    {
+      "close": 51.4,
+      "conditions": {
+        "consolidation": {
+          "days": 60,
+          "drift_ratio": 0.238,
+          "flat": true,
+          "high": 53.0,
+          "low": 50.7,
+          "ma_slope_pct": 1.3e-05,
+          "narrow": true,
+          "pass": true,
+          "position": 0.304,
+          "range_pct": 0.0447,
+          "run_days": 90,
+          "run_range_pct": 0.0936,
+          "status": "pass"
+        },
+        "foreign_increasing": {
+          "basis": "shares",
+          "change_pct": 0.1018,
+          "first": 2438579.0,
+          "increased": true,
+          "last": 2686855.0,
+          "pass": true,
+          "slope": 6310.05,
+          "status": "pass",
+          "uptrend": true
+        },
+        "institutional_net_buy": {
+          "days": 5,
+          "net_shares": 12881,
+          "pass": true,
+          "status": "pass"
+        },
+        "ma_turn_up": {
+          "deducting_low": false,
+          "deduction": 51.4,
+          "deduction_percentile": 0.533,
+          "future_deduction_mean": 51.4,
+          "future_supports": false,
+          "ma": 51.51,
+          "ma_slope_pct": 1.3e-05,
+          "pass": false,
+          "rises_tomorrow": false,
+          "status": "fail",
+          "still_falling": false
+        },
+        "macd": {
+          "converge_days": 0,
+          "converging": false,
+          "days_since_cross": null,
+          "osc": -0.0036,
+          "pass": false,
+          "prev_osc": -0.0021,
+          "status": "fail",
+          "turned_red": false
+        },
+        "margin_declining": {
+          "change_pct": -0.7258,
+          "declined": true,
+          "downtrend": true,
+          "first": 62.0,
+          "last": 17.0,
+          "pass": true,
+          "slope": -1.15,
+          "status": "pass"
+        }
+      },
+      "groups": {
+        "chips": true,
+        "consolidation": true,
+        "ma_turn_up": false,
+        "macd": false
+      },
+      "insufficient": [],
+      "market": "twse",
+      "name": "全國電",
+      "pass_all": false,
+      "score": 4,
+      "stock_id": "6281"
+    },
+    {
+      "close": 111.5,
+      "conditions": {
+        "consolidation": {
+          "days": 60,
+          "drift_ratio": 0.046,
+          "flat": true,
+          "high": 112.0,
+          "low": 105.5,
+          "ma_slope_pct": 0.000201,
+          "narrow": true,
+          "pass": true,
+          "position": 0.923,
+          "range_pct": 0.0602,
+          "run_days": 90,
+          "run_range_pct": 0.0879,
+          "status": "pass"
+        },
+        "foreign_increasing": {
+          "basis": "shares",
+          "change_pct": 0.0835,
+          "first": 1143484.0,
+          "increased": true,
+          "last": 1238919.0,
+          "pass": true,
+          "slope": 2129.7,
+          "status": "pass",
+          "uptrend": true
+        },
+        "institutional_net_buy": {
+          "days": 5,
+          "net_shares": 5992,
+          "pass": true,
+          "status": "pass"
+        },
+        "ma_turn_up": {
+          "deducting_low": true,
+          "deduction": 109.0,
+          "deduction_percentile": 0.311,
+          "future_deduction_mean": 107.45,
+          "future_supports": true,
+          "ma": 108.01,
+          "ma_slope_pct": 0.000201,
+          "pass": false,
+          "rises_tomorrow": true,
+          "status": "fail",
+          "still_falling": false
+        },
+        "macd": {
+          "converge_days": 2,
+          "converging": false,
+          "days_since_cross": 11,
+          "osc": 0.2107,
+          "pass": false,
+          "prev_osc": 0.061,
+          "status": "fail",
+          "turned_red": false
+        },
+        "margin_declining": {
+          "change_pct": -0.4545,
+          "declined": true,
+          "downtrend": true,
+          "first": 11.0,
+          "last": 6.0,
+          "pass": true,
+          "slope": -0.062,
+          "status": "pass"
+        }
+      },
+      "groups": {
+        "chips": true,
+        "consolidation": true,
+        "ma_turn_up": false,
+        "macd": false
+      },
+      "insufficient": [],
+      "market": "twse",
+      "name": "鋼聯",
+      "pass_all": false,
+      "score": 4,
+      "stock_id": "6581"
+    },
+    {
+      "close": 75.9,
+      "conditions": {
+        "consolidation": {
+          "days": 60,
+          "drift_ratio": 0.41,
+          "flat": true,
+          "high": 80.5,
+          "low": 72.4,
+          "ma_slope_pct": -1.3e-05,
+          "narrow": true,
+          "pass": true,
+          "position": 0.432,
+          "range_pct": 0.105,
+          "run_days": 90,
+          "run_range_pct": 0.1237,
+          "status": "pass"
+        },
+        "foreign_increasing": {
+          "basis": "shares",
+          "change_pct": 0.3048,
+          "first": 850619.0,
+          "increased": true,
+          "last": 1109854.0,
+          "pass": true,
+          "slope": 3028.42,
+          "status": "pass",
+          "uptrend": true
+        },
+        "institutional_net_buy": {
+          "days": 5,
+          "net_shares": 36291,
+          "pass": true,
+          "status": "pass"
+        },
+        "ma_turn_up": {
+          "deducting_low": false,
+          "deduction": 77.6,
+          "deduction_percentile": 0.867,
+          "future_deduction_mean": 78.69,
+          "future_supports": false,
+          "ma": 77.17,
+          "ma_slope_pct": -1.3e-05,
+          "pass": false,
+          "rises_tomorrow": false,
+          "status": "fail",
+          "still_falling": true
+        },
+        "macd": {
+          "converge_days": 0,
+          "converging": false,
+          "days_since_cross": null,
+          "osc": -0.171,
+          "pass": false,
+          "prev_osc": -0.201,
+          "status": "fail",
+          "turned_red": false
+        },
+        "margin_declining": {
+          "change_pct": -0.2326,
+          "declined": true,
+          "downtrend": true,
+          "first": 1019.0,
+          "last": 782.0,
+          "pass": true,
+          "slope": -3.867,
+          "status": "pass"
+        }
+      },
+      "groups": {
+        "chips": true,
+        "consolidation": true,
+        "ma_turn_up": false,
+        "macd": false
+      },
+      "insufficient": [],
+      "market": "twse",
+      "name": "必應",
+      "pass_all": false,
+      "score": 4,
+      "stock_id": "6625"
+    },
+    {
+      "close": 23.95,
+      "conditions": {
+        "consolidation": {
+          "days": 60,
+          "drift_ratio": 0.481,
+          "flat": true,
+          "high": 25.8,
+          "low": 22.35,
+          "ma_slope_pct": -0.000519,
+          "narrow": true,
+          "pass": true,
+          "position": 0.464,
+          "range_pct": 0.1453,
+          "run_days": 66,
+          "run_range_pct": 0.1446,
+          "status": "pass"
+        },
+        "foreign_increasing": {
+          "basis": "shares",
+          "change_pct": 0.1762,
+          "first": 2110758.0,
+          "increased": true,
+          "last": 2482684.0,
+          "pass": true,
+          "slope": 4169.9,
+          "status": "pass",
+          "uptrend": true
+        },
+        "institutional_net_buy": {
+          "days": 5,
+          "net_shares": 221344,
+          "pass": true,
+          "status": "pass"
+        },
+        "ma_turn_up": {
+          "deducting_low": true,
+          "deduction": 25.0,
+          "deduction_percentile": 0.5,
+          "future_deduction_mean": 24.28,
+          "future_supports": false,
+          "ma": 23.75,
+          "ma_slope_pct": -0.000519,
+          "pass": false,
+          "rises_tomorrow": false,
+          "status": "fail",
+          "still_falling": true
+        },
+        "macd": {
+          "converge_days": 2,
+          "converging": false,
+          "days_since_cross": 12,
+          "osc": 0.1936,
+          "pass": false,
+          "prev_osc": 0.2309,
+          "status": "fail",
+          "turned_red": false
+        },
+        "margin_declining": {
+          "change_pct": -0.1099,
+          "declined": true,
+          "downtrend": true,
+          "first": 2776.0,
+          "last": 2471.0,
+          "pass": true,
+          "slope": -5.122,
+          "status": "pass"
+        }
+      },
+      "groups": {
+        "chips": true,
+        "consolidation": true,
+        "ma_turn_up": false,
+        "macd": false
+      },
+      "insufficient": [],
+      "market": "twse",
+      "name": "台新藥",
+      "pass_all": false,
+      "score": 4,
+      "stock_id": "6838"
+    },
+    {
+      "close": 40.7,
+      "conditions": {
+        "consolidation": {
+          "days": 60,
+          "drift_ratio": 0.31,
+          "flat": true,
+          "high": 42.4,
+          "low": 39.7,
+          "ma_slope_pct": 0.000292,
+          "narrow": true,
+          "pass": true,
+          "position": 0.37,
+          "range_pct": 0.0667,
+          "run_days": 90,
+          "run_range_pct": 0.0847,
+          "status": "pass"
+        },
+        "foreign_increasing": {
+          "basis": "shares",
+          "change_pct": 0.0738,
+          "first": 1401533.0,
+          "increased": true,
+          "last": 1505000.0,
+          "pass": true,
+          "slope": 2381.391,
+          "status": "pass",
+          "uptrend": true
+        },
+        "institutional_net_buy": {
+          "days": 5,
+          "net_shares": 16817,
+          "pass": true,
+          "status": "pass"
+        },
+        "ma_turn_up": {
+          "deducting_low": true,
+          "deduction": 40.3,
+          "deduction_percentile": 0.267,
+          "future_deduction_mean": 40.3,
+          "future_supports": true,
+          "ma": 40.47,
+          "ma_slope_pct": 0.000292,
+          "pass": false,
+          "rises_tomorrow": true,
+          "status": "fail",
+          "still_falling": false
+        },
+        "macd": {
+          "converge_days": 0,
+          "converging": false,
+          "days_since_cross": 13,
+          "osc": 0.0308,
+          "pass": false,
+          "prev_osc": 0.0597,
+          "status": "fail",
+          "turned_red": false
+        },
+        "margin_declining": {
+          "change_pct": -0.3636,
+          "declined": true,
+          "downtrend": true,
+          "first": 22.0,
+          "last": 14.0,
+          "pass": true,
+          "slope": -0.229,
+          "status": "pass"
+        }
+      },
+      "groups": {
+        "chips": true,
+        "consolidation": true,
+        "ma_turn_up": false,
+        "macd": false
+      },
+      "insufficient": [],
+      "market": "twse",
+      "name": "建新國際",
+      "pass_all": false,
+      "score": 4,
+      "stock_id": "8367"
+    },
+    {
+      "close": 29.1,
+      "conditions": {
+        "consolidation": {
+          "days": 60,
+          "drift_ratio": 0.288,
+          "flat": true,
+          "high": 30.0,
+          "low": 28.8,
+          "ma_slope_pct": -0.000165,
+          "narrow": true,
+          "pass": true,
+          "position": 0.25,
+          "range_pct": 0.0409,
+          "run_days": 90,
+          "run_range_pct": 0.0409,
+          "status": "pass"
+        },
+        "foreign_increasing": {
+          "basis": "shares",
+          "change_pct": 0.0205,
+          "first": 10780051.0,
+          "increased": true,
+          "last": 11001576.0,
+          "pass": true,
+          "slope": 16968.902,
+          "status": "pass",
+          "uptrend": true
+        },
+        "institutional_net_buy": {
+          "days": 5,
+          "net_shares": 360281,
+          "pass": true,
+          "status": "pass"
+        },
+        "ma_turn_up": {
+          "deducting_low": false,
+          "deduction": 29.55,
+          "deduction_percentile": 0.878,
+          "future_deduction_mean": 29.73,
+          "future_supports": false,
+          "ma": 29.32,
+          "ma_slope_pct": -0.000165,
+          "pass": false,
+          "rises_tomorrow": false,
+          "status": "fail",
+          "still_falling": true
+        },
+        "macd": {
+          "converge_days": 0,
+          "converging": false,
+          "days_since_cross": 13,
+          "osc": 0.0215,
+          "pass": false,
+          "prev_osc": 0.0218,
+          "status": "fail",
+          "turned_red": false
+        },
+        "margin_declining": {
+          "change_pct": -0.3295,
+          "declined": true,
+          "downtrend": true,
+          "first": 173.0,
+          "last": 116.0,
+          "pass": true,
+          "slope": -1.214,
+          "status": "pass"
+        }
+      },
+      "groups": {
+        "chips": true,
+        "consolidation": true,
+        "ma_turn_up": false,
+        "macd": false
+      },
+      "insufficient": [],
+      "market": "twse",
+      "name": "大台北",
+      "pass_all": false,
+      "score": 4,
+      "stock_id": "9908"
+    },
+    {
+      "close": 43.2,
+      "conditions": {
+        "consolidation": {
+          "days": 60,
+          "drift_ratio": 0.128,
+          "flat": true,
+          "high": 46.5,
+          "low": 41.5,
+          "ma_slope_pct": -3.1e-05,
+          "narrow": true,
+          "pass": true,
+          "position": 0.34,
+          "range_pct": 0.1159,
+          "run_days": 90,
+          "run_range_pct": 0.1156,
+          "status": "pass"
+        },
+        "foreign_increasing": {
+          "basis": "shares",
+          "change_pct": 0.0268,
+          "first": 4848828.0,
+          "increased": true,
+          "last": 4978808.0,
+          "pass": true,
+          "slope": 1201.608,
+          "status": "pass",
+          "uptrend": true
+        },
+        "institutional_net_buy": {
+          "days": 5,
+          "net_shares": 16063,
+          "pass": true,
+          "status": "pass"
+        },
+        "ma_turn_up": {
+          "deducting_low": false,
+          "deduction": 43.3,
+          "deduction_percentile": 0.644,
+          "future_deduction_mean": 43.37,
+          "future_supports": false,
+          "ma": 43.15,
+          "ma_slope_pct": -3.1e-05,
+          "pass": false,
+          "rises_tomorrow": false,
+          "status": "fail",
+          "still_falling": true
+        },
+        "macd": {
+          "converge_days": 0,
+          "converging": false,
+          "days_since_cross": 13,
+          "osc": 0.058,
+          "pass": false,
+          "prev_osc": 0.0588,
+          "status": "fail",
+          "turned_red": false
+        },
+        "margin_declining": {
+          "change_pct": -0.6142,
+          "declined": true,
+          "downtrend": true,
+          "first": 127.0,
+          "last": 49.0,
+          "pass": true,
+          "slope": -0.961,
+          "status": "pass"
+        }
+      },
+      "groups": {
+        "chips": true,
+        "consolidation": true,
+        "ma_turn_up": false,
+        "macd": false
+      },
+      "insufficient": [],
+      "market": "twse",
+      "name": "欣天然",
+      "pass_all": false,
+      "score": 4,
+      "stock_id": "9918"
+    },
+    {
+      "close": 49.5,
+      "conditions": {
+        "consolidation": {
+          "days": 60,
+          "drift_ratio": 0.01,
+          "flat": true,
+          "high": 51.5,
+          "low": 48.1,
+          "ma_slope_pct": 4.7e-05,
+          "narrow": true,
+          "pass": true,
+          "position": 0.412,
+          "range_pct": 0.0688,
+          "run_days": 90,
+          "run_range_pct": 0.0689,
+          "status": "pass"
+        },
+        "foreign_increasing": {
+          "basis": "shares",
+          "change_pct": 0.1438,
+          "first": 1249821.0,
+          "increased": true,
+          "last": 1429586.0,
+          "pass": true,
+          "slope": 3338.517,
+          "status": "pass",
+          "uptrend": true
+        },
+        "institutional_net_buy": {
+          "days": 5,
+          "net_shares": 42057,
+          "pass": true,
+          "status": "pass"
+        },
+        "ma_turn_up": {
+          "deducting_low": false,
+          "deduction": 49.7,
+          "deduction_percentile": 0.756,
+          "future_deduction_mean": 49.57,
+          "future_supports": false,
+          "ma": 49.42,
+          "ma_slope_pct": 4.7e-05,
+          "pass": false,
+          "rises_tomorrow": false,
+          "status": "fail",
+          "still_falling": false
+        },
+        "macd": {
+          "converge_days": 0,
+          "converging": false,
+          "days_since_cross": 3,
+          "osc": 0.0742,
+          "pass": false,
+          "prev_osc": 0.0623,
+          "status": "fail",
+          "turned_red": false
+        },
+        "margin_declining": {
+          "change_pct": -0.5,
+          "declined": true,
+          "downtrend": true,
+          "first": 12.0,
+          "last": 6.0,
+          "pass": true,
+          "slope": -0.073,
+          "status": "pass"
+        }
+      },
+      "groups": {
+        "chips": true,
+        "consolidation": true,
+        "ma_turn_up": false,
+        "macd": false
+      },
+      "insufficient": [],
+      "market": "twse",
+      "name": "新海",
+      "pass_all": false,
+      "score": 4,
+      "stock_id": "9926"
+    },
+    {
+      "close": 55.2,
+      "conditions": {
+        "consolidation": {
+          "days": 60,
+          "drift_ratio": 0.263,
+          "flat": true,
+          "high": 57.9,
+          "low": 53.5,
+          "ma_slope_pct": -6e-05,
+          "narrow": true,
+          "pass": true,
+          "position": 0.386,
+          "range_pct": 0.0795,
+          "run_days": 90,
+          "run_range_pct": 0.0792,
+          "status": "pass"
+        },
+        "foreign_increasing": {
+          "basis": "shares",
+          "change_pct": 0.0702,
+          "first": 5383915.0,
+          "increased": true,
+          "last": 5761835.0,
+          "pass": true,
+          "slope": 6483.748,
+          "status": "pass",
+          "uptrend": true
+        },
+        "institutional_net_buy": {
+          "days": 5,
+          "net_shares": 85820,
+          "pass": true,
+          "status": "pass"
+        },
+        "ma_turn_up": {
+          "deducting_low": false,
+          "deduction": 55.7,
+          "deduction_percentile": 0.567,
+          "future_deduction_mean": 55.4,
+          "future_supports": false,
+          "ma": 55.34,
+          "ma_slope_pct": -6e-05,
+          "pass": false,
+          "rises_tomorrow": false,
+          "status": "fail",
+          "still_falling": true
+        },
+        "macd": {
+          "converge_days": 4,
+          "converging": true,
+          "days_since_cross": 9,
+          "osc": 0.05,
+          "pass": false,
+          "prev_osc": 0.0609,
+          "status": "fail",
+          "turned_red": false
+        },
+        "margin_declining": {
+          "change_pct": -0.1758,
+          "declined": true,
+          "downtrend": true,
+          "first": 165.0,
+          "last": 136.0,
+          "pass": true,
+          "slope": -0.797,
+          "status": "pass"
+        }
+      },
+      "groups": {
+        "chips": true,
+        "consolidation": true,
+        "ma_turn_up": false,
+        "macd": false
+      },
+      "insufficient": [],
+      "market": "twse",
+      "name": "全國",
+      "pass_all": false,
+      "score": 4,
+      "stock_id": "9937"
+    },
+    {
+      "close": 81.0,
+      "conditions": {
+        "consolidation": {
+          "days": 60,
+          "drift_ratio": 0.19,
+          "flat": true,
+          "high": 87.7,
+          "low": 78.6,
+          "ma_slope_pct": -0.000774,
+          "narrow": true,
+          "pass": true,
+          "position": 0.264,
+          "range_pct": 0.11,
+          "run_days": 68,
+          "run_range_pct": 0.134,
+          "status": "pass"
+        },
+        "foreign_increasing": {
+          "basis": "shares",
+          "change_pct": 0.0477,
+          "first": 26363543.0,
+          "increased": true,
+          "last": 27620518.0,
+          "pass": true,
+          "slope": 29150.872,
+          "status": "pass",
+          "uptrend": true
+        },
+        "institutional_net_buy": {
+          "days": 5,
+          "net_shares": 1438041,
+          "pass": true,
+          "status": "pass"
+        },
+        "ma_turn_up": {
+          "deducting_low": true,
+          "deduction": 83.0,
+          "deduction_percentile": 0.411,
+          "future_deduction_mean": 81.19,
+          "future_supports": false,
+          "ma": 82.71,
+          "ma_slope_pct": -0.000774,
+          "pass": false,
+          "rises_tomorrow": false,
+          "status": "fail",
+          "still_falling": true
+        },
+        "macd": {
+          "converge_days": 0,
+          "converging": false,
+          "days_since_cross": null,
+          "osc": -0.6994,
+          "pass": false,
+          "prev_osc": -0.7349,
+          "status": "fail",
+          "turned_red": false
+        },
+        "margin_declining": {
+          "change_pct": -0.2537,
+          "declined": true,
+          "downtrend": true,
+          "first": 938.0,
+          "last": 700.0,
+          "pass": true,
+          "slope": -6.464,
+          "status": "pass"
+        }
+      },
+      "groups": {
+        "chips": true,
+        "consolidation": true,
+        "ma_turn_up": false,
+        "macd": false
+      },
+      "insufficient": [],
+      "market": "twse",
+      "name": "裕融",
+      "pass_all": false,
+      "score": 4,
+      "stock_id": "9941"
+    }
+  ],
+  "trading_days": 90,
+  "universe": 1955
 }

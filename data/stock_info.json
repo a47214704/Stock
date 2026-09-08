@@ -2159,6 +2159,10 @@
     "market": "twse",
     "name": "統一證"
   },
+  "2867": {
+    "market": "twse",
+    "name": "三商壽"
+  },
   "2880": {
     "market": "twse",
     "name": "華南金"
@@ -2286,6 +2290,10 @@
   "2941": {
     "market": "tpex",
     "name": "米斯特"
+  },
+  "2945": {
+    "market": "twse",
+    "name": "三商家購"
   },
   "2947": {
     "market": "tpex",
@@ -3999,6 +4007,10 @@
     "market": "tpex",
     "name": "捷流閥業"
   },
+  "4581": {
+    "market": "twse",
+    "name": "光隆精密-KY"
+  },
   "4582": {
     "market": "twse",
     "name": "聚恆-創"
@@ -4942,6 +4954,10 @@
   "5905": {
     "market": "tpex",
     "name": "南仁湖"
+  },
+  "5906": {
+    "market": "twse",
+    "name": "台南-KY"
   },
   "5907": {
     "market": "twse",
@@ -6326,6 +6342,10 @@
   "6805": {
     "market": "twse",
     "name": "富世達"
+  },
+  "6806": {
+    "market": "twse",
+    "name": "森崴能源"
   },
   "6807": {
     "market": "twse",
