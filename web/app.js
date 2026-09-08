@@ -11,6 +11,10 @@ const CANDIDATES = ["data", "../data", "demo"];
 const store = {
   base: null, isDemo: false,
   signals: null, screenAll: null,
+  // 全市場精簡結果，以代號索引。個股頁在名單外的個股靠它顯示摘要，
+  // 否則點進去會是一片空白。
+  compact: new Map(),
+  screenAllReady: null,
   history: new Map(),
 };
 
@@ -353,8 +357,9 @@ function renderList(root) {
     ])]);
     const tbody = h("tbody");
     for (const r of rows) {
-      const clickable = !!r.detail;
-      const tr = h("tr", clickable ? {
+      // 每一列都能點。名單外的個股沒有 K 線圖，但個股頁會顯示現有摘要並
+      // 說明原因——點了完全沒反應是最糟的，使用者無從得知為什麼。
+      const tr = h("tr", {
         class: "clickable", tabindex: 0, role: "link",
         "aria-label": `查看 ${r.id} ${r.name} 的詳細分析`,
         onclick: () => { location.hash = `#/${r.id}`; },
@@ -363,7 +368,7 @@ function renderList(root) {
             e.preventDefault(); location.hash = `#/${r.id}`;
           }
         },
-      } : {}, [
+      }, [
         h("td", {}, [
           h("span", { class: "code", text: r.id }),
           h("span", { class: "nm", text: r.name ?? "" }),
@@ -396,7 +401,8 @@ function renderList(root) {
         class: "card-sub",
         text: ui.onlyMatched
           ? "點一列可看該檔的完整判斷依據與圖表。"
-          : "全市場只有各條件的過／不過；點選入選名單中的個股才有圖表。",
+          : "全市場只有各條件的過／不過。名單外的個股點進去會有摘要，"
+            + "但沒有 K 線圖——歷史圖表只為入選名單產生。",
       }),
       h("div", { class: "scroll" }, [table]),
     ]));
@@ -422,8 +428,15 @@ async function renderDetail(root, stockId) {
   root.replaceChildren(h("div", { class: "empty", text: "載入中…" }));
 
   const result = (store.signals.results ?? []).find(r => r.stock_id === stockId);
-  let history = store.history.get(stockId);
-  if (!history) {
+  // 名單外的個股靠 screen_all 顯示摘要；深連結進來時它可能還在下載
+  if (!result && store.screenAllReady) {
+    try { await store.screenAllReady; } catch { /* 抓不到就降級 */ }
+  }
+  const compact = store.compact.get(stockId) ?? null;
+
+  // 歷史檔只為入選名單產生，不在名單就不必發一次註定 404 的請求
+  let history = store.history.get(stockId) ?? null;
+  if (result && !history) {
     try {
       history = await getJSON(`${store.base}/history/${stockId}.json`);
       store.history.set(stockId, history);
@@ -437,27 +450,75 @@ async function renderDetail(root, stockId) {
     h("a", { href: "#/", text: "← 回名單" }),
   ]));
 
-  if (!result && !history) {
+  if (!result && !compact) {
     root.appendChild(h("div", { class: "card" }, [
-      h("div", { class: "empty", text: `找不到 ${stockId} 的資料。歷史檔只為入選名單產生。` }),
+      h("div", { class: "empty", text: `資料中沒有 ${stockId} 這檔。` }),
     ]));
     return;
   }
 
-  const name = result?.name ?? history?.name ?? "";
-  const close = result?.close ?? history?.close?.at(-1);
+  const info = result ?? compact;
+  const name = info.name ?? history?.name ?? "";
+  const close = info.close ?? history?.close?.at(-1);
+  const market = (info.market ?? history?.market) === "tpex" ? "上櫃" : "上市";
+  const runDays = result
+    ? result.conditions?.consolidation?.run_days
+    : compact?.runDays;
+
   root.appendChild(h("div", { class: "hero-row" }, [
     tile(`${stockId}${name ? "　" + name : ""}`, fmt.num(close), "最新收盤價", true),
-    tile("符合項數", `${result?.score ?? "—"} / 6`,
-      result?.pass_all ? "四組條件全數符合" : "未全數符合"),
-    tile("市場", (result?.market ?? history?.market) === "tpex" ? "上櫃" : "上市",
-      `資料至 ${store.signals.data_date ?? "—"}`),
-    tile("交易日數", String(history?.dates?.length ?? 0), "納入計算的天數"),
+    tile("符合項數", `${info.score ?? "—"} / 6`,
+      info.pass_all ? "四組條件全數符合" : "未全數符合"),
+    tile("市場", market, `資料至 ${store.signals.data_date ?? "—"}`),
+    tile("已盤整", runDays ? `${runDays} 日` : "—",
+      runDays ? "箱型實際持續天數" : "不構成盤整"),
   ]));
 
-  if (result) root.appendChild(reasonCards(result));
-  if (history) root.appendChild(chartsFor(history));
+  if (result) {
+    root.appendChild(reasonCards(result));
+  } else {
+    // 只有精簡資料時，至少把四組條件的過／不過顯示出來
+    root.appendChild(h("div", { class: "card" }, [
+      h("h2", { text: "四組條件" }),
+      h("p", {
+        class: "card-sub",
+        text: "此檔不在入選名單，只有各組的過／不過；完整的判斷依據與圖表"
+          + "只為入選名單產生。",
+      }),
+      h("div", { style: "padding: 14px 20px 20px" }, [
+        h("div", { class: "badges" }, Object.entries(GROUPS).map(([key, label]) =>
+          badge(label, compact.groups[key] ? "pass" : "fail"))),
+      ]),
+    ]));
+    if (compact.tradable === false) {
+      root.appendChild(h("div", { class: "notice" }, [
+        h("div", {}, [
+          h("strong", { text: "流動性不足。" }),
+          h("span", {
+            text: "20 日中位成交額低於門檻，這種量級不但難成交，"
+              + "融資與外資的百分比變化也多半是雜訊，因此不列入名單。",
+          }),
+        ]),
+      ]));
+    }
+  }
+
+  if (history) {
+    root.appendChild(chartsFor(history));
+  } else if (!result) {
+    root.appendChild(h("div", { class: "notice" }, [
+      h("div", {}, [
+        h("strong", { text: "沒有歷史圖表。" }),
+        h("span", {
+          text: "K 線與指標圖只為入選名單產生——全市場 1900 多檔每天全量改寫，"
+            + "repo 會無謂膨脹。若要看這檔的圖，把它的條件門檻調鬆讓它進名單，"
+            + "或直接查 data/daily 的每日快照。",
+        }),
+      ]),
+    ]));
+  }
 }
+
 
 function reasonCards(result) {
   const wrap = h("div", { class: "reasons" });
@@ -601,9 +662,26 @@ async function main() {
     return;
   }
 
-  // 全市場精簡結果較大，名單頁不一定用到，抓不到就降級成只顯示入選名單
-  getJSON(`${store.base}/screen_all.json`)
-    .then(data => { store.screenAll = data; })
+  // 全市場精簡結果較大，名單頁不一定馬上用到，所以不阻擋首次渲染；
+  // 但個股頁可能需要它，因此保留 promise 供等待。抓不到就降級。
+  store.screenAllReady = getJSON(`${store.base}/screen_all.json`)
+    .then(data => {
+      store.screenAll = data;
+      const idx = Object.fromEntries(data.columns.map((c, i) => [c, i]));
+      for (const row of data.rows) {
+        store.compact.set(row[idx.stock_id], {
+          stock_id: row[idx.stock_id], name: row[idx.name],
+          market: row[idx.market], close: row[idx.close],
+          score: row[idx.score], runDays: row[idx.run_days],
+          tradable: idx.tradable === undefined ? true : !!row[idx.tradable],
+          groups: {
+            consolidation: !!row[idx.consolidation],
+            ma_turn_up: !!row[idx.ma_turn_up],
+            chips: !!row[idx.chips], macd: !!row[idx.macd],
+          },
+        });
+      }
+    })
     .catch(() => { store.screenAll = null; });
 
   const stamp = (store.signals.generated_at ?? "").replace("T", " ").replace("Z", " UTC");
