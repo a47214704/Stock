@@ -13,6 +13,10 @@ on:
   workflow_run:
     workflows: ["每日 ETL"]
     types: [completed]
+    # 只有 main 上的 ETL 才觸發部署。少了這個過濾，在功能分支上跑 ETL
+    # 也會觸發，而下方 checkout 取的是觸發者的分支——結果會把功能分支的
+    # 內容發布到網站，或用舊 code 執行部署步驟而失敗（實際發生過）。
+    branches: [main]
 
   workflow_dispatch:
 

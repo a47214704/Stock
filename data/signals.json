@@ -31,7 +31,7 @@
     "min_score_to_list": 4
   },
   "data_date": "2026-09-08",
-  "generated_at": "2026-09-08T15:04:39Z",
+  "generated_at": "2026-09-08T15:09:30Z",
   "matched": 0,
   "missing_breakdown": {
     "chips": 0,
@@ -79,7 +79,7 @@
         "ma_turn_up": {
           "deducting_low": false,
           "deduction": 41.75,
-          "deduction_percentile": 0.778,
+          "deduction_percentile": 0.617,
           "downtrend_pct": 0.0097,
           "future_deduction_mean": 42.04,
           "future_supports": false,
@@ -98,9 +98,9 @@
           "converging": false,
           "days_since_cross": null,
           "green_run": null,
-          "osc": -0.0268,
+          "osc": -0.0247,
           "pass": false,
-          "prev_osc": -0.0118,
+          "prev_osc": -0.0095,
           "status": "fail",
           "turned_red": false
         },
@@ -180,7 +180,7 @@
         "ma_turn_up": {
           "deducting_low": true,
           "deduction": 19.0,
-          "deduction_percentile": 0.433,
+          "deduction_percentile": 0.358,
           "downtrend_pct": 0.0074,
           "future_deduction_mean": 18.87,
           "future_supports": true,
@@ -199,9 +199,9 @@
           "converging": false,
           "days_since_cross": null,
           "green_run": null,
-          "osc": -0.0212,
+          "osc": -0.0205,
           "pass": false,
-          "prev_osc": -0.0283,
+          "prev_osc": -0.0276,
           "status": "fail",
           "turned_red": false
         },
@@ -248,7 +248,7 @@
       "conditions": {
         "consolidation": {
           "days": 60,
-          "drift_ratio": 0.018,
+          "drift_ratio": null,
           "flat": true,
           "high": 14.55,
           "low": 13.3,
@@ -257,8 +257,8 @@
           "pass": true,
           "position": 0.52,
           "range_pct": 0.0906,
-          "run_days": 90,
-          "run_range_pct": 0.0905,
+          "run_days": null,
+          "run_range_pct": null,
           "status": "pass"
         },
         "foreign_increasing": {
@@ -281,7 +281,7 @@
         "ma_turn_up": {
           "deducting_low": true,
           "deduction": 13.9,
-          "deduction_percentile": 0.478,
+          "deduction_percentile": 0.358,
           "downtrend_pct": 0.0007,
           "future_deduction_mean": 13.78,
           "future_supports": true,
@@ -296,13 +296,13 @@
         },
         "macd": {
           "converge_days": 1,
-          "converge_slope": 0.001156,
+          "converge_slope": 0.001164,
           "converging": false,
           "days_since_cross": 1,
           "green_run": 4,
-          "osc": 0.0059,
+          "osc": 0.006,
           "pass": true,
-          "prev_osc": 0.0017,
+          "prev_osc": 0.0018,
           "status": "pass",
           "turned_red": true
         },
@@ -349,7 +349,7 @@
       "conditions": {
         "consolidation": {
           "days": 60,
-          "drift_ratio": 0.017,
+          "drift_ratio": 0.212,
           "flat": true,
           "high": 20.85,
           "low": 18.4,
@@ -358,8 +358,8 @@
           "pass": true,
           "position": 0.408,
           "range_pct": 0.1244,
-          "run_days": 90,
-          "run_range_pct": 0.1409,
+          "run_days": 104,
+          "run_range_pct": 0.1452,
           "status": "pass"
         },
         "foreign_increasing": {
@@ -382,11 +382,11 @@
         "ma_turn_up": {
           "deducting_low": false,
           "deduction": 19.6,
-          "deduction_percentile": 0.756,
+          "deduction_percentile": 0.608,
           "downtrend_pct": -0.0029,
           "future_deduction_mean": 20.12,
           "future_supports": false,
-          "ma": 19.7,
+          "ma": 19.69,
           "ma_slope_pct": 0.0,
           "pass": false,
           "rises_tomorrow": false,
@@ -397,13 +397,13 @@
         },
         "macd": {
           "converge_days": 10,
-          "converge_slope": 0.004971,
+          "converge_slope": 0.005104,
           "converging": true,
           "days_since_cross": 11,
           "green_run": 27,
-          "osc": 0.0979,
+          "osc": 0.0981,
           "pass": false,
-          "prev_osc": 0.0986,
+          "prev_osc": 0.0988,
           "status": "fail",
           "turned_red": false
         },
@@ -481,9 +481,9 @@
           "status": "pass"
         },
         "ma_turn_up": {
-          "deducting_low": true,
+          "deducting_low": false,
           "deduction": 12.85,
-          "deduction_percentile": 0.444,
+          "deduction_percentile": 0.583,
           "downtrend_pct": 0.0338,
           "future_deduction_mean": 13.1,
           "future_supports": true,
@@ -498,13 +498,13 @@
         },
         "macd": {
           "converge_days": 2,
-          "converge_slope": -0.015933,
+          "converge_slope": -0.015911,
           "converging": true,
           "days_since_cross": 1,
           "green_run": 3,
-          "osc": 0.0171,
+          "osc": 0.0174,
           "pass": true,
-          "prev_osc": 0.0132,
+          "prev_osc": 0.0135,
           "status": "pass",
           "turned_red": true
         },
@@ -551,7 +551,7 @@
       "conditions": {
         "consolidation": {
           "days": 60,
-          "drift_ratio": 0.294,
+          "drift_ratio": 0.429,
           "flat": true,
           "high": 11.0,
           "low": 10.0,
@@ -560,8 +560,8 @@
           "pass": true,
           "position": 0.95,
           "range_pct": 0.0962,
-          "run_days": 90,
-          "run_range_pct": 0.1087,
+          "run_days": 137,
+          "run_range_pct": 0.1471,
           "status": "pass"
         },
         "foreign_increasing": {
@@ -584,7 +584,7 @@
         "ma_turn_up": {
           "deducting_low": false,
           "deduction": 10.5,
-          "deduction_percentile": 0.811,
+          "deduction_percentile": 0.858,
           "downtrend_pct": 0.0051,
           "future_deduction_mean": 10.52,
           "future_supports": true,
@@ -599,7 +599,7 @@
         },
         "macd": {
           "converge_days": 1,
-          "converge_slope": 4.2e-05,
+          "converge_slope": 7.5e-05,
           "converging": false,
           "days_since_cross": 15,
           "green_run": 35,
@@ -683,9 +683,9 @@
           "status": "pass"
         },
         "ma_turn_up": {
-          "deducting_low": true,
+          "deducting_low": false,
           "deduction": 222.5,
-          "deduction_percentile": 0.478,
+          "deduction_percentile": 0.608,
           "downtrend_pct": 0.0436,
           "future_deduction_mean": 227.5,
           "future_supports": true,
@@ -700,13 +700,13 @@
         },
         "macd": {
           "converge_days": 0,
-          "converge_slope": 0.403114,
+          "converge_slope": 0.402165,
           "converging": false,
           "days_since_cross": 1,
           "green_run": 2,
-          "osc": 0.8777,
+          "osc": 0.8676,
           "pass": true,
-          "prev_osc": 0.4036,
+          "prev_osc": 0.3927,
           "status": "pass",
           "turned_red": true
         },
@@ -786,7 +786,7 @@
         "ma_turn_up": {
           "deducting_low": true,
           "deduction": 91.2,
-          "deduction_percentile": 0.289,
+          "deduction_percentile": 0.292,
           "downtrend_pct": -0.0415,
           "future_deduction_mean": 87.47,
           "future_supports": true,
@@ -801,13 +801,13 @@
         },
         "macd": {
           "converge_days": 0,
-          "converge_slope": 0.118024,
+          "converge_slope": 0.117702,
           "converging": false,
           "days_since_cross": 8,
           "green_run": 2,
-          "osc": 0.6581,
+          "osc": 0.6561,
           "pass": false,
-          "prev_osc": 0.8957,
+          "prev_osc": 0.8936,
           "status": "fail",
           "turned_red": false
         },
@@ -887,7 +887,7 @@
         "ma_turn_up": {
           "deducting_low": true,
           "deduction": 277.0,
-          "deduction_percentile": 0.289,
+          "deduction_percentile": 0.408,
           "downtrend_pct": -0.0079,
           "future_deduction_mean": 260.27,
           "future_supports": true,
@@ -906,9 +906,9 @@
           "converging": false,
           "days_since_cross": null,
           "green_run": null,
-          "osc": -0.3812,
+          "osc": -0.398,
           "pass": false,
-          "prev_osc": -0.5534,
+          "prev_osc": -0.5716,
           "status": "fail",
           "turned_red": false
         },
@@ -988,7 +988,7 @@
         "ma_turn_up": {
           "deducting_low": true,
           "deduction": 209.0,
-          "deduction_percentile": 0.344,
+          "deduction_percentile": 0.383,
           "downtrend_pct": -0.0442,
           "future_deduction_mean": 196.72,
           "future_supports": true,
@@ -1003,13 +1003,13 @@
         },
         "macd": {
           "converge_days": 1,
-          "converge_slope": -0.354224,
+          "converge_slope": -0.374658,
           "converging": true,
           "days_since_cross": 26,
           "green_run": 2,
-          "osc": 3.2617,
+          "osc": 3.2296,
           "pass": false,
-          "prev_osc": 2.0316,
+          "prev_osc": 1.9969,
           "status": "fail",
           "turned_red": false
         },
@@ -1087,9 +1087,9 @@
           "status": "pass"
         },
         "ma_turn_up": {
-          "deducting_low": true,
+          "deducting_low": false,
           "deduction": 83.0,
-          "deduction_percentile": 0.411,
+          "deduction_percentile": 0.558,
           "downtrend_pct": 0.0417,
           "future_deduction_mean": 81.19,
           "future_supports": false,
@@ -1108,9 +1108,9 @@
           "converging": false,
           "days_since_cross": null,
           "green_run": null,
-          "osc": -0.6994,
+          "osc": -0.6952,
           "pass": false,
-          "prev_osc": -0.7349,
+          "prev_osc": -0.7304,
           "status": "fail",
           "turned_red": false
         },
@@ -1154,6 +1154,6 @@
     }
   ],
   "tradable": 968,
-  "trading_days": 90,
-  "universe": 1955
+  "trading_days": 248,
+  "universe": 1958
 }
