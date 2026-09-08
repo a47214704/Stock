@@ -11,9 +11,24 @@ from typing import Any
 
 from . import config
 from .http import get_json
-from .parsing import iter_tables, resolve_columns
+from .parsing import clean_text, iter_tables, resolve_columns
 from .sources import twse
 from .storage import to_api_date, parse_date
+
+# 各交易所的 OpenAPI 規格位置。discover 直接讀它，就不必靠猜端點名稱。
+SWAGGER = {
+    "tpex": "https://www.tpex.org.tw/openapi/swagger.json",
+    "twse": "https://openapi.twse.com.tw/v1/swagger.json",
+}
+
+# 用來從規格中挑出候選端點的關鍵字。路徑與說明任一命中即列為候選。
+DATASET_KEYWORDS = {
+    "price": ["收盤", "行情", "close", "quote", "daily_close"],
+    "institutional": ["三大法人", "法人", "institution", "3itrade", "trade_hedge",
+                      "foreign_trust_dealer"],
+    "margin": ["融資", "融券", "margin", "short_sale"],
+    "foreign": ["外資", "持股", "僑外", "foreign", "shareholding", "holding"],
+}
 
 SPECS = {
     "price": (twse.PRICE_SPEC, twse.PRICE_REQUIRED),
@@ -78,6 +93,100 @@ def verify_twse(date_text: str) -> int:
         if not matched:
             print("  ✗ 沒有任何表格能對應到必要欄位，請依上面的表頭更新 etl/sources/twse.py 的別名")
             problems += 1
+
+    return problems
+
+
+def _endpoint_paths(spec: dict) -> dict[str, str]:
+    """從 OpenAPI 規格取出 {路徑: 說明}，同時吃 OAS2 與 OAS3 的形狀。"""
+    out: dict[str, str] = {}
+    paths = spec.get("paths")
+    if not isinstance(paths, dict):
+        return out
+    for path, methods in paths.items():
+        note = ""
+        if isinstance(methods, dict):
+            get = methods.get("get") or next(
+                (v for v in methods.values() if isinstance(v, dict)), {})
+            if isinstance(get, dict):
+                note = clean_text(get.get("summary") or get.get("description") or "")
+        out[str(path)] = note
+    return out
+
+
+def discover(market: str, grep: str | None = None) -> int:
+    """列出交易所實際提供的端點，並比對目前設定的路徑是否存在。
+
+    TPEx 的端點名稱無法從公開文件可靠地推斷，猜錯時伺服器會回 HTML 錯誤頁，
+    只看 JSON 解析失敗的訊息完全查不出原因。這個指令直接讀官方的 OpenAPI
+    規格，把真實路徑列出來。
+    """
+    url = SWAGGER.get(market)
+    if not url:
+        print(f"沒有 {market} 的 OpenAPI 規格位置")
+        return 1
+
+    print(f"讀取 {url}")
+    try:
+        spec = get_json(url)
+    except Exception as exc:                          # noqa: BLE001
+        print(f"✗ 取得規格失敗：{exc}")
+        return 1
+
+    endpoints = _endpoint_paths(spec if isinstance(spec, dict) else {})
+    if not endpoints:
+        print(f"✗ 規格中沒有 paths 區段：{_preview(spec, 200)}")
+        return 1
+    print(f"規格共 {len(endpoints)} 個端點\n")
+
+    if grep:
+        needle = grep.lower()
+        hits = {p: n for p, n in endpoints.items()
+                if needle in p.lower() or needle in n.lower()}
+        print(f"{'=' * 72}\n符合「{grep}」的端點（{len(hits)} 個）")
+        for path, note in sorted(hits.items()):
+            print(f"  {path}\n      {note or '（無說明）'}")
+        return 0
+
+    configured = config.TPEX_ENDPOINTS if market == "tpex" else {}
+    problems = 0
+
+    print(f"{'=' * 72}\n目前設定的端點是否存在於規格中")
+    known = set(endpoints)
+    for kind, full_url in configured.items():
+        suffix = "/" + full_url.split("/openapi/", 1)[-1] if "/openapi/" in full_url \
+            else "/" + full_url.rsplit("/", 1)[-1]
+        exists = suffix in known or any(k.endswith(suffix) for k in known)
+        print(f"  {kind:<15} {suffix:<48} {'✓ 存在' if exists else '✗ 不存在'}")
+        if not exists:
+            problems += 1
+
+    if problems:
+        print(f"\n{'=' * 72}\n依關鍵字比對出的候選端點")
+        suggestions: dict[str, str] = {}
+        for kind, keywords in DATASET_KEYWORDS.items():
+            matches = [
+                (path, note) for path, note in sorted(endpoints.items())
+                if any(k.lower() in path.lower() or k.lower() in note.lower()
+                       for k in keywords)
+            ]
+            print(f"\n  [{kind}]  關鍵字 {keywords}")
+            if not matches:
+                print("      找不到候選，請用 --grep 自行搜尋")
+                continue
+            for path, note in matches[:6]:
+                print(f"      {path}\n          {note or '（無說明）'}")
+            suggestions[kind] = matches[0][0]
+
+        if suggestions:
+            base = SWAGGER[market].rsplit("/", 1)[0]
+            print(f"\n{'=' * 72}\n把確認過的路徑填回 etl/config.py 的 "
+                  f"{market.upper()}_ENDPOINTS，例如：\n")
+            print(f"{market.upper()}_ENDPOINTS = {{")
+            for kind, path in suggestions.items():
+                print(f'    "{kind}": "{base}{path}",')
+            print("}")
+            print("\n（以上只是關鍵字命中的第一個候選，請對照上面的說明挑對的那個）")
 
     return problems
 

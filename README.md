@@ -17,12 +17,28 @@
 
 ```bash
 pip install -r requirements-dev.txt
-python -m pytest -q          # 158 個測試，不需要網路
+python -m pytest -q          # 181 個測試，不需要網路
 ```
 
 ### 第一次部署，請照這個順序
 
-**第 1 步：驗證端點**（必做，5 分鐘）
+**第 1 步：確認 TPEx 端點路徑**（必做）
+
+```bash
+python -m etl discover
+```
+
+`etl/config.py` 裡的 TPEx 路徑是依文件推測的，**已知至少有一個不正確**。
+TPEx 的端點名稱無法從公開文件可靠推斷，而且猜錯時伺服器回的是 HTML 錯誤頁
+而不是 404，只看 JSON 解析失敗的訊息查不出原因。
+
+這個指令會讀官方的 OpenAPI 規格，列出真實路徑、指出設定檔裡哪幾個對不上，
+並依關鍵字給出候選，最後印出可直接貼回 `TPEX_ENDPOINTS` 的片段。
+要自己找的話用 `python -m etl discover --grep 法人`。
+
+TWSE 用的是 `rwd` 報表端點，不在 OpenAPI 規格裡，所以這步只查上櫃。
+
+**第 2 步：驗證欄位**（必做，5 分鐘）
 
 ```bash
 python -m etl verify --date 2026-09-05
@@ -33,7 +49,7 @@ python -m etl verify --date 2026-09-05
 照著印出的表頭去補 `etl/sources/twse.py` 裡的別名清單即可——欄位是以**表頭
 文字**定位的，所以只需要加別名，不必改索引。
 
-**第 2 步：回補歷史**
+**第 3 步：回補歷史**
 
 ```bash
 python -m etl backfill --start 2026-03-01 --markets twse
@@ -45,7 +61,7 @@ Actions → 每日 ETL → Run workflow，選 `mode=backfill` 執行。
 > 上櫃（TPEx）的 OpenAPI 多半只提供當日資料，**無法回補歷史**，
 > 只能從導入日起每日累積。
 
-**第 3 步：確認資料是否足以判斷**
+**第 4 步：確認資料是否足以判斷**
 
 ```bash
 python -m etl coverage
@@ -55,7 +71,7 @@ python -m etl coverage
 `insufficient` 而不是 `fail`——這兩者的差別很重要，別把「還不知道」
 當成「不符合」。
 
-**第 4 步：開啟排程**
+**第 5 步：開啟排程**
 
 `.github/workflows/etl.yml` 已設定台北時間每個交易日 19:00 自動執行。
 推上 GitHub 後在 Actions 頁面啟用即可。
@@ -67,6 +83,7 @@ python -m etl fetch                      # 抓今天（已有快照會略過）
 python -m etl fetch --date 2026-09-05    # 抓指定日期
 python -m etl build                      # 重算指標與選股結果
 python -m etl coverage                   # 檢查資料累積進度
+python -m etl discover --grep 融資       # 在官方規格裡搜端點
 ```
 
 ---
@@ -172,7 +189,7 @@ etl/
   indicators.py   SMA / EMA / MACD / 季線扣抵 / 盤整持續天數 / 迴歸斜率（純函式）
   screen.py       四組選股條件
   build.py        產出前端檔案
-  verify.py       端點探測
+  verify.py       端點探測與 OpenAPI 規格查詢
 web/
   index.html      單頁應用，hash 路由
   styles.css      設計 token、深淺色
@@ -181,7 +198,7 @@ web/
   demo/           示範資料，由 tools/gen_demo_data.py 產生
 tools/
   gen_demo_data.py
-tests/            158 個測試，全部離線執行
+tests/            181 個測試，全部離線執行
 ```
 
 ---
@@ -217,8 +234,11 @@ tests/            158 個測試，全部離線執行
 
 ## 已知限制
 
-- **欄位別名未經實際驗證。** 首次使用務必先跑 `python -m etl verify`。
-- **上櫃無法回補歷史。** 見上方第 2 步。
+- **TPEx 端點路徑未驗證，已知至少一個錯誤。** 首次使用先跑
+  `python -m etl discover`。抓取層遇到「200 但不是 JSON」會立刻失敗並印出
+  實際回應內容與狀態碼，不會浪費四輪退避重試。
+- **欄位別名未經實際驗證。** 接著跑 `python -m etl verify`。
+- **上櫃無法回補歷史。** 見上方第 3 步。
 - **回補時的日期防呆。** 若端點忽略 `date` 參數回傳當日資料，程式會偵測到
   日期不符並跳過該筆，避免把今天的數字寫進過去的日期。無法從回應判斷日期
   時只能放行，此時不會宣稱驗證過。

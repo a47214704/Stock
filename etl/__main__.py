@@ -109,6 +109,13 @@ def cmd_coverage(args) -> int:
     return 0
 
 
+def cmd_discover(args) -> int:
+    problems = verify_mod.discover(args.market, args.grep)
+    if problems:
+        print(f"\n有 {problems} 個端點需要更正。")
+    return 0
+
+
 def cmd_verify(args) -> int:
     date_text = args.date or storage.to_key(today_taipei() - timedelta(days=1))
     problems = 0
@@ -150,6 +157,13 @@ def main(argv=None) -> int:
 
     p = sub.add_parser("coverage", help="檢查已累積的資料是否足以判斷各條件")
     p.set_defaults(func=cmd_coverage)
+
+    p = sub.add_parser(
+        "discover",
+        help="讀交易所的 OpenAPI 規格，列出實際端點並檢查設定是否正確")
+    p.add_argument("--market", choices=["tpex", "twse"], default="tpex")
+    p.add_argument("--grep", help="只列出路徑或說明含此關鍵字的端點")
+    p.set_defaults(func=cmd_discover)
 
     p = sub.add_parser("verify", help="探測端點並印出實際欄位，用來校正欄位別名")
     p.add_argument("--market", choices=["twse", "tpex", "both"], default="both")

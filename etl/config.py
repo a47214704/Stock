@@ -41,8 +41,11 @@ TWSE_PARAMS = {
     "foreign": {"selectType": "ALLBUT0999", "response": "json"},
 }
 
-# 上櫃。TPEx 的歷史查詢端點與 TWSE 命名慣例不同，此處先接 openapi 的當日資料，
-# 歷史回補能力待 verify 後補上。
+# 上櫃。以下路徑是依文件推測的，**已知至少有一個不正確**——TPEx 的端點名稱
+# 無法從公開文件可靠推斷，猜錯時伺服器會回 HTML 錯誤頁而不是 404。
+# 使用前請先跑 `python -m etl discover`，它會讀官方 OpenAPI 規格、列出真實路徑，
+# 並直接指出這裡哪幾個對不上。
+# 另外 TPEx 的 openapi 端點多半只提供當日資料，上櫃無法回補歷史。
 TPEX_ENDPOINTS = {
     "price": f"{TPEX_OPENAPI}/tpex_mainboard_daily_close_quotes",
     "institutional": f"{TPEX_OPENAPI}/tpex_3itrade_hedge_daily",
