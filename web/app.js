@@ -73,11 +73,21 @@ const CONDITIONS = {
   },
   foreign_increasing: {
     label: "外資庫存增加", group: "chips",
-    rows: c => [
-      ["期間變化", fmt.pct(c.change_pct)],
-      ["期初／期末", `${fmt.compact(c.first)} / ${fmt.compact(c.last)}`],
-      ["迴歸斜率", fmt.compact(c.slope) + " 股/日"],
-    ],
+    // 上櫃的來源只提供持股比例、沒有股數，這時判斷依據會是比例。
+    // 兩者通常一致，但遇到現金增資這類股本變動會不同，所以要標明。
+    rows: c => {
+      const byRatio = c.basis === "ratio";
+      const unit = byRatio ? "%" : "股";
+      return [
+        ["判斷依據", byRatio ? "持股比例" : "持有股數"],
+        ["期間變化", fmt.pct(c.change_pct)],
+        ["期初／期末", byRatio
+          ? `${fmt.num(c.first)}% / ${fmt.num(c.last)}%`
+          : `${fmt.compact(c.first)} / ${fmt.compact(c.last)}`],
+        ["迴歸斜率", (byRatio ? fmt.num(c.slope, 4) : fmt.compact(c.slope))
+          + ` ${unit}/日`],
+      ];
+    },
   },
   institutional_net_buy: {
     label: "三大法人合計買超", group: "chips",

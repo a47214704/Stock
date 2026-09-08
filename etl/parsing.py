@@ -78,19 +78,39 @@ def iter_tables(payload: Any) -> Iterable[tuple[list[str], list[list[Any]]]]:
             yield [clean_text(x) for x in f], d
 
 
-def find_column(fields: Sequence[str], aliases: Sequence[str]) -> int | None:
-    """依表頭文字找欄位索引。先求完全相等，再退回包含比對。"""
+Alias = str | tuple[str, int]
+
+
+def find_column(fields: Sequence[str], aliases: Sequence[Alias]) -> int | None:
+    """依表頭文字找欄位索引。先求完全相等，再退回包含比對。
+
+    別名可以是字串，也可以是 `(別名, 第幾次出現)` 的組合。後者是為了
+    表頭本身無法區分欄位的情形——MI_MARGN 的表頭是
+
+        代號 名稱 買進 賣出 現金償還 前日餘額 今日餘額 次一營業日限額
+                  買進 賣出 現券償還 前日餘額 今日餘額 次一營業日限額 …
+
+    前六欄是融資、後六欄是融券，但表頭裡沒有「融資／融券」字樣，
+    「今日餘額」出現兩次且意義不同。這種情況只能靠出現順序區分，
+    所以 `("今日餘額", 1)` 取融資、`("今日餘額", 2)` 取融券。
+
+    別名依序嘗試，字串別名永遠優先，位置退路放在最後——這樣萬一交易所
+    日後補上「融資今日餘額」這種明確欄名，會自動改用文字比對。
+    """
     normalized = [clean_text(f).replace(" ", "") for f in fields]
-    for alias in aliases:
-        target = alias.replace(" ", "")
-        for idx, name in enumerate(normalized):
-            if name == target:
-                return idx
-    for alias in aliases:
-        target = alias.replace(" ", "")
-        for idx, name in enumerate(normalized):
-            if target and target in name:
-                return idx
+
+    def hits(target: str, exact: bool) -> list[int]:
+        if not target:
+            return []
+        return [idx for idx, name in enumerate(normalized)
+                if (name == target if exact else target in name)]
+
+    for exact in (True, False):
+        for alias in aliases:
+            target, nth = alias if isinstance(alias, tuple) else (alias, 1)
+            found = hits(target.replace(" ", ""), exact)
+            if len(found) >= nth:
+                return found[nth - 1]
     return None
 
 
@@ -105,7 +125,7 @@ class ColumnMissing(LookupError):
         self.fields = list(fields)
 
 
-def resolve_columns(fields: Sequence[str], spec: dict[str, Sequence[str]],
+def resolve_columns(fields: Sequence[str], spec: dict[str, Sequence[Alias]],
                     required: Sequence[str]) -> dict[str, int | None]:
     """把 {欄位名: 別名清單} 解析成 {欄位名: 索引}，缺必要欄位就丟錯。"""
     resolved: dict[str, int | None] = {}
@@ -117,7 +137,7 @@ def resolve_columns(fields: Sequence[str], spec: dict[str, Sequence[str]],
     return resolved
 
 
-def pick_table(payload: Any, spec: dict[str, Sequence[str]],
+def pick_table(payload: Any, spec: dict[str, Sequence[Alias]],
                required: Sequence[str]) -> tuple[dict[str, int | None], list[list[Any]]]:
     """在回應的多張表中挑出含有所需欄位的那一張。"""
     errors: list[str] = []

@@ -78,6 +78,41 @@ class TestFindColumn:
         assert find_column(["a", "b"], ["c"]) is None
 
 
+class TestPositionalAliases:
+    """表頭本身無法區分欄位時，靠出現順序定位。
+
+    這是 MI_MARGN 的真實表頭：前六欄是融資、後六欄是融券，
+    但欄名都叫「買進 賣出 …前日餘額 今日餘額」，「今日餘額」出現兩次
+    且意義不同。純文字比對會把融券餘額也對到融資欄。
+    """
+
+    MARGN = ["代號", "名稱", "買進", "賣出", "現金償還", "前日餘額", "今日餘額",
+             "次一營業日限額", "買進", "賣出", "現券償還", "前日餘額", "今日餘額",
+             "次一營業日限額", "資券互抵", "註記"]
+
+    def test_first_occurrence(self):
+        assert find_column(self.MARGN, [("今日餘額", 1)]) == 6
+
+    def test_second_occurrence(self):
+        assert find_column(self.MARGN, [("今日餘額", 2)]) == 12
+
+    def test_plain_alias_takes_the_first(self):
+        assert find_column(self.MARGN, ["今日餘額"]) == 6
+
+    def test_text_alias_wins_over_positional_fallback(self):
+        """交易所日後若補上明確欄名，應自動改用文字比對而非位置。"""
+        labelled = ["代號", "融券今日餘額", "今日餘額"]
+        assert find_column(labelled, ["融券今日餘額", ("今日餘額", 2)]) == 1
+
+    def test_falls_through_when_occurrence_missing(self):
+        assert find_column(["今日餘額"], [("今日餘額", 2), "代號"]) is None
+        assert find_column(["今日餘額", "代號"], [("今日餘額", 2), "代號"]) == 1
+
+    def test_occurrence_counts_substring_matches_too(self):
+        fields = ["融資今日餘額", "融券今日餘額"]
+        assert find_column(fields, [("今日餘額", 2)]) == 1
+
+
 class TestResolveColumns:
     def test_column_order_does_not_matter(self):
         a = resolve_columns(["證券代號", "收盤價", "成交股數"], SPEC, REQUIRED)

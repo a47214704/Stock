@@ -79,9 +79,10 @@ TPEX_ENDPOINTS = {
     "price": f"{TPEX_OPENAPI}/tpex_mainboard_daily_close_quotes",
     "institutional": f"{TPEX_OPENAPI}/tpex_3insti_daily_trading",
     "margin": f"{TPEX_OPENAPI}/tpex_mainboard_margin_balance",
-    # 外資持股：關鍵字搜尋只找到董監事持股相關的端點，正確的還沒確認。
-    # 待 discover --all 列出全部 225 個端點後挑選。
-    "foreign": f"{TPEX_OPENAPI}/tpex_foreign_dealers_hold",
+    # 外資持股：規格中的「上櫃僑外資及陸資持股比例排行表」。
+    # 名稱是「排行表」，可能只提供持股比例而沒有股數，
+    # 條件 3b 會自動退回用比例判斷趨勢（見 screen.check_foreign_increasing）。
+    "foreign": f"{TPEX_OPENAPI}/tpex_3insti_qfii",
 }
 
 # --- 儲存路徑 -------------------------------------------------------------

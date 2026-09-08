@@ -12,7 +12,8 @@ from typing import Any
 from .. import config
 from ..http import get_json
 from ..parsing import (
-    ColumnMissing, clean_text, is_common_stock, pick_table, to_int, to_num,
+    ColumnMissing, clean_text, is_common_stock, iter_tables, pick_table,
+    to_int, to_num,
 )
 
 log = logging.getLogger(__name__)
@@ -44,12 +45,19 @@ INSTITUTIONAL_SPEC = {
 }
 INSTITUTIONAL_REQUIRED = ["stock_id"]
 
+# MI_MARGN 的表頭無法自我區分：前六欄是融資、後六欄是融券，但欄名都叫
+# 「買進 賣出 …前日餘額 今日餘額」，「今日餘額」出現兩次。這種情形只能靠
+# 出現順序區分，因此保留文字別名在前、位置退路在後（見 parsing.find_column）。
 MARGIN_SPEC = {
     "stock_id": ["股票代號", "證券代號", "代號"],
     "name": ["股票名稱", "證券名稱", "名稱"],
-    "margin_balance": ["融資今日餘額", "融資餘額"],
-    "margin_prev": ["融資前日餘額"],
-    "short_balance": ["融券今日餘額", "融券餘額"],
+    "margin_balance": ["融資今日餘額", "融資餘額", ("今日餘額", 1)],
+    "margin_prev": ["融資前日餘額", ("前日餘額", 1)],
+    "short_balance": ["融券今日餘額", "融券餘額", ("今日餘額", 2)],
+    "short_prev": ["融券前日餘額", ("前日餘額", 2)],
+    # 只用來驗證版面順序，不寫進快照
+    "cash_repayment": ["現金償還"],
+    "stock_repayment": ["現券償還"],
 }
 MARGIN_REQUIRED = ["stock_id", "margin_balance"]
 
@@ -132,11 +140,17 @@ def _fetch(kind: str, date: str) -> dict[str, Any]:
 
 
 def _rows(kind: str, date: str, spec: dict, required: list[str]):
+    """逐列產出 (股票代號, 取值函式, 該列, 版面資訊)。
+
+    版面資訊帶著解析出的欄位索引與實際表頭，供需要驗證版面的呼叫端使用。
+    """
     payload = _fetch(kind, date)
     try:
         cols, data = pick_table(payload, spec, required)
     except (LookupError, ColumnMissing) as exc:
         raise RuntimeError(f"TWSE {kind} {date} 欄位解析失敗：{exc}") from exc
+    fields = next((f for f, d in iter_tables(payload) if d is data), [])
+    layout = {"cols": cols, "fields": [clean_text(f) for f in fields]}
 
     def cell(row: list, key: str):
         idx = cols.get(key)
@@ -150,12 +164,12 @@ def _rows(kind: str, date: str, spec: dict, required: list[str]):
         stock_id = clean_text(cell(row, "stock_id"))
         if not is_common_stock(stock_id):
             continue
-        yield stock_id, cell, row
+        yield stock_id, cell, row, layout
 
 
 def fetch_price(date: str) -> dict[str, dict]:
     out: dict[str, dict] = {}
-    for stock_id, cell, row in _rows("price", date, PRICE_SPEC, PRICE_REQUIRED):
+    for stock_id, cell, row, _ in _rows("price", date, PRICE_SPEC, PRICE_REQUIRED):
         close = to_num(cell(row, "close"))
         if close is None:
             continue          # 全日無成交
@@ -173,7 +187,7 @@ def fetch_price(date: str) -> dict[str, dict]:
 
 def fetch_institutional(date: str) -> dict[str, dict]:
     out: dict[str, dict] = {}
-    for stock_id, cell, row in _rows("institutional", date, INSTITUTIONAL_SPEC,
+    for stock_id, cell, row, _ in _rows("institutional", date, INSTITUTIONAL_SPEC,
                                      INSTITUTIONAL_REQUIRED):
         foreign = to_int(cell(row, "foreign_net")) or 0
         foreign_dealer = to_int(cell(row, "foreign_dealer_net")) or 0
@@ -192,9 +206,38 @@ def fetch_institutional(date: str) -> dict[str, dict]:
     return out
 
 
+def _check_margin_layout(layout: dict) -> None:
+    """在只能靠位置區分融資／融券時，確認兩段的順序沒有改變。
+
+    表頭若本身帶有「融資／融券」字樣，欄位是靠文字定位的，順序無關，
+    這時不做檢查。只有在表頭無法自我區分、真的依賴出現順序時，
+    版面一變才必須大聲失敗，而不是安靜地把融券餘額寫進融資欄位。
+    """
+    fields = layout.get("fields") or []
+    if any("融資" in f or "融券" in f for f in fields):
+        return                          # 表頭可自我區分，不依賴位置
+
+    cols = layout["cols"]
+    margin, short = cols.get("margin_balance"), cols.get("short_balance")
+    if margin is not None and short is not None and margin >= short:
+        raise RuntimeError(
+            f"MI_MARGN 版面異常：融資今日餘額（欄 {margin}）不在融券今日餘額"
+            f"（欄 {short}）之前。請跑 `python -m etl verify` 檢查表頭。")
+
+    cash, stock = cols.get("cash_repayment"), cols.get("stock_repayment")
+    if cash is not None and stock is not None and cash >= stock:
+        raise RuntimeError(
+            f"MI_MARGN 版面異常：現金償還（欄 {cash}）不在現券償還"
+            f"（欄 {stock}）之前，融資／融券兩段的順序可能已改變。")
+
+
 def fetch_margin(date: str) -> dict[str, dict]:
     out: dict[str, dict] = {}
-    for stock_id, cell, row in _rows("margin", date, MARGIN_SPEC, MARGIN_REQUIRED):
+    checked = False
+    for stock_id, cell, row, layout in _rows("margin", date, MARGIN_SPEC, MARGIN_REQUIRED):
+        if not checked:
+            _check_margin_layout(layout)
+            checked = True
         balance = to_int(cell(row, "margin_balance"))
         if balance is None:
             continue
@@ -207,7 +250,7 @@ def fetch_margin(date: str) -> dict[str, dict]:
 
 def fetch_foreign(date: str) -> dict[str, dict]:
     out: dict[str, dict] = {}
-    for stock_id, cell, row in _rows("foreign", date, FOREIGN_SPEC, FOREIGN_REQUIRED):
+    for stock_id, cell, row, _ in _rows("foreign", date, FOREIGN_SPEC, FOREIGN_REQUIRED):
         shares = to_int(cell(row, "shares_held"))
         ratio = to_num(cell(row, "holding_ratio"))
         issued = to_int(cell(row, "issued_shares"))

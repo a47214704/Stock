@@ -135,6 +135,30 @@ class TestForeignIncreasing:
     def test_flat_holding_fails(self):
         assert not check_foreign_increasing([int(3e8)] * 200, CFG)["pass"]
 
+    def test_uses_shares_when_available(self):
+        result = check_foreign_increasing(
+            [int(3e8 + 9e5 * i) for i in range(200)], CFG,
+            ratio=[10.0] * 200)          # 比例持平也不該影響結果
+        assert result["basis"] == "shares"
+        assert result["pass"] is True
+
+    def test_falls_back_to_ratio_when_shares_missing(self):
+        """上櫃的來源只給持股比例、沒有股數，此時用比例判斷趨勢。"""
+        result = check_foreign_increasing(
+            [None] * 200, CFG, ratio=[20.0 + 0.02 * i for i in range(200)])
+        assert result["basis"] == "ratio"
+        assert result["pass"] is True
+
+    def test_ratio_fallback_still_needs_an_uptrend(self):
+        result = check_foreign_increasing(
+            [None] * 200, CFG, ratio=[20.0 - 0.02 * i for i in range(200)])
+        assert result["basis"] == "ratio"
+        assert result["pass"] is False
+
+    def test_insufficient_when_neither_is_available(self):
+        result = check_foreign_increasing([None] * 200, CFG, ratio=[None] * 200)
+        assert result["status"] == INSUFFICIENT
+
 
 class TestInstitutionalNetBuy:
     def test_net_buy_passes(self):

@@ -146,14 +146,29 @@ def check_margin_declining(margin, cfg: ScreenConfig) -> dict:
     )
 
 
-def check_foreign_increasing(foreign, cfg: ScreenConfig) -> dict:
-    """條件 3b：外資庫存（持有股數）近三個月持續增加。"""
-    if _count_valid(foreign) < cfg.foreign_window:
-        return _result(INSUFFICIENT, need=cfg.foreign_window, have=_count_valid(foreign))
+def check_foreign_increasing(foreign, cfg: ScreenConfig,
+                             ratio=None) -> dict:
+    """條件 3b：外資庫存近三個月持續增加。
 
-    t = trend(foreign, cfg.foreign_window)
+    優先看持有股數。上櫃的來源只提供持股比例、沒有股數，此時退回用比例
+    判斷趨勢——比例上升通常等同庫存增加，但遇到現金增資這類股本變動時，
+    股數增加而比例被稀釋，兩者會不一致。結果會標明用的是哪一種，
+    前端可據此說明。
+    """
+    series = foreign
+    basis = "shares"
+    if _count_valid(series) < cfg.foreign_window and ratio is not None:
+        series = ratio
+        basis = "ratio"
+
+    if _count_valid(series) < cfg.foreign_window:
+        return _result(INSUFFICIENT, need=cfg.foreign_window,
+                       have=_count_valid(series), basis=basis)
+
+    t = trend(series, cfg.foreign_window)
     if t is None or t["change_pct"] is None or t["slope"] is None:
-        return _result(INSUFFICIENT, need=cfg.foreign_window, have=_count_valid(foreign))
+        return _result(INSUFFICIENT, need=cfg.foreign_window,
+                       have=_count_valid(series), basis=basis)
 
     increased = t["change_pct"] >= cfg.foreign_min_increase_pct
     uptrend = t["slope"] > cfg.foreign_min_slope
@@ -161,8 +176,8 @@ def check_foreign_increasing(foreign, cfg: ScreenConfig) -> dict:
         PASS if (increased and uptrend) else FAIL,
         change_pct=round(t["change_pct"], 4),
         first=t["first"], last=t["last"],
-        slope=round(t["slope"], 3),
-        increased=increased, uptrend=uptrend,
+        slope=round(t["slope"], 6 if basis == "ratio" else 3),
+        increased=increased, uptrend=uptrend, basis=basis,
     )
 
 
@@ -219,7 +234,8 @@ def screen_stock(stock_id: str, series: dict, cfg: ScreenConfig = DEFAULT_SCREEN
             series.get("high", []), series.get("low", []), closes, cfg),
         "ma_turn_up": check_ma_turn_up(closes, cfg),
         "margin_declining": check_margin_declining(series.get("margin_balance", []), cfg),
-        "foreign_increasing": check_foreign_increasing(series.get("foreign_shares", []), cfg),
+        "foreign_increasing": check_foreign_increasing(
+            series.get("foreign_shares", []), cfg, series.get("foreign_ratio", [])),
         "institutional_net_buy": check_institutional_net_buy(series.get("total_net", []), cfg),
         "macd": check_macd(closes, cfg),
     }

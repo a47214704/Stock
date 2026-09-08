@@ -130,8 +130,14 @@ def fetch_foreign(date: str) -> dict[str, dict]:
     def run():
         out: dict[str, dict] = {}
         for stock_id, row in _iter("foreign"):
-            shares = to_int(_pick(row, ["ForeignShareholding", "外資及陸資持有股數", "持有股數"]))
-            ratio = to_num(_pick(row, ["ForeignShareholdingRatio", "持股比率"]))
+            shares = to_int(_pick(row, [
+                "ForeignShareholding", "全體外資及陸資持有股數",
+                "外資及陸資持有股數", "持有股數",
+            ]))
+            ratio = to_num(_pick(row, [
+                "ForeignShareholdingRatio", "全體僑外資及陸資持股比例",
+                "僑外資及陸資持股比例", "持股比例", "持股比率",
+            ]))
             if shares is None and ratio is None:
                 continue
             out[stock_id] = {"foreign_shares": shares, "foreign_ratio": ratio}

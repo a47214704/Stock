@@ -32,15 +32,23 @@ T86_PAYLOAD = {
               "-300,000", "6,000,000"]],
 }
 
+# MI_MARGN 的真實表頭（取自 docs/endpoint-report.md）。
+# 融資與融券的欄名完全相同，只能靠出現順序區分。
+MARGIN_FIELDS = ["代號", "名稱", "買進", "賣出", "現金償還", "前日餘額", "今日餘額",
+                 "次一營業日限額", "買進", "賣出", "現券償還", "前日餘額",
+                 "今日餘額", "次一營業日限額", "資券互抵", "註記"]
+
 MARGIN_PAYLOAD = {
     "stat": "OK", "date": "20260907",
     "tables": [
-        {"fields": ["說明"], "data": [["融資融券彙總"]]},
-        {"fields": ["股票代號", "股票名稱", "融資買進", "融資賣出", "現金償還",
-                    "融資前日餘額", "融資今日餘額", "融資限額",
-                    "融券今日餘額"],
-         "data": [["2330", "台積電", "1,000", "1,500", "100",
-                   "50,000", "49,400", "999,999", "3,200"]]},
+        {"fields": MARGIN_FIELDS, "data": [
+            # 第一列是合計列，代號為空白，應被普通股過濾擋掉
+            ["　", "合計", "320,493", "254,685", "2,713", "6,568,019", "6,631,114",
+             "192,003,069", "25,169", "16,389", "654", "135,944", "126,510",
+             "192,003,069", "5,567", "　"],
+            ["2330", "台積電", "1,000", "1,500", "100", "50,000", "49,400",
+             "999,999", "300", "200", "50", "3,500", "3,200", "999,999", "10", ""],
+        ]},
     ],
 }
 
@@ -96,11 +104,42 @@ class TestFetchInstitutional:
 
 
 class TestFetchMargin:
-    def test_picks_the_right_table_and_column(self, fake_get):
+    def test_reads_the_margin_side_not_the_short_side(self, fake_get):
+        """兩段欄名相同，錯一格就會把融券餘額當成融資餘額。"""
         fake_get(MARGIN_PAYLOAD)
         row = twse.fetch_margin("20260907")["2330"]
-        assert row["margin_balance"] == 49_400     # 今日餘額，不是前日
+        assert row["margin_balance"] == 49_400     # 融資今日餘額
+        assert row["short_balance"] == 3_200       # 融券今日餘額
+        # 不能誤取前日餘額（50,000 / 3,500）
+        assert row["margin_balance"] != 50_000
+        assert row["short_balance"] != 3_500
+
+    def test_excludes_the_total_row(self, fake_get):
+        fake_get(MARGIN_PAYLOAD)
+        rows = twse.fetch_margin("20260907")
+        assert list(rows) == ["2330"]
+
+    def test_prefers_labelled_headers_when_available(self, fake_get):
+        """交易所日後若補上「融資今日餘額」這種欄名，應改用文字比對。"""
+        fake_get({
+            "stat": "OK", "date": "20260907",
+            "fields": ["代號", "名稱", "融券今日餘額", "融資今日餘額"],
+            "data": [["2330", "台積電", "3,200", "49,400"]],
+        })
+        row = twse.fetch_margin("20260907")["2330"]
+        assert row["margin_balance"] == 49_400
         assert row["short_balance"] == 3_200
+
+    def test_layout_change_fails_loudly(self, fake_get):
+        """融資／融券只能靠位置區分，版面一變必須大聲失敗，
+        而不是安靜地把融券餘額寫進融資欄位。"""
+        swapped = list(MARGIN_FIELDS)
+        # 把兩段的償還欄互換，模擬融券段被排到前面
+        swapped[4], swapped[10] = swapped[10], swapped[4]
+        fake_get({"stat": "OK", "date": "20260907", "fields": swapped,
+                  "data": [MARGIN_PAYLOAD["tables"][0]["data"][1]]})
+        with pytest.raises(RuntimeError, match="版面異常"):
+            twse.fetch_margin("20260907")
 
 
 class TestFetchForeign:
