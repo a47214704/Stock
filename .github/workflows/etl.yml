@@ -63,6 +63,17 @@ jobs:
             ${{ inputs.end && format('--end {0}', inputs.end) || '' }} \
             --markets "${{ inputs.markets || 'twse' }}"
 
+      - name: 補齊最近缺漏的交易日
+        # 排程若曾漏跑（runner 故障、手動停用、判斷成非交易日等），
+        # 那天的快照就會永久缺一個洞，而每日 fetch 只抓當天、不會回頭補。
+        # 這裡掃最近 10 個平日：已有快照的日期直接跳過、不發任何請求，
+        # 所以資料齊全時幾乎零成本。上櫃無法回補，只補上市。
+        if: inputs.mode != 'backfill' && inputs.mode != 'build-only'
+        run: |
+          python -m etl backfill \
+            --start "$(date -u -d '10 days ago' +%Y-%m-%d)" \
+            --markets twse
+
       - name: 補抓延遲公布的報表
         # 外資持股當天抓不到（TWSE 回「查詢日期大於可查詢最大日期」），
         # 要等下一個交易日才公布，所以每次執行都往回補幾天。

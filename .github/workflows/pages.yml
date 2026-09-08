@@ -1,10 +1,19 @@
 name: 部署前端
 
 on:
-  # ETL 每天 commit 新資料後自動重新部署
+  # 直接推 main 時（改前端、手動改資料）重新部署
   push:
     branches: [main]
     paths: ["web/**", "data/**", ".github/workflows/pages.yml"]
+
+  # 每日 ETL 之後接著部署。
+  # 不能只靠上面的 push 觸發——ETL 是用預設的 GITHUB_TOKEN 推送的，
+  # GitHub 為避免遞迴，刻意不讓這種 push 產生 workflow 事件。
+  # workflow_run 是接在另一個 workflow「完成」之後，不受此限制。
+  workflow_run:
+    workflows: ["每日 ETL"]
+    types: [completed]
+
   workflow_dispatch:
 
 # 同時只跑一份部署，排隊而不取消，避免部署到舊資料
@@ -20,8 +29,16 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # ETL 失敗時不要拿半份資料去部署
+    if: >-
+      github.event_name != 'workflow_run'
+      || github.event.workflow_run.conclusion == 'success'
     steps:
       - uses: actions/checkout@v4
+        with:
+          # workflow_run 事件的 github.sha 是「ETL 開始時」的 commit，
+          # 不含它剛推上去的資料。取分支名才拿得到含新資料的最新狀態。
+          ref: ${{ github.event.workflow_run.head_branch || github.ref }}
 
       - name: 組裝靜態站台
         run: |

@@ -122,9 +122,13 @@ python -m etl coverage
 `.github/workflows/etl.yml` 已設定台北時間每個交易日 19:00 自動執行。
 推上 GitHub 後在 Actions 頁面啟用即可。
 
+排程每次執行除了抓當天，還會掃最近 10 個平日把缺漏的日期補回來——
+每日 fetch 只抓當天，排程若曾漏跑（runner 故障、手動停用）那天就會永久
+缺一個洞。已有快照的日期直接跳過、不發請求，資料齊全時這一步零成本。
+
 前端要另外部署：Settings → Pages 把 Source 設為 **GitHub Actions**，
-然後跑一次 **Actions → 部署前端**。之後 `main` 只要有 `web/` 或 `data/`
-的變動就會自動重新部署，所以每日 ETL commit 完資料，網站會跟著更新。
+然後跑一次 **Actions → 部署前端**。之後每日 ETL 跑完會自動接著部署
+（機制見上方「分支」一節），網站會跟著更新。
 在功能分支上開發時不會自動觸發，要用 Run workflow 手動部署。
 
 ### 日常指令
@@ -193,7 +197,13 @@ python -m etl discover --grep 融資       # 在 TPEx 官方規格裡搜端點
 `main` 是主要分支，也是 GitHub Pages 與每日排程運作的分支：
 
 - **每日 ETL** 的 cron 在預設分支上執行，資料 commit 回同一個分支
-- **部署前端** 在 push 到 `main` 且動到 `web/` 或 `data/` 時自動觸發
+- **部署前端** 由兩種方式觸發：直接 push `main`（改前端、手動改資料），
+  以及每日 ETL 執行完之後
+
+第二點不能只靠 push 觸發。ETL 是用預設的 `GITHUB_TOKEN` 推送資料，
+而 GitHub 為避免遞迴，**刻意不讓這種 push 產生 workflow 事件**——所以
+`pages.yml` 另外用 `workflow_run` 接在 ETL 完成之後，並在 ETL 失敗時跳過，
+不會拿半份資料去部署。
 
 功能分支上開發時，ETL 與部署都要用 Run workflow 手動觸發，
 資料會 commit 到該功能分支而不是 `main`。
