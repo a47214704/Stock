@@ -85,7 +85,11 @@ GitHub Pages / Cloudflare Pages（靜態託管）
 
 要注意的兩點：
 
-- **repo 體積**：每日 commit 會持續長大。對策是只保留最新快照的完整 JSON，歷史序列存成單一累積檔（或另開 `data` 分支、或用 Release assets 存檔），避免每天複製整份資料。
+- **repo 體積**：每日 commit 會持續長大，但實測是可控的。做法是每日快照
+  一天一個檔、寫入後不再改動（git 每天只新增一個 blob，不重寫既有檔案），
+  並採欄位化編碼讓欄位名只出現一次。以 1800 檔實測：每日原始 240 KB、
+  git 壓縮後 105 KB，一年約 26 MB，五年約 128 MB。若日後想再壓，
+  可把兩年前的快照合併成年度檔案封存。
 - **排程會被停用**：public repo 的 GitHub Actions 排程若 60 天無任何 commit 活動會自動停用。這個專案每天都有 commit，實務上不會遇到。
 
 進階選項：ETL 直接產出 SQLite 檔，前端用 `sql.js` 或 DuckDB-WASM 載入，就能在瀏覽器內下 SQL 做任意條件組合的篩選，不必事先把所有篩選邏輯寫死在 ETL。

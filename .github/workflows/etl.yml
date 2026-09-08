@@ -1,0 +1,90 @@
+name: 每日 ETL
+
+on:
+  schedule:
+    # 台北時間每個交易日 19:00（UTC 11:00）。
+    # 三大法人與融資餘額約 15:00 後陸續公布，外資持股統計較晚，抓晚一點比較保險。
+    - cron: "0 11 * * 1-5"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "執行模式"
+        type: choice
+        options: [fetch, backfill, build-only]
+        default: fetch
+      start:
+        description: "回補起日 YYYY-MM-DD（mode=backfill 時必填）"
+        type: string
+      end:
+        description: "回補迄日 YYYY-MM-DD（留空為今天）"
+        type: string
+      markets:
+        description: "市場"
+        type: string
+        default: "twse,tpex"
+
+# 同時只跑一份，避免排程與手動回補互相蓋掉對方的 commit
+concurrency:
+  group: etl
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  etl:
+    runs-on: ubuntu-latest
+    # 回補整季歷史可能要跑一小時以上
+    timeout-minutes: 330
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: 安裝相依套件
+        run: pip install -r requirements.txt
+
+      - name: 抓取當日資料
+        if: inputs.mode != 'backfill' && inputs.mode != 'build-only'
+        run: python -m etl fetch --markets "${{ inputs.markets || 'twse,tpex' }}"
+
+      - name: 回補歷史
+        if: inputs.mode == 'backfill'
+        run: |
+          if [ -z "${{ inputs.start }}" ]; then
+            echo "::error::mode=backfill 必須填 start"
+            exit 1
+          fi
+          python -m etl backfill \
+            --start "${{ inputs.start }}" \
+            ${{ inputs.end && format('--end {0}', inputs.end) || '' }} \
+            --markets "${{ inputs.markets || 'twse' }}"
+
+      - name: 重算指標與選股結果
+        run: python -m etl build
+
+      - name: 檢查資料累積進度
+        run: python -m etl coverage
+
+      - name: 提交結果
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data
+          if git diff --cached --quiet; then
+            echo "資料無變化（可能是休市日），不產生 commit"
+            exit 0
+          fi
+          git commit -m "data: 更新至 $(date -u +%Y-%m-%d)"
+          # 排程與手動執行可能同時進行，推不上去就 rebase 後重試
+          for i in 1 2 3 4; do
+            if git push; then exit 0; fi
+            echo "推送失敗，第 $i 次重試"
+            sleep $((2 ** i))
+            git pull --rebase origin "${GITHUB_REF_NAME}"
+          done
+          echo "::error::推送失敗"
+          exit 1
