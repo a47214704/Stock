@@ -31,8 +31,8 @@
     "min_median_amount": 10000000.0,
     "min_score_to_list": 4
   },
-  "data_date": "2026-09-10",
-  "generated_at": "2026-09-10T14:41:48Z",
+  "data_date": "2026-09-11",
+  "generated_at": "2026-09-11T14:40:37Z",
   "matched": 0,
   "missing_breakdown": {
     "chips": 0,
@@ -43,54 +43,54 @@
   "near_miss": 0,
   "results": [
     {
-      "close": 41.75,
+      "close": 40.7,
       "conditions": {
         "consolidation": {
           "days": 60,
-          "drift_ratio": 0.004,
+          "drift_ratio": 0.015,
           "flat": true,
           "high": 44.2,
           "low": 39.7,
-          "ma_slope_pct": 6e-05,
+          "ma_slope_pct": -6.4e-05,
           "narrow": true,
           "pass": true,
-          "position": 0.456,
+          "position": 0.222,
           "range_pct": 0.1084,
-          "run_days": 76,
+          "run_days": 77,
           "run_range_pct": 0.1386,
           "status": "pass"
         },
         "foreign_increasing": {
           "basis": "shares",
-          "change_pct": 0.039,
-          "first": 160508258.0,
+          "change_pct": 0.0403,
+          "first": 160576374.0,
           "increased": true,
-          "last": 166765966.0,
+          "last": 167053626.0,
           "pass": true,
-          "slope": 109863.406,
+          "slope": 118290.409,
           "status": "pass",
           "uptrend": true
         },
         "institutional_net_buy": {
           "days": 5,
-          "net_shares": 1932773,
+          "net_shares": 1189542,
           "pass": true,
           "status": "pass"
         },
         "ma_turn_up": {
           "deducting_low": false,
-          "deduction": 41.95,
-          "deduction_percentile": 0.625,
+          "deduction": 41.9,
+          "deduction_percentile": 0.558,
           "downtrend_pct": 0.0107,
-          "future_deduction_mean": 41.95,
+          "future_deduction_mean": 41.9,
           "future_supports": false,
-          "ma": 41.52,
-          "ma_slope_pct": 6e-05,
+          "ma": 41.5,
+          "ma_slope_pct": -6.4e-05,
           "pass": false,
           "rises_tomorrow": false,
           "status": "fail",
           "turning": false,
-          "turning_up": true,
+          "turning_up": false,
           "was_falling": false
         },
         "macd": {
@@ -99,22 +99,22 @@
           "converging": false,
           "days_since_cross": null,
           "green_run": null,
-          "osc": -0.0284,
+          "osc": -0.1017,
           "pass": false,
-          "prev_osc": -0.0187,
+          "prev_osc": -0.0284,
           "status": "fail",
           "turned_red": false
         },
         "margin_declining": {
-          "change_pct": -0.1556,
+          "change_pct": -0.1335,
           "declined": true,
           "downtrend": true,
           "first": 3342.0,
-          "last": 2822.0,
+          "last": 2896.0,
           "meaningful": true,
           "min_balance": 500,
           "pass": true,
-          "slope": -4.163,
+          "slope": -3.859,
           "status": "pass"
         }
       },
@@ -144,51 +144,51 @@
       "tradable": true
     },
     {
-      "close": 19.1,
+      "close": 18.9,
       "conditions": {
         "consolidation": {
           "days": 60,
-          "drift_ratio": 0.044,
+          "drift_ratio": 0.039,
           "flat": true,
           "high": 19.95,
           "low": 18.25,
-          "ma_slope_pct": 0.000307,
+          "ma_slope_pct": 0.000263,
           "narrow": true,
           "pass": true,
-          "position": 0.5,
+          "position": 0.382,
           "range_pct": 0.0894,
-          "run_days": 77,
+          "run_days": 78,
           "run_range_pct": 0.1446,
           "status": "pass"
         },
         "foreign_increasing": {
           "basis": "shares",
-          "change_pct": 0.2425,
-          "first": 1910171841.0,
+          "change_pct": 0.0597,
+          "first": 2228098636.0,
           "increased": true,
-          "last": 2373300640.0,
+          "last": 2361164551.0,
           "pass": true,
-          "slope": 5210871.066,
+          "slope": 4825166.689,
           "status": "pass",
           "uptrend": true
         },
         "institutional_net_buy": {
           "days": 5,
-          "net_shares": 20462370,
+          "net_shares": 3310522,
           "pass": true,
           "status": "pass"
         },
         "ma_turn_up": {
           "deducting_low": true,
-          "deduction": 18.75,
+          "deduction": 19.1,
           "deduction_percentile": 0.35,
-          "downtrend_pct": 0.0073,
-          "future_deduction_mean": 18.86,
+          "downtrend_pct": 0.007,
+          "future_deduction_mean": 18.85,
           "future_supports": true,
           "ma": 19.01,
-          "ma_slope_pct": 0.000307,
+          "ma_slope_pct": 0.000263,
           "pass": false,
-          "rises_tomorrow": true,
+          "rises_tomorrow": false,
           "status": "fail",
           "turning": false,
           "turning_up": true,
@@ -200,22 +200,22 @@
           "converging": false,
           "days_since_cross": null,
           "green_run": null,
-          "osc": -0.0057,
+          "osc": -0.0184,
           "pass": false,
-          "prev_osc": -0.0056,
+          "prev_osc": -0.0057,
           "status": "fail",
           "turned_red": false
         },
         "margin_declining": {
-          "change_pct": -0.2017,
+          "change_pct": -0.1567,
           "declined": true,
           "downtrend": true,
-          "first": 47677.0,
-          "last": 38061.0,
+          "first": 45229.0,
+          "last": 38141.0,
           "meaningful": true,
           "min_balance": 500,
           "pass": true,
-          "slope": -123.775,
+          "slope": -125.86,
           "status": "pass"
         }
       },
@@ -245,310 +245,7 @@
       "tradable": true
     },
     {
-      "close": 16.9,
-      "conditions": {
-        "consolidation": {
-          "days": 60,
-          "drift_ratio": 0.338,
-          "flat": true,
-          "high": 18.45,
-          "low": 16.45,
-          "ma_slope_pct": -0.000775,
-          "narrow": true,
-          "pass": true,
-          "position": 0.225,
-          "range_pct": 0.1162,
-          "run_days": 68,
-          "run_range_pct": 0.1388,
-          "status": "pass"
-        },
-        "foreign_increasing": {
-          "basis": "shares",
-          "change_pct": 0.2354,
-          "first": 84309603.0,
-          "increased": true,
-          "last": 104156370.0,
-          "pass": true,
-          "slope": 398618.109,
-          "status": "pass",
-          "uptrend": true
-        },
-        "institutional_net_buy": {
-          "days": 5,
-          "net_shares": 186004,
-          "pass": true,
-          "status": "pass"
-        },
-        "ma_turn_up": {
-          "deducting_low": true,
-          "deduction": 17.65,
-          "deduction_percentile": 0.458,
-          "downtrend_pct": -0.0129,
-          "future_deduction_mean": 17.45,
-          "future_supports": false,
-          "ma": 17.22,
-          "ma_slope_pct": -0.000775,
-          "pass": false,
-          "rises_tomorrow": false,
-          "status": "fail",
-          "turning": false,
-          "turning_up": false,
-          "was_falling": true
-        },
-        "macd": {
-          "converge_days": 0,
-          "converge_slope": null,
-          "converging": false,
-          "days_since_cross": null,
-          "green_run": null,
-          "osc": -0.0142,
-          "pass": false,
-          "prev_osc": -0.0101,
-          "status": "fail",
-          "turned_red": false
-        },
-        "margin_declining": {
-          "change_pct": -0.6433,
-          "declined": true,
-          "downtrend": true,
-          "first": 2010.0,
-          "last": 717.0,
-          "meaningful": true,
-          "min_balance": 500,
-          "pass": true,
-          "slope": -23.734,
-          "status": "pass"
-        }
-      },
-      "groups": {
-        "chips": true,
-        "consolidation": true,
-        "ma_turn_up": false,
-        "macd": false
-      },
-      "insufficient": [],
-      "liquidity": {
-        "days": 20,
-        "median_amount": 27317004,
-        "pass": true,
-        "status": "pass",
-        "threshold": 10000000
-      },
-      "market": "twse",
-      "missing": [
-        "ma_turn_up",
-        "macd"
-      ],
-      "name": "中鴻",
-      "pass_all": false,
-      "score": 4,
-      "stock_id": "2014",
-      "tradable": true
-    },
-    {
-      "close": 64.7,
-      "conditions": {
-        "consolidation": {
-          "days": 60,
-          "drift_ratio": 0.173,
-          "flat": true,
-          "high": 67.6,
-          "low": 60.2,
-          "ma_slope_pct": 0.000504,
-          "narrow": true,
-          "pass": true,
-          "position": 0.608,
-          "range_pct": 0.1165,
-          "run_days": 120,
-          "run_range_pct": 0.1441,
-          "status": "pass"
-        },
-        "foreign_increasing": {
-          "basis": "shares",
-          "change_pct": 0.0313,
-          "first": 72438538.0,
-          "increased": true,
-          "last": 74704985.0,
-          "pass": true,
-          "slope": 59291.711,
-          "status": "pass",
-          "uptrend": true
-        },
-        "institutional_net_buy": {
-          "days": 5,
-          "net_shares": 171455,
-          "pass": true,
-          "status": "pass"
-        },
-        "ma_turn_up": {
-          "deducting_low": true,
-          "deduction": 62.2,
-          "deduction_percentile": 0.2,
-          "downtrend_pct": 0.0102,
-          "future_deduction_mean": 61.76,
-          "future_supports": true,
-          "ma": 63.51,
-          "ma_slope_pct": 0.000504,
-          "pass": false,
-          "rises_tomorrow": true,
-          "status": "fail",
-          "turning": false,
-          "turning_up": true,
-          "was_falling": false
-        },
-        "macd": {
-          "converge_days": 5,
-          "converge_slope": -0.008365,
-          "converging": true,
-          "days_since_cross": 1,
-          "green_run": 7,
-          "osc": 0.005,
-          "pass": true,
-          "prev_osc": 0.0121,
-          "status": "pass",
-          "turned_red": true
-        },
-        "margin_declining": {
-          "change_pct": -0.1892,
-          "declined": true,
-          "downtrend": true,
-          "first": 37.0,
-          "last": 30.0,
-          "meaningful": false,
-          "min_balance": 500,
-          "pass": false,
-          "slope": -0.071,
-          "status": "fail"
-        }
-      },
-      "groups": {
-        "chips": false,
-        "consolidation": true,
-        "ma_turn_up": false,
-        "macd": true
-      },
-      "insufficient": [],
-      "liquidity": {
-        "days": 20,
-        "median_amount": 10823633,
-        "pass": true,
-        "status": "pass",
-        "threshold": 10000000
-      },
-      "market": "twse",
-      "missing": [
-        "ma_turn_up",
-        "chips"
-      ],
-      "name": "豐興",
-      "pass_all": false,
-      "score": 4,
-      "stock_id": "2015",
-      "tradable": true
-    },
-    {
-      "close": 64.0,
-      "conditions": {
-        "consolidation": {
-          "days": 60,
-          "drift_ratio": 0.361,
-          "flat": true,
-          "high": 66.7,
-          "low": 59.4,
-          "ma_slope_pct": 0.000462,
-          "narrow": true,
-          "pass": true,
-          "position": 0.63,
-          "range_pct": 0.1164,
-          "run_days": 83,
-          "run_range_pct": 0.1479,
-          "status": "pass"
-        },
-        "foreign_increasing": {
-          "basis": "shares",
-          "change_pct": 0.3915,
-          "first": 44408526.0,
-          "increased": true,
-          "last": 61793277.0,
-          "pass": true,
-          "slope": 146907.861,
-          "status": "pass",
-          "uptrend": true
-        },
-        "institutional_net_buy": {
-          "days": 5,
-          "net_shares": 257315,
-          "pass": true,
-          "status": "pass"
-        },
-        "ma_turn_up": {
-          "deducting_low": false,
-          "deduction": 61.9,
-          "deduction_percentile": 0.658,
-          "downtrend_pct": 0.0132,
-          "future_deduction_mean": 62.5,
-          "future_supports": true,
-          "ma": 62.72,
-          "ma_slope_pct": 0.000462,
-          "pass": false,
-          "rises_tomorrow": true,
-          "status": "fail",
-          "turning": false,
-          "turning_up": true,
-          "was_falling": false
-        },
-        "macd": {
-          "converge_days": 3,
-          "converge_slope": -0.010807,
-          "converging": true,
-          "days_since_cross": 16,
-          "green_run": 11,
-          "osc": 0.0655,
-          "pass": false,
-          "prev_osc": 0.0605,
-          "status": "fail",
-          "turned_red": false
-        },
-        "margin_declining": {
-          "change_pct": -0.4592,
-          "declined": true,
-          "downtrend": true,
-          "first": 5812.0,
-          "last": 3143.0,
-          "meaningful": true,
-          "min_balance": 500,
-          "pass": true,
-          "slope": -39.603,
-          "status": "pass"
-        }
-      },
-      "groups": {
-        "chips": true,
-        "consolidation": true,
-        "ma_turn_up": false,
-        "macd": false
-      },
-      "insufficient": [],
-      "liquidity": {
-        "days": 20,
-        "median_amount": 31852858,
-        "pass": true,
-        "status": "pass",
-        "threshold": 10000000
-      },
-      "market": "twse",
-      "missing": [
-        "ma_turn_up",
-        "macd"
-      ],
-      "name": "三陽工業",
-      "pass_all": false,
-      "score": 4,
-      "stock_id": "2206",
-      "tradable": true
-    },
-    {
-      "close": 35.35,
+      "close": 35.15,
       "conditions": {
         "consolidation": {
           "days": 60,
@@ -556,41 +253,41 @@
           "flat": false,
           "high": 43.75,
           "low": 33.7,
-          "ma_slope_pct": -0.001568,
+          "ma_slope_pct": -0.001563,
           "narrow": false,
           "pass": false,
-          "position": 0.164,
-          "range_pct": 0.2563,
+          "position": 0.144,
+          "range_pct": 0.2568,
           "run_days": null,
           "run_range_pct": null,
           "status": "fail"
         },
         "foreign_increasing": {
           "basis": "shares",
-          "change_pct": 0.3348,
-          "first": 21894265.0,
+          "change_pct": 0.3501,
+          "first": 21795901.0,
           "increased": true,
-          "last": 29224066.0,
+          "last": 29426866.0,
           "pass": true,
-          "slope": 128412.086,
+          "slope": 128318.538,
           "status": "pass",
           "uptrend": true
         },
         "institutional_net_buy": {
           "days": 5,
-          "net_shares": 980751,
+          "net_shares": 1045718,
           "pass": true,
           "status": "pass"
         },
         "ma_turn_up": {
           "deducting_low": true,
-          "deduction": 39.4,
-          "deduction_percentile": 0.475,
-          "downtrend_pct": 0.0098,
-          "future_deduction_mean": 39.47,
+          "deduction": 39.95,
+          "deduction_percentile": 0.483,
+          "downtrend_pct": 0.0062,
+          "future_deduction_mean": 39.54,
           "future_supports": false,
-          "ma": 39.21,
-          "ma_slope_pct": -0.001568,
+          "ma": 39.14,
+          "ma_slope_pct": -0.001563,
           "pass": false,
           "rises_tomorrow": false,
           "status": "fail",
@@ -602,24 +299,24 @@
           "converge_days": 10,
           "converge_slope": 0.008594,
           "converging": true,
-          "days_since_cross": 1,
+          "days_since_cross": 2,
           "green_run": 21,
-          "osc": 0.0929,
+          "osc": 0.1169,
           "pass": true,
-          "prev_osc": 0.0472,
+          "prev_osc": 0.0929,
           "status": "pass",
           "turned_red": true
         },
         "margin_declining": {
-          "change_pct": -0.4292,
+          "change_pct": -0.4553,
           "declined": true,
           "downtrend": true,
-          "first": 2267.0,
-          "last": 1294.0,
+          "first": 2350.0,
+          "last": 1280.0,
           "meaningful": true,
           "min_balance": 500,
           "pass": true,
-          "slope": -19.363,
+          "slope": -19.956,
           "status": "pass"
         }
       },
@@ -632,7 +329,7 @@
       "insufficient": [],
       "liquidity": {
         "days": 20,
-        "median_amount": 38624078,
+        "median_amount": 36407101,
         "pass": true,
         "status": "pass",
         "threshold": 10000000
@@ -649,78 +346,78 @@
       "tradable": true
     },
     {
-      "close": 10.8,
+      "close": 19.5,
       "conditions": {
         "consolidation": {
           "days": 60,
-          "drift_ratio": 0.452,
+          "drift_ratio": 0.222,
           "flat": true,
-          "high": 11.0,
-          "low": 10.0,
-          "ma_slope_pct": 0.000577,
+          "high": 20.85,
+          "low": 18.4,
+          "ma_slope_pct": -0.000254,
           "narrow": true,
           "pass": true,
-          "position": 0.8,
-          "range_pct": 0.0961,
-          "run_days": 139,
-          "run_range_pct": 0.147,
+          "position": 0.449,
+          "range_pct": 0.1245,
+          "run_days": 107,
+          "run_range_pct": 0.1453,
           "status": "pass"
         },
         "foreign_increasing": {
           "basis": "shares",
-          "change_pct": 0.1979,
-          "first": 228326096.0,
+          "change_pct": 0.3036,
+          "first": 469042420.0,
           "increased": true,
-          "last": 273520836.0,
+          "last": 611432392.0,
           "pass": true,
-          "slope": 685040.941,
+          "slope": 1390018.103,
           "status": "pass",
           "uptrend": true
         },
         "institutional_net_buy": {
           "days": 5,
-          "net_shares": 2560085,
+          "net_shares": 18221286,
           "pass": true,
           "status": "pass"
         },
         "ma_turn_up": {
           "deducting_low": false,
-          "deduction": 10.55,
-          "deduction_percentile": 0.842,
-          "downtrend_pct": 0.0069,
-          "future_deduction_mean": 10.53,
-          "future_supports": true,
-          "ma": 10.41,
-          "ma_slope_pct": 0.000577,
+          "deduction": 19.8,
+          "deduction_percentile": 0.65,
+          "downtrend_pct": -0.0004,
+          "future_deduction_mean": 20.21,
+          "future_supports": false,
+          "ma": 19.67,
+          "ma_slope_pct": -0.000254,
           "pass": false,
-          "rises_tomorrow": true,
+          "rises_tomorrow": false,
           "status": "fail",
           "turning": false,
-          "turning_up": true,
-          "was_falling": false
+          "turning_up": false,
+          "was_falling": true
         },
         "macd": {
-          "converge_days": 1,
-          "converge_slope": 7.5e-05,
-          "converging": false,
-          "days_since_cross": 17,
-          "green_run": 35,
-          "osc": 0.0521,
+          "converge_days": 10,
+          "converge_slope": 0.005104,
+          "converging": true,
+          "days_since_cross": 14,
+          "green_run": 27,
+          "osc": 0.0704,
           "pass": false,
-          "prev_osc": 0.0653,
+          "prev_osc": 0.0589,
           "status": "fail",
           "turned_red": false
         },
         "margin_declining": {
-          "change_pct": -0.215,
+          "change_pct": -0.1484,
           "declined": true,
           "downtrend": true,
-          "first": 1786.0,
-          "last": 1402.0,
+          "first": 5047.0,
+          "last": 4298.0,
           "meaningful": true,
           "min_balance": 500,
           "pass": true,
-          "slope": -12.084,
+          "slope": -37.615,
           "status": "pass"
         }
       },
@@ -733,7 +430,209 @@
       "insufficient": [],
       "liquidity": {
         "days": 20,
-        "median_amount": 36862492,
+        "median_amount": 237575386,
+        "pass": true,
+        "status": "pass",
+        "threshold": 10000000
+      },
+      "market": "twse",
+      "missing": [
+        "ma_turn_up",
+        "macd"
+      ],
+      "name": "台中銀",
+      "pass_all": false,
+      "score": 4,
+      "stock_id": "2812",
+      "tradable": true
+    },
+    {
+      "close": 13.7,
+      "conditions": {
+        "consolidation": {
+          "days": 60,
+          "drift_ratio": null,
+          "flat": false,
+          "high": 13.8,
+          "low": 12.8,
+          "ma_slope_pct": 0.000813,
+          "narrow": true,
+          "pass": false,
+          "position": 0.9,
+          "range_pct": 0.075,
+          "run_days": null,
+          "run_range_pct": null,
+          "status": "fail"
+        },
+        "foreign_increasing": {
+          "basis": "shares",
+          "change_pct": 0.1231,
+          "first": 470415544.0,
+          "increased": true,
+          "last": 528312180.0,
+          "pass": true,
+          "slope": 1316517.906,
+          "status": "pass",
+          "uptrend": true
+        },
+        "institutional_net_buy": {
+          "days": 5,
+          "net_shares": 11097088,
+          "pass": true,
+          "status": "pass"
+        },
+        "ma_turn_up": {
+          "deducting_low": false,
+          "deduction": 12.95,
+          "deduction_percentile": 0.625,
+          "downtrend_pct": 0.0327,
+          "future_deduction_mean": 13.16,
+          "future_supports": true,
+          "ma": 13.33,
+          "ma_slope_pct": 0.000813,
+          "pass": false,
+          "rises_tomorrow": true,
+          "status": "fail",
+          "turning": false,
+          "turning_up": true,
+          "was_falling": false
+        },
+        "macd": {
+          "converge_days": 0,
+          "converge_slope": null,
+          "converging": false,
+          "days_since_cross": 0,
+          "green_run": 1,
+          "osc": 0.003,
+          "pass": true,
+          "prev_osc": -0.0043,
+          "status": "pass",
+          "turned_red": true
+        },
+        "margin_declining": {
+          "change_pct": -0.7247,
+          "declined": true,
+          "downtrend": true,
+          "first": 10574.0,
+          "last": 2911.0,
+          "meaningful": true,
+          "min_balance": 500,
+          "pass": true,
+          "slope": -100.229,
+          "status": "pass"
+        }
+      },
+      "groups": {
+        "chips": true,
+        "consolidation": false,
+        "ma_turn_up": false,
+        "macd": true
+      },
+      "insufficient": [],
+      "liquidity": {
+        "days": 20,
+        "median_amount": 180354558,
+        "pass": true,
+        "status": "pass",
+        "threshold": 10000000
+      },
+      "market": "twse",
+      "missing": [
+        "consolidation",
+        "ma_turn_up"
+      ],
+      "name": "遠東銀",
+      "pass_all": false,
+      "score": 4,
+      "stock_id": "2845",
+      "tradable": true
+    },
+    {
+      "close": 11.0,
+      "conditions": {
+        "consolidation": {
+          "days": 60,
+          "drift_ratio": 0.468,
+          "flat": true,
+          "high": 11.0,
+          "low": 10.0,
+          "ma_slope_pct": 0.000576,
+          "narrow": true,
+          "pass": true,
+          "position": 1.0,
+          "range_pct": 0.096,
+          "run_days": 140,
+          "run_range_pct": 0.1469,
+          "status": "pass"
+        },
+        "foreign_increasing": {
+          "basis": "shares",
+          "change_pct": 0.1971,
+          "first": 229991096.0,
+          "increased": true,
+          "last": 275333056.0,
+          "pass": true,
+          "slope": 718145.092,
+          "status": "pass",
+          "uptrend": true
+        },
+        "institutional_net_buy": {
+          "days": 5,
+          "net_shares": 5954528,
+          "pass": true,
+          "status": "pass"
+        },
+        "ma_turn_up": {
+          "deducting_low": false,
+          "deduction": 10.5,
+          "deduction_percentile": 0.833,
+          "downtrend_pct": 0.0076,
+          "future_deduction_mean": 10.52,
+          "future_supports": true,
+          "ma": 10.41,
+          "ma_slope_pct": 0.000576,
+          "pass": false,
+          "rises_tomorrow": true,
+          "status": "fail",
+          "turning": false,
+          "turning_up": true,
+          "was_falling": false
+        },
+        "macd": {
+          "converge_days": 1,
+          "converge_slope": 7.5e-05,
+          "converging": false,
+          "days_since_cross": 18,
+          "green_run": 35,
+          "osc": 0.0529,
+          "pass": false,
+          "prev_osc": 0.0521,
+          "status": "fail",
+          "turned_red": false
+        },
+        "margin_declining": {
+          "change_pct": -0.2156,
+          "declined": true,
+          "downtrend": true,
+          "first": 1800.0,
+          "last": 1412.0,
+          "meaningful": true,
+          "min_balance": 500,
+          "pass": true,
+          "slope": -12.456,
+          "status": "pass"
+        }
+      },
+      "groups": {
+        "chips": true,
+        "consolidation": true,
+        "ma_turn_up": false,
+        "macd": false
+      },
+      "insufficient": [],
+      "liquidity": {
+        "days": 20,
+        "median_amount": 38569120,
         "pass": true,
         "status": "pass",
         "threshold": 10000000
@@ -750,108 +649,7 @@
       "tradable": true
     },
     {
-      "close": 90.0,
-      "conditions": {
-        "consolidation": {
-          "days": 60,
-          "drift_ratio": null,
-          "flat": false,
-          "high": 105.5,
-          "low": 75.0,
-          "ma_slope_pct": 0.001381,
-          "narrow": false,
-          "pass": false,
-          "position": 0.492,
-          "range_pct": 0.3407,
-          "run_days": null,
-          "run_range_pct": null,
-          "status": "fail"
-        },
-        "foreign_increasing": {
-          "basis": "shares",
-          "change_pct": 0.0602,
-          "first": 16309215.0,
-          "increased": true,
-          "last": 17291134.0,
-          "pass": true,
-          "slope": 19468.47,
-          "status": "pass",
-          "uptrend": true
-        },
-        "institutional_net_buy": {
-          "days": 5,
-          "net_shares": 176165,
-          "pass": true,
-          "status": "pass"
-        },
-        "ma_turn_up": {
-          "deducting_low": true,
-          "deduction": 88.8,
-          "deduction_percentile": 0.267,
-          "downtrend_pct": -0.0364,
-          "future_deduction_mean": 87.2,
-          "future_supports": true,
-          "ma": 89.52,
-          "ma_slope_pct": 0.001381,
-          "pass": true,
-          "rises_tomorrow": true,
-          "status": "pass",
-          "turning": true,
-          "turning_up": true,
-          "was_falling": true
-        },
-        "macd": {
-          "converge_days": 0,
-          "converge_slope": null,
-          "converging": false,
-          "days_since_cross": null,
-          "green_run": null,
-          "osc": -0.515,
-          "pass": false,
-          "prev_osc": 0.2552,
-          "status": "fail",
-          "turned_red": false
-        },
-        "margin_declining": {
-          "change_pct": -0.1147,
-          "declined": true,
-          "downtrend": true,
-          "first": 3792.0,
-          "last": 3357.0,
-          "meaningful": true,
-          "min_balance": 500,
-          "pass": true,
-          "slope": -6.338,
-          "status": "pass"
-        }
-      },
-      "groups": {
-        "chips": true,
-        "consolidation": false,
-        "ma_turn_up": true,
-        "macd": false
-      },
-      "insufficient": [],
-      "liquidity": {
-        "days": 20,
-        "median_amount": 58667153,
-        "pass": true,
-        "status": "pass",
-        "threshold": 10000000
-      },
-      "market": "twse",
-      "missing": [
-        "consolidation",
-        "macd"
-      ],
-      "name": "聯德控股-KY",
-      "pass_all": false,
-      "score": 4,
-      "stock_id": "4912",
-      "tradable": true
-    },
-    {
-      "close": 276.5,
+      "close": 280.5,
       "conditions": {
         "consolidation": {
           "days": 60,
@@ -859,41 +657,41 @@
           "flat": true,
           "high": 291.5,
           "low": 195.5,
-          "ma_slope_pct": 0.000279,
+          "ma_slope_pct": 0.00026,
           "narrow": false,
           "pass": false,
-          "position": 0.844,
-          "range_pct": 0.3743,
+          "position": 0.885,
+          "range_pct": 0.3742,
           "run_days": null,
           "run_range_pct": null,
           "status": "fail"
         },
         "foreign_increasing": {
           "basis": "shares",
-          "change_pct": 0.3359,
-          "first": 7102559.0,
+          "change_pct": 0.3847,
+          "first": 7430708.0,
           "increased": true,
-          "last": 9488394.0,
+          "last": 10289141.0,
           "pass": true,
-          "slope": 48687.219,
+          "slope": 54865.883,
           "status": "pass",
           "uptrend": true
         },
         "institutional_net_buy": {
           "days": 5,
-          "net_shares": 2600734,
+          "net_shares": 2786250,
           "pass": true,
           "status": "pass"
         },
         "ma_turn_up": {
           "deducting_low": true,
-          "deduction": 275.0,
-          "deduction_percentile": 0.342,
-          "downtrend_pct": -0.0072,
-          "future_deduction_mean": 255.47,
+          "deduction": 278.5,
+          "deduction_percentile": 0.333,
+          "downtrend_pct": -0.0064,
+          "future_deduction_mean": 252.18,
           "future_supports": true,
-          "ma": 256.48,
-          "ma_slope_pct": 0.000279,
+          "ma": 256.57,
+          "ma_slope_pct": 0.00026,
           "pass": true,
           "rises_tomorrow": true,
           "status": "pass",
@@ -907,22 +705,22 @@
           "converging": false,
           "days_since_cross": null,
           "green_run": null,
-          "osc": -0.5456,
+          "osc": -0.4961,
           "pass": false,
-          "prev_osc": -0.2646,
+          "prev_osc": -0.5456,
           "status": "fail",
           "turned_red": false
         },
         "margin_declining": {
-          "change_pct": -0.1415,
+          "change_pct": -0.1734,
           "declined": true,
           "downtrend": true,
-          "first": 9047.0,
-          "last": 7767.0,
+          "first": 9128.0,
+          "last": 7545.0,
           "meaningful": true,
           "min_balance": 500,
           "pass": true,
-          "slope": -37.815,
+          "slope": -37.714,
           "status": "pass"
         }
       },
@@ -935,7 +733,7 @@
       "insufficient": [],
       "liquidity": {
         "days": 20,
-        "median_amount": 1294999543,
+        "median_amount": 1201813751,
         "pass": true,
         "status": "pass",
         "threshold": 10000000
@@ -952,91 +750,91 @@
       "tradable": true
     },
     {
-      "close": 296.0,
+      "close": 98.2,
       "conditions": {
         "consolidation": {
           "days": 60,
           "drift_ratio": null,
           "flat": false,
-          "high": 315.5,
-          "low": 229.0,
-          "ma_slope_pct": 0.000955,
+          "high": 119.5,
+          "low": 79.5,
+          "ma_slope_pct": -0.001487,
           "narrow": false,
           "pass": false,
-          "position": 0.775,
-          "range_pct": 0.3178,
+          "position": 0.468,
+          "range_pct": 0.3966,
           "run_days": null,
           "run_range_pct": null,
           "status": "fail"
         },
         "foreign_increasing": {
           "basis": "shares",
-          "change_pct": 0.9099,
-          "first": 1632273.0,
+          "change_pct": 0.034,
+          "first": 5533038.0,
           "increased": true,
-          "last": 3117536.0,
+          "last": 5721094.0,
           "pass": true,
-          "slope": 26971.697,
+          "slope": 9352.862,
           "status": "pass",
           "uptrend": true
         },
         "institutional_net_buy": {
           "days": 5,
-          "net_shares": 81393,
+          "net_shares": 9686,
           "pass": true,
           "status": "pass"
         },
         "ma_turn_up": {
-          "deducting_low": true,
-          "deduction": 271.0,
-          "deduction_percentile": 0.325,
-          "downtrend_pct": -0.0295,
-          "future_deduction_mean": 269.95,
-          "future_supports": true,
-          "ma": 272.21,
-          "ma_slope_pct": 0.000955,
-          "pass": true,
-          "rises_tomorrow": true,
-          "status": "pass",
-          "turning": true,
-          "turning_up": true,
+          "deducting_low": false,
+          "deduction": 108.5,
+          "deduction_percentile": 0.667,
+          "downtrend_pct": -0.0711,
+          "future_deduction_mean": 108.15,
+          "future_supports": false,
+          "ma": 100.87,
+          "ma_slope_pct": -0.001487,
+          "pass": false,
+          "rises_tomorrow": false,
+          "status": "fail",
+          "turning": false,
+          "turning_up": false,
           "was_falling": true
         },
         "macd": {
           "converge_days": 1,
-          "converge_slope": 0.016124,
-          "converging": false,
-          "days_since_cross": 10,
-          "green_run": 4,
-          "osc": 1.4807,
-          "pass": false,
-          "prev_osc": 1.2106,
-          "status": "fail",
-          "turned_red": false
+          "converge_slope": -0.014229,
+          "converging": true,
+          "days_since_cross": 1,
+          "green_run": 2,
+          "osc": 0.1098,
+          "pass": true,
+          "prev_osc": 0.1219,
+          "status": "pass",
+          "turned_red": true
         },
         "margin_declining": {
-          "change_pct": -0.2437,
+          "change_pct": -0.1449,
           "declined": true,
           "downtrend": true,
-          "first": 2134.0,
-          "last": 1614.0,
+          "first": 5976.0,
+          "last": 5110.0,
           "meaningful": true,
           "min_balance": 500,
           "pass": true,
-          "slope": -11.569,
+          "slope": -18.708,
           "status": "pass"
         }
       },
       "groups": {
         "chips": true,
         "consolidation": false,
-        "ma_turn_up": true,
-        "macd": false
+        "ma_turn_up": false,
+        "macd": true
       },
       "insufficient": [],
       "liquidity": {
         "days": 20,
-        "median_amount": 85151825,
+        "median_amount": 61043560,
         "pass": true,
         "status": "pass",
         "threshold": 10000000
@@ -1044,12 +842,12 @@
       "market": "twse",
       "missing": [
         "consolidation",
-        "macd"
+        "ma_turn_up"
       ],
-      "name": "天虹",
+      "name": "和椿",
       "pass_all": false,
       "score": 4,
-      "stock_id": "6937",
+      "stock_id": "6215",
       "tradable": true
     },
     {
@@ -1057,33 +855,33 @@
       "conditions": {
         "consolidation": {
           "days": 60,
-          "drift_ratio": 0.142,
+          "drift_ratio": 0.119,
           "flat": true,
           "high": 87.7,
           "low": 78.6,
-          "ma_slope_pct": -0.000791,
+          "ma_slope_pct": -0.000629,
           "narrow": true,
           "pass": true,
           "position": 0.187,
           "range_pct": 0.1101,
-          "run_days": 70,
+          "run_days": 71,
           "run_range_pct": 0.1341,
           "status": "pass"
         },
         "foreign_increasing": {
           "basis": "shares",
-          "change_pct": 0.0386,
-          "first": 26340945.0,
+          "change_pct": 0.0529,
+          "first": 26269918.0,
           "increased": true,
-          "last": 27358728.0,
+          "last": 27658728.0,
           "pass": true,
-          "slope": 18119.946,
+          "slope": 13073.915,
           "status": "pass",
           "uptrend": true
         },
         "institutional_net_buy": {
           "days": 5,
-          "net_shares": 149533,
+          "net_shares": 396258,
           "pass": true,
           "status": "pass"
         },
@@ -1091,11 +889,11 @@
           "deducting_low": false,
           "deduction": 81.4,
           "deduction_percentile": 0.575,
-          "downtrend_pct": 0.0377,
-          "future_deduction_mean": 81.3,
+          "downtrend_pct": 0.0344,
+          "future_deduction_mean": 81.35,
           "future_supports": false,
-          "ma": 82.64,
-          "ma_slope_pct": -0.000791,
+          "ma": 82.62,
+          "ma_slope_pct": -0.000629,
           "pass": false,
           "rises_tomorrow": false,
           "status": "fail",
@@ -1109,22 +907,22 @@
           "converging": false,
           "days_since_cross": null,
           "green_run": null,
-          "osc": -0.6389,
+          "osc": -0.5762,
           "pass": false,
-          "prev_osc": -0.6828,
+          "prev_osc": -0.6389,
           "status": "fail",
           "turned_red": false
         },
         "margin_declining": {
-          "change_pct": -0.2995,
+          "change_pct": -0.3096,
           "declined": true,
           "downtrend": true,
-          "first": 995.0,
-          "last": 697.0,
+          "first": 998.0,
+          "last": 689.0,
           "meaningful": true,
           "min_balance": 500,
           "pass": true,
-          "slope": -7.484,
+          "slope": -7.852,
           "status": "pass"
         }
       },
@@ -1137,7 +935,7 @@
       "insufficient": [],
       "liquidity": {
         "days": 20,
-        "median_amount": 78452596,
+        "median_amount": 69536450,
         "pass": true,
         "status": "pass",
         "threshold": 10000000
@@ -1154,7 +952,7 @@
       "tradable": true
     }
   ],
-  "tradable": 959,
-  "trading_days": 250,
-  "universe": 1977
+  "tradable": 960,
+  "trading_days": 251,
+  "universe": 1978
 }
