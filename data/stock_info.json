@@ -3659,6 +3659,10 @@
     "market": "tpex",
     "name": "鈺緯"
   },
+  "4154": {
+    "market": "tpex",
+    "name": "樂威科-KY"
+  },
   "4155": {
     "market": "twse",
     "name": "訊映"
@@ -5106,6 +5110,10 @@
   "6128": {
     "market": "twse",
     "name": "上福"
+  },
+  "6129": {
+    "market": "tpex",
+    "name": "普誠"
   },
   "6130": {
     "market": "tpex",
@@ -7573,7 +7581,7 @@
   },
   "8472": {
     "market": "tpex",
-    "name": "夠麻吉"
+    "name": "納維康"
   },
   "8473": {
     "market": "twse",
