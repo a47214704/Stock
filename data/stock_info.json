@@ -7003,6 +7003,10 @@
     "market": "tpex",
     "name": "民盛"
   },
+  "7812": {
+    "market": "twse",
+    "name": "稜研科技*-創"
+  },
   "7814": {
     "market": "tpex",
     "name": "海昌生技"
@@ -7058,6 +7062,10 @@
   "7855": {
     "market": "twse",
     "name": "和運租車"
+  },
+  "7856": {
+    "market": "tpex",
+    "name": "漢測"
   },
   "8011": {
     "market": "twse",
