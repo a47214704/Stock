@@ -31,8 +31,8 @@
     "min_median_amount": 10000000.0,
     "min_score_to_list": 4
   },
-  "data_date": "2026-10-01",
-  "generated_at": "2026-09-30T16:33:26Z",
+  "data_date": "2026-10-02",
+  "generated_at": "2026-10-01T17:11:27Z",
   "matched": 0,
   "missing_breakdown": {
     "chips": 0,
@@ -41,97 +41,8 @@
     "macd": 0
   },
   "near_miss": 0,
-  "results": [
-    {
-      "close": 165.0,
-      "conditions": {
-        "consolidation": {
-          "days": 60,
-          "drift_ratio": null,
-          "flat": true,
-          "high": 175.5,
-          "low": 160.0,
-          "ma_slope_pct": -0.00019,
-          "narrow": true,
-          "pass": true,
-          "position": 0.323,
-          "range_pct": 0.093,
-          "run_days": null,
-          "run_range_pct": null,
-          "status": "pass"
-        },
-        "foreign_increasing": {
-          "basis": "shares",
-          "change_pct": 0.1978,
-          "first": 11548789.0,
-          "increased": true,
-          "last": 13832740.0,
-          "pass": true,
-          "slope": 39206.178,
-          "status": "pass",
-          "uptrend": true
-        },
-        "institutional_net_buy": {
-          "days": 1,
-          "net_shares": 84000,
-          "pass": true,
-          "status": "pass"
-        },
-        "ma_turn_up": {
-          "have": 255,
-          "need": 85,
-          "pass": false,
-          "status": "insufficient"
-        },
-        "macd": {
-          "have": 255,
-          "need": 35,
-          "pass": false,
-          "status": "insufficient"
-        },
-        "margin_declining": {
-          "change_pct": -0.2135,
-          "declined": true,
-          "downtrend": true,
-          "first": 698.0,
-          "last": 549.0,
-          "meaningful": true,
-          "min_balance": 500,
-          "pass": true,
-          "slope": -3.399,
-          "status": "pass"
-        }
-      },
-      "groups": {
-        "chips": true,
-        "consolidation": true,
-        "ma_turn_up": false,
-        "macd": false
-      },
-      "insufficient": [
-        "ma_turn_up",
-        "macd"
-      ],
-      "liquidity": {
-        "days": 15,
-        "median_amount": 21348162,
-        "pass": true,
-        "status": "pass",
-        "threshold": 10000000
-      },
-      "market": "twse",
-      "missing": [
-        "ma_turn_up",
-        "macd"
-      ],
-      "name": "拓凱",
-      "pass_all": false,
-      "score": 4,
-      "stock_id": "4536",
-      "tradable": true
-    }
-  ],
-  "tradable": 942,
+  "results": [],
+  "tradable": 941,
   "trading_days": 260,
   "universe": 1985
 }
