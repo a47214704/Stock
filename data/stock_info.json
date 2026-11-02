@@ -1069,7 +1069,7 @@
   },
   "2072": {
     "market": "twse",
-    "name": "世紀風電"
+    "name": "世紀能源"
   },
   "2073": {
     "market": "tpex",
@@ -6439,6 +6439,10 @@
     "market": "tpex",
     "name": "濾能"
   },
+  "6825": {
+    "market": "tpex",
+    "name": "和暢科技"
+  },
   "6829": {
     "market": "tpex",
     "name": "千附精密"
@@ -6835,6 +6839,10 @@
     "market": "tpex",
     "name": "榮田"
   },
+  "7710": {
+    "market": "twse",
+    "name": "東擎科技"
+  },
   "7711": {
     "market": "twse",
     "name": "永擎"
@@ -7090,6 +7098,10 @@
   "7856": {
     "market": "tpex",
     "name": "漢測"
+  },
+  "7867": {
+    "market": "twse",
+    "name": "特力屋"
   },
   "8011": {
     "market": "twse",
