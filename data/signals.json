@@ -31,8 +31,8 @@
     "min_median_amount": 10000000.0,
     "min_score_to_list": 4
   },
-  "data_date": "2026-11-11",
-  "generated_at": "2026-11-10T18:22:03Z",
+  "data_date": "2026-11-12",
+  "generated_at": "2026-11-11T18:12:34Z",
   "matched": 0,
   "missing_breakdown": {
     "chips": 0,
@@ -50,24 +50,24 @@
           "drift_ratio": null,
           "flat": true,
           "high": 66.0,
-          "low": 60.5,
+          "low": 61.5,
           "ma_slope_pct": 0.000388,
           "narrow": true,
           "pass": true,
-          "position": 0.345,
-          "range_pct": 0.0865,
+          "position": 0.2,
+          "range_pct": 0.0707,
           "run_days": null,
           "run_range_pct": null,
           "status": "pass"
         },
         "foreign_increasing": {
           "basis": "shares",
-          "change_pct": 0.1177,
-          "first": 60363008.0,
+          "change_pct": 0.1107,
+          "first": 60743023.0,
           "increased": true,
           "last": 67470006.0,
           "pass": true,
-          "slope": 128860.63,
+          "slope": 129368.329,
           "status": "pass",
           "uptrend": true
         },
@@ -78,27 +78,27 @@
           "status": "pass"
         },
         "ma_turn_up": {
-          "have": 237,
+          "have": 236,
           "need": 85,
           "pass": false,
           "status": "insufficient"
         },
         "macd": {
-          "have": 237,
+          "have": 236,
           "need": 35,
           "pass": false,
           "status": "insufficient"
         },
         "margin_declining": {
-          "change_pct": -0.3416,
+          "change_pct": -0.3392,
           "declined": true,
           "downtrend": true,
-          "first": 3817.0,
+          "first": 3803.0,
           "last": 2513.0,
           "meaningful": true,
           "min_balance": 500,
           "pass": true,
-          "slope": -42.346,
+          "slope": -42.793,
           "status": "pass"
         }
       },
@@ -143,19 +143,19 @@
           "narrow": true,
           "pass": true,
           "position": 0.927,
-          "range_pct": 0.1004,
+          "range_pct": 0.1003,
           "run_days": null,
           "run_range_pct": null,
           "status": "pass"
         },
         "foreign_increasing": {
           "basis": "shares",
-          "change_pct": 0.1869,
-          "first": 927955809.0,
+          "change_pct": 0.1999,
+          "first": 917845954.0,
           "increased": true,
           "last": 1101357849.0,
           "pass": true,
-          "slope": 1897567.947,
+          "slope": 1999759.598,
           "status": "pass",
           "uptrend": true
         },
@@ -166,27 +166,27 @@
           "status": "pass"
         },
         "ma_turn_up": {
-          "have": 237,
+          "have": 236,
           "need": 85,
           "pass": false,
           "status": "insufficient"
         },
         "macd": {
-          "have": 237,
+          "have": 236,
           "need": 35,
           "pass": false,
           "status": "insufficient"
         },
         "margin_declining": {
-          "change_pct": -0.1666,
+          "change_pct": -0.1604,
           "declined": true,
           "downtrend": true,
-          "first": 48909.0,
+          "first": 48544.0,
           "last": 40759.0,
           "meaningful": true,
           "min_balance": 500,
           "pass": true,
-          "slope": -270.627,
+          "slope": -262.963,
           "status": "pass"
         }
       },
@@ -226,24 +226,24 @@
           "drift_ratio": null,
           "flat": true,
           "high": 44.35,
-          "low": 39.9,
+          "low": 41.0,
           "ma_slope_pct": 0.000606,
           "narrow": true,
           "pass": true,
-          "position": 0.899,
-          "range_pct": 0.1051,
+          "position": 0.866,
+          "range_pct": 0.0791,
           "run_days": null,
           "run_range_pct": null,
           "status": "pass"
         },
         "foreign_increasing": {
           "basis": "shares",
-          "change_pct": 0.1015,
-          "first": 1726922239.0,
+          "change_pct": 0.0958,
+          "first": 1735929982.0,
           "increased": true,
           "last": 1902178243.0,
           "pass": true,
-          "slope": 2497564.119,
+          "slope": 2465521.094,
           "status": "pass",
           "uptrend": true
         },
@@ -254,27 +254,27 @@
           "status": "pass"
         },
         "ma_turn_up": {
-          "have": 237,
+          "have": 236,
           "need": 85,
           "pass": false,
           "status": "insufficient"
         },
         "macd": {
-          "have": 237,
+          "have": 236,
           "need": 35,
           "pass": false,
           "status": "insufficient"
         },
         "margin_declining": {
-          "change_pct": -0.3886,
+          "change_pct": -0.3645,
           "declined": true,
           "downtrend": true,
-          "first": 24460.0,
+          "first": 23531.0,
           "last": 14954.0,
           "meaningful": true,
           "min_balance": 500,
           "pass": true,
-          "slope": -236.174,
+          "slope": -237.996,
           "status": "pass"
         }
       },
@@ -307,7 +307,7 @@
       "tradable": true
     }
   ],
-  "tradable": 982,
+  "tradable": 984,
   "trading_days": 260,
   "universe": 1993
 }
