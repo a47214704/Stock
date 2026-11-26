@@ -31,8 +31,8 @@
     "min_median_amount": 10000000.0,
     "min_score_to_list": 4
   },
-  "data_date": "2026-11-26",
-  "generated_at": "2026-11-25T20:16:47Z",
+  "data_date": "2026-11-27",
+  "generated_at": "2026-11-26T19:55:18Z",
   "matched": 0,
   "missing_breakdown": {
     "chips": 0,
@@ -55,19 +55,19 @@
           "narrow": true,
           "pass": true,
           "position": 0.048,
-          "range_pct": 0.1481,
+          "range_pct": 0.1483,
           "run_days": null,
           "run_range_pct": null,
           "status": "pass"
         },
         "foreign_increasing": {
           "basis": "shares",
-          "change_pct": 0.0285,
-          "first": 923724336.0,
+          "change_pct": 0.0288,
+          "first": 923531485.0,
           "increased": true,
           "last": 950096543.0,
           "pass": true,
-          "slope": 1263743.916,
+          "slope": 1318921.144,
           "status": "pass",
           "uptrend": true
         },
@@ -78,27 +78,27 @@
           "status": "pass"
         },
         "ma_turn_up": {
-          "have": 228,
+          "have": 227,
           "need": 85,
           "pass": false,
           "status": "insufficient"
         },
         "macd": {
-          "have": 228,
+          "have": 227,
           "need": 35,
           "pass": false,
           "status": "insufficient"
         },
         "margin_declining": {
-          "change_pct": -0.2607,
+          "change_pct": -0.24,
           "declined": true,
           "downtrend": true,
-          "first": 8159.0,
+          "first": 7937.0,
           "last": 6032.0,
           "meaningful": true,
           "min_balance": 500,
           "pass": true,
-          "slope": -57.832,
+          "slope": -59.699,
           "status": "pass"
         }
       },
@@ -131,7 +131,7 @@
       "tradable": true
     }
   ],
-  "tradable": 999,
+  "tradable": 998,
   "trading_days": 260,
-  "universe": 1994
+  "universe": 1995
 }
